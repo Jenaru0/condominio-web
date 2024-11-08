@@ -1,0 +1,31 @@
+/* src/styles/GestionPagos.css */
+.gestion-pagos-container {
+    padding: 20px;
+  }
+  
+  .pago-form input {
+    margin-right: 10px;
+    padding: 8px;
+  }
+  
+  .pago-form button {
+    padding: 8px 12px;
+  }
+  
+  .pago-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .pago-table th, .pago-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .pago-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  

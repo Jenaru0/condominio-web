@@ -1,6 +1,7 @@
 // src/Routes.js
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import ResidentesInquilinos from './pages/ResidentesInquilinos';
 import GestionCocheras from './pages/GestionCocheras';
@@ -25,20 +26,20 @@ const AppRoutes = () => {
       {/* Ruta de Login */}
       <Route path="/login" element={<LoginPage />} />
 
-      {/* Rutas de las diferentes secciones */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/residentes-inquilinos" element={<ResidentesInquilinos />} />
-      <Route path="/gestion-cocheras" element={<GestionCocheras />} />
-      <Route path="/reportes" element={<Reportes />} />
-      <Route path="/solicitudes-mantenimiento" element={<SolicitudesMantenimiento />} />
-      <Route path="/envio-notificaciones" element={<EnvioNotificaciones />} />
-      <Route path="/gestion-correspondencia" element={<GestionCorrespondencia />} />
-      <Route path="/eventos-condominio" element={<EventosCondominio />} />
-      <Route path="/control-monitoreo-accesos" element={<ControlMonitoreoAccesos />} />
-      <Route path="/gestion-contratos" element={<GestionContratos />} />
-      <Route path="/ayuda-soporte" element={<AyudaSoporte />} />
-      <Route path="/configuracion" element={<Configuracion />} />
-      <Route path="/usuario" element={<Usuario />} />
+      {/* Rutas protegidas de las diferentes secciones */}
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/residentes-inquilinos" element={<ProtectedRoute><ResidentesInquilinos /></ProtectedRoute>} />
+      <Route path="/gestion-cocheras" element={<ProtectedRoute><GestionCocheras /></ProtectedRoute>} />
+      <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+      <Route path="/solicitudes-mantenimiento" element={<ProtectedRoute><SolicitudesMantenimiento /></ProtectedRoute>} />
+      <Route path="/envio-notificaciones" element={<ProtectedRoute><EnvioNotificaciones /></ProtectedRoute>} />
+      <Route path="/gestion-correspondencia" element={<ProtectedRoute><GestionCorrespondencia /></ProtectedRoute>} />
+      <Route path="/eventos-condominio" element={<ProtectedRoute><EventosCondominio /></ProtectedRoute>} />
+      <Route path="/control-monitoreo-accesos" element={<ProtectedRoute><ControlMonitoreoAccesos /></ProtectedRoute>} />
+      <Route path="/gestion-contratos" element={<ProtectedRoute><GestionContratos /></ProtectedRoute>} />
+      <Route path="/ayuda-soporte" element={<ProtectedRoute><AyudaSoporte /></ProtectedRoute>} />
+      <Route path="/configuracion" element={<ProtectedRoute><Configuracion /></ProtectedRoute>} />
+      <Route path="/usuario" element={<ProtectedRoute><Usuario /></ProtectedRoute>} />
     </Routes>
   );
 };
