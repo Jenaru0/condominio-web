@@ -9,8 +9,14 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware global
 app.use(express.json());
-app.use(cors());
 app.use(helmet());
+
+// Configuración de CORS
+app.use(cors({
+  origin: 'http://localhost:3000', // Permite solicitudes desde tu frontend local
+  credentials: true,
+}));
+
 
 // Importar las rutas
 const userRoutes = require('./routes/userRoutes');
