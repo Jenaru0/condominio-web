@@ -1,14 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './Routes'; // Importa las rutas definidas
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        {/* Puedes agregar más rutas como el Dashboard */}
-      </Routes>
+      <AppRoutes /> {/* Aquí cargamos todas las rutas definidas en Routes.js */}
     </Router>
   );
 }
