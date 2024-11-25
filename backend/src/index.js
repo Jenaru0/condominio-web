@@ -22,11 +22,12 @@ app.use(cors({
 // Importar las rutas
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const edificioRoutes = require('./routes/edificioRoutes');
 
 // Registrar las rutas
 app.use('/api/auth', authRoutes); // Rutas de autenticación
 app.use('/api/usuarios', userRoutes); // Rutas de usuario
-
+app.use('/api/edificios', edificioRoutes);
 // Conexión a la base de datos
 mongoose
   .connect(process.env.MONGO_URI)
