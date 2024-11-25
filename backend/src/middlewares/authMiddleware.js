@@ -1,19 +1,25 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User'); // Modelo del usuario
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) {
-    return res.status(401).json({ mensaje: 'Acceso denegado, token no proporcionado' });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // El objeto decoded debería contener el `id` del usuario
-    console.log('Usuario autenticado:', decoded); // Para depuración
-    next();
-  } catch (error) {
-    console.error('Error al verificar el token:', error);
-    res.status(401).json({ mensaje: 'Token no válido' });
-  }
+module.exports = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Token no proporcionado' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('Error en el middleware de autenticación:', error);
+        res.status(403).json({ error: 'Token inválido o expirado' });
+    }
 };
-
-module.exports = authMiddleware;

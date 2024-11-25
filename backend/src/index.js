@@ -13,17 +13,23 @@ app.use(helmet());
 
 // Configuración de CORS
 app.use(cors({
-  origin: 'http://localhost:3000', // Permite solicitudes desde tu frontend local
+  origin: 'http://localhost:3000', // URL del frontend
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'], // Permitir cabeceras necesarias
 }));
 
-
 // Importar las rutas
+const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-app.use('/api/usuarios', userRoutes);
+
+// Registrar las rutas
+app.use('/api/auth', authRoutes); // Rutas de autenticación
+app.use('/api/usuarios', userRoutes); // Rutas de usuario
 
 // Conexión a la base de datos
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Conectado a la base de datos');
     app.listen(PORT, () => {
@@ -31,10 +37,10 @@ mongoose.connect(process.env.MONGO_URI)
     });
   })
   .catch((error) => {
-    console.error('Error al conectar a la base de datos', error);
+    console.error('Error al conectar a la base de datos:', error);
   });
 
-// Ruta raíz para ver si el servidor está activo
+// Ruta raíz para verificar si el servidor está activo
 app.get('/', (req, res) => {
   res.send('Servidor activo');
 });
