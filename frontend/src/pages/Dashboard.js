@@ -1,97 +1,114 @@
-// src/pages/Dashboard.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import '../styles/Dashboard.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  FaShieldAlt,
+  FaWrench,
+  FaUsers,
+  FaReceipt,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaClipboardCheck,
+  FaBell,
+} from "react-icons/fa";
 
 const Dashboard = () => {
-  const [pagosPendientes, setPagosPendientes] = useState(0);
-  const [solicitudesMantenimiento, setSolicitudesMantenimiento] = useState(0);
-  const [visitasRecientes, setVisitasRecientes] = useState(0);
-  const [boletasPago, setBoletasPago] = useState(0);
-  const [correspondencia, setCorrespondencia] = useState(0);
-  const [reservasProximas, setReservasProximas] = useState(0);
-  const [eventosProximos, setEventosProximos] = useState(0);
-  const [incidentesSeguridad, setIncidentesSeguridad] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
-
-        const pagosResponse = await axios.get('/api/pagos', { headers });
-        const reservasResponse = await axios.get('/api/reservas', { headers });
-        const notificacionesResponse = await axios.get('/api/notificaciones', { headers });
-
-        setPagosPendientes(pagosResponse.data.pendientes || 0);
-        setSolicitudesMantenimiento(pagosResponse.data.solicitudes || 0);
-        setVisitasRecientes(reservasResponse.data.visitas || 0);
-        setBoletasPago(notificacionesResponse.data.boletas || 0);
-        setCorrespondencia(notificacionesResponse.data.paquetes || 0);
-        setReservasProximas(reservasResponse.data.reservas || 0);
-        setEventosProximos(reservasResponse.data.eventos || 0);
-        setIncidentesSeguridad(reservasResponse.data.incidentes || 0);
-      } catch (error) {
-        console.error("Error al obtener datos del Dashboard:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // Datos simulados para el Dashboard (puedes reemplazarlos con datos dinámicos)
+  const [dashboardData] = useState({
+    incidentesSeguridad: 1,
+    solicitudesMantenimiento: 8,
+    visitasRecientes: 3,
+    boletasPago: 10,
+    correspondencia: 2,
+    reservasProximas: 5,
+    eventosProximos: 2,
+  });
 
   return (
-    <div className="dashboard-container">
-      <div className="main-content">
-        <div className="header">
-          <h1>Panel de Control</h1>
-          <p>Resumen del estado actual del condominio</p>
-        </div>
-        <div className="cards-container">
-          <div className="card">
-            <h3>Pagos Pendientes</h3>
-            <p>{pagosPendientes}</p>
-            <Link to="/pagos-pendientes">Ver todos los pagos</Link>
-          </div>
-          <div className="card">
-            <h3>Solicitudes de Mantenimiento</h3>
-            <p>{solicitudesMantenimiento} Pendientes</p>
-            <Link to="/solicitudes-mantenimiento">Ver todas las solicitudes</Link>
-          </div>
-          <div className="card">
-            <h3>Visitas Recientes</h3>
-            <p>{visitasRecientes} Autorizados</p>
-            <Link to="/visitas-recientes">Ver detalles de acceso</Link>
-          </div>
-          <div className="card">
-            <h3>Boletas de Pago Subidas</h3>
-            <p>{boletasPago} Nuevas</p>
-            <Link to="/boletas-pago">Ver todas las boletas</Link>
-          </div>
-          <div className="card">
-            <h3>Correspondencia Recibida</h3>
-            <p>{correspondencia} Paquetes</p>
-            <Link to="/correspondencia-recibida">Ver toda la correspondencia</Link>
-          </div>
-          <div className="card">
-            <h3>Reservas Próximas</h3>
-            <p>{reservasProximas} Áreas Comunes Reservadas</p>
-            <Link to="/reservas-proximas">Gestionar reservas</Link>
-          </div>
-          <div className="card">
-            <h3>Eventos del Condominio</h3>
-            <p>{eventosProximos} Próximos</p>
-            <Link to="/eventos-condominio">Ver eventos</Link>
-          </div>
-          <div className="card">
-            <h3>Incidentes de Seguridad</h3>
-            <p>{incidentesSeguridad} Incidentes Registrados</p>
-            <Link to="/incidentes-seguridad">Ver incidentes</Link>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col items-center w-full bg-gray-100 min-h-screen">
+      {/* Header */}
+      <header className="w-full max-w-screen-xl bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-800">
+          Buenos días, [Usuario]
+        </h1>
+        <button
+          className="flex items-center text-gray-800 py-2 px-4 rounded hover:bg-blue-500 focus:outline-none"
+          aria-label="Abrir notificaciones"
+        >
+          <FaBell className="text-2xl mr-2" /> Notificaciones
+        </button>
+      </header>
+
+      {/* Dashboard Cards */}
+      <section className="w-full max-w-screen-xl mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <DashboardCard
+          icon={<FaShieldAlt />}
+          title="Incidentes de Seguridad"
+          data={`${dashboardData.incidentesSeguridad} Incidente Registrado`}
+          link="/incidentes-seguridad"
+          linkText="Ver incidentes"
+        />
+        <DashboardCard
+          icon={<FaWrench />}
+          title="Solicitudes de Mantenimiento"
+          data={`${dashboardData.solicitudesMantenimiento} Pendientes`}
+          link="/solicitudes-mantenimiento"
+          linkText="Ver todas las solicitudes"
+        />
+        <DashboardCard
+          icon={<FaUsers />}
+          title="Visitas Recientes"
+          data={`${dashboardData.visitasRecientes} Autorizados`}
+          link="/visitas-recientes"
+          linkText="Ver detalles de acceso"
+        />
+        <DashboardCard
+          icon={<FaReceipt />}
+          title="Boletas de Pago Subidas"
+          data={`${dashboardData.boletasPago} Nuevas`}
+          link="/boletas-pago"
+          linkText="Ver todas las boletas"
+        />
+        <DashboardCard
+          icon={<FaEnvelope />}
+          title="Correspondencia Recibida"
+          data={`${dashboardData.correspondencia} Paquetes`}
+          link="/correspondencia-recibida"
+          linkText="Ver toda la correspondencia"
+        />
+        <DashboardCard
+          icon={<FaClipboardCheck />}
+          title="Reservas Próximas"
+          data={`${dashboardData.reservasProximas} Áreas Comunes Reservadas`}
+          link="/reservas-proximas"
+          linkText="Gestionar reservas"
+        />
+        <DashboardCard
+          icon={<FaCalendarAlt />}
+          title="Eventos del Condominio"
+          data={`${dashboardData.eventosProximos} Próximos`}
+          link="/eventos-condominio"
+          linkText="Ver eventos"
+        />
+      </section>
     </div>
   );
 };
+
+// Componente reutilizable para tarjetas del Dashboard
+const DashboardCard = ({ icon, title, data, link, linkText }) => (
+  <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <div className="flex items-center gap-4 mb-4">
+      <div className="text-blue-500 text-3xl">{icon}</div>
+      <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+    </div>
+    <p className="text-gray-600 text-lg mb-4">{data}</p>
+    <Link
+      to={link}
+      className="text-blue-500 font-semibold hover:underline focus:outline-none"
+    >
+      {linkText}
+    </Link>
+  </div>
+);
 
 export default Dashboard;

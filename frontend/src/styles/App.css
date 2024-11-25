@@ -4,6 +4,7 @@
 .app-layout {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
 /* Estilo para la barra lateral */
@@ -14,6 +15,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  height: 100%;
 }
 
 .sidebar h2 {
@@ -26,6 +29,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .sidebar-menu {
@@ -49,7 +53,8 @@
 }
 
 .sidebar-menu li.active a {
-  color: #61dafb; /* Color para el enlace activo */
+  background-color: #80BAE4;
+  color: #333;
 }
 
 /* Estilo para la sección de contenido principal */
@@ -57,24 +62,14 @@
   flex: 1;
   padding: 20px;
   background-color: #f8f9fa;
+  margin-left: 250px; /* Ajusta el margen izquierdo para que no se superponga con la barra lateral */
+  width: calc(100% - 250px); /* Ajusta el ancho para que ocupe el espacio restante */
 }
 
-/* Puedes personalizar el encabezado del Dashboard aquí */
-.main-content .header {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-}
-
-/* Estilos adicionales, si los necesitas */
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Estilo para la sección de contenido principal cuando no hay barra lateral */
+.full-width-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f8f9fa;
+  width: 100%; /* Ocupa todo el ancho */
 }

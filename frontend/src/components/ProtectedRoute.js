@@ -1,34 +1,44 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Cambiado a una importación nombrada
-// Removemos axios ya que no se usa en este componente
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Hook para el contexto de autenticación
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const { user, isLoading, error } = useAuth(); // Suponiendo que el AuthContext maneja errores también
 
-  if (!token) {
-    // Redirige a la página de inicio de sesión si no hay token
-    return <Navigate to="/login" state={{ from: window.location.pathname }} />;
+  // Mostrar un spinner o indicador mientras se valida el estado del usuario
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="loader animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+      </div>
+    );
   }
 
-  try {
-    // Decodificar y verificar la expiración del token
-    const decodedToken = jwtDecode(token);
-    const isTokenExpired = decodedToken.exp * 1000 < Date.now();
-
-    if (isTokenExpired) {
-      // Eliminar token y redirigir si está expirado
-      localStorage.removeItem('token');
-      return <Navigate to="/login" state={{ from: window.location.pathname }} />;
-    }
-  } catch (error) {
-    console.error("Token no válido", error);
-    // Eliminar token y redirigir si no es válido
-    localStorage.removeItem('token');
-    return <Navigate to="/login" state={{ from: window.location.pathname }} />;
+  // Manejar errores de autenticación o conexión
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-red-100">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-red-600">
+            Ocurrió un error: {error.message || "Error desconocido"}
+          </h1>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  // Renderiza el contenido si el token es válido
+  // Redirigir si no está autenticado
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Renderizar el contenido protegido
   return children;
 };
 

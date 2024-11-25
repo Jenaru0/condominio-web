@@ -1,22 +1,35 @@
+/* src/styles/Dashboard.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap');
 
+/* Variables CSS */
 :root {
   --color-barra-lateral: #286AA7;
   --color-texto: #fff;
   --color-texto-menu: #d1d1d1;
-  --color-menu-hover: #3a8fc3;
+  --color-menu-hover: #007bff;
   --color-menu-hover-texto: #ffffff;
   --color-boton: #000;
   --color-boton-texto: #fff;
   --color-linea: rgb(180, 180, 180);
-  --color-scroll: rgb(192, 192, 192);
-  --color-scroll-hover: rgb(134, 134, 134);
+  --color-scroll: #cccccc;
+  --color-scroll-hover: #aaaaaa;
   --color-iconos: #fff;
-  --color-fondo-principal: #F0E4D7;
+  --color-fondo-principal: #f8f9fa;
   --color-card: #ffffff;
   --color-titulo-card: #286AA7;
   --color-enlace-card: #1b4f73;
   --color-enlace-hover: #3a8fc3;
+  --color-primary: #007bff;
+  --color-secondary: #6c757d;
+  --color-background: #f8f9fa;
+  --color-text: #343a40;
+  --color-card-background: #ffffff;
+  --color-card-shadow: rgba(0, 0, 0, 0.1);
+  --spacing-small: 8px;
+  --spacing-medium: 16px;
+  --spacing-large: 24px;
+  --border-radius: 5px;
 }
 
 * {
@@ -26,90 +39,32 @@
   font-family: 'Outfit', sans-serif;
 }
 
+/* General Styles */
 body {
-  height: 100vh;
-  width: 100%;
-  background-color: var(--color-fondo-principal);
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
 }
 
 .dashboard-container {
   display: flex;
   font-family: 'Outfit', sans-serif;
-}
-
-.sidebar {
-  width: 250px; /* Asegúrate de que este ancho coincida con el margen izquierdo en .main-content */
-  background-color: var(--color-barra-lateral);
-  color: var(--color-texto);
-  height: 100vh;
-  padding: 20px;
-  position: fixed;
-  transition: width 0.5s ease;
-  overflow-y: auto;
-}
-
-.sidebar-header {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: var(--color-texto);
-  text-align: center;
-}
-
-.sidebar-menu-wrapper {
-  overflow-y: auto;
-  height: calc(100vh - 60px);
-}
-
-.sidebar-menu {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar-menu li {
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.sidebar-menu a {
-  color: var(--color-texto-menu);
-  text-decoration: none;
-  transition: color 0.3s;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-}
-
-.sidebar-menu a:hover {
-  background-color: var(--color-menu-hover);
-  color: var(--color-menu-hover-texto);
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.sidebar-menu .icon {
-  color: var(--color-iconos);
-  margin-right: 10px;
-  font-size: 20px;
-}
-
-.sidebar-separator {
-  border-top: 1px solid var(--color-linea);
-  margin: 20px 0;
+  padding: var(--spacing-large);
+  width: 100%;
 }
 
 .main-content {
-  margin-left: 250px; /* Ajuste del margen izquierdo para coincidir con el ancho del sidebar */
+  flex: 1;
   padding: 20px;
-  width: calc(100% - 250px); /* Ancho adaptado para ocupar el espacio restante */
   background-color: var(--color-fondo-principal);
   min-height: 100vh;
 }
 
 .header {
   font-size: 2rem;
-  margin-bottom: 20px;
-  text-align: center;
+  margin-bottom: var(--spacing-large);
 }
 
 .cards-container {
@@ -119,11 +74,14 @@ body {
 }
 
 .card {
-  background-color: var(--color-card);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: var(--color-card-background);
+  box-shadow: 0 4px 8px var(--color-card-shadow);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-medium);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .card:hover {
@@ -136,33 +94,30 @@ body {
   color: var(--color-titulo-card);
 }
 
+.card p {
+  margin: var(--spacing-small) 0;
+}
+
 .card a {
-  color: var(--color-enlace-card);
+  color: var(--color-primary);
   text-decoration: none;
-  transition: color 0.3s;
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .card a:hover {
-  color: var(--color-enlace-hover);
+  text-decoration: underline;
 }
 
+/* Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-scroll);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-scroll-hover);
-}
-
-.sidebar-menu .active a {
-  background-color: var(--color-menu-hover);
-  color: var(--color-menu-hover-texto);
-  padding: 10px;
-  border-radius: 5px;
 }
