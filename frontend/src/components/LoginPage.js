@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useAuth from '../hooks/useAuth'; // Importar useAuth
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +17,7 @@ const LoginPage = () => {
     setLoading(true);
     setError(null); // Reset error state
     try {
+      console.log('Datos enviados:', { email, password }); // Depuración
       await login(email, password);
       navigate("/dashboard");
     } catch (error) {
@@ -26,6 +27,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">

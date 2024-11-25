@@ -107,6 +107,7 @@ const Sidebar = () => {
         { to: "/gestion-correspondencia", icon: FaEnvelope, label: "Gestión de Correspondencia" },
         { to: "/eventos-condominio", icon: FaCalendarAlt, label: "Eventos del Condominio" },
         { to: "/control-monitoreo-accesos", icon: FaEye, label: "Control y Monitoreo de Accesos" },
+        { to: "/gestion-usuarios", icon: FaUserCircle, label: "Gestión de Usuarios" }, // Nuevo enlace
       ],
     },
     {

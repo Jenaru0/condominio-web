@@ -20,6 +20,7 @@ import Usuario from "./pages/Usuario";
 import ReportePagos from "./pages/ReportePagos";
 import ReporteMantenimiento from "./pages/ReporteMantenimiento";
 import ReporteCorrespondencia from "./pages/ReporteCorrespondencia";
+import GestionUsuarios from "./pages/GestionUsuarios";
 
 const AppRoutes = () => {
   return (
@@ -155,6 +156,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <ReporteCorrespondencia />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/gestion-usuarios"
+          element={
+            <ProtectedRoute>
+              <GestionUsuarios />
             </ProtectedRoute>
           }
         />
