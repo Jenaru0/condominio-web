@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# IntelliJ IDEA
+.idea/
+
+# Logs generales del sistema
+*.log
+
+# Cache de paquetes (opcional, dependiendo del uso)
+.yarn/
+.yarn-cache/
