@@ -1,4 +1,4 @@
-@import '../../node_modules/@fortawesome/fontawesome-free/css/all.css';
+@import '../../frontendAitor/node_modules/@fortawesome/fontawesome-free/css/all.css';
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -6,6 +6,7 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+
 /* Barra de desplazamiento personalizada global */
 ::-webkit-scrollbar {
     width: 8px;
