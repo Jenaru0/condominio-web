@@ -1,0 +1,22 @@
+.app-container {
+    display: grid;
+    grid-template-columns: 250px auto; /* Sidebar y contenido */
+    grid-template-rows: auto; /* Permite que el contenido crezca dinámicamente */
+    min-height: 100vh; /* Altura mínima del viewport */
+    overflow: hidden; /* Evita barras de scroll innecesarias */
+    transition: grid-template-columns 0.3s ease;
+}
+
+.app-container.collapsed {
+    grid-template-columns: 70px auto;
+}
+
+.main-content {
+    grid-column: 2 / 3;
+    overflow-y: auto; /* Scroll vertical para el contenido principal */
+    overflow-x: hidden;
+    min-height: 100%; /* Permite que crezca dinámicamente según el contenido */
+    padding: 20px;
+    margin: 0; /* Elimina márgenes adicionales */
+    background-color: #f0f2f5;
+}

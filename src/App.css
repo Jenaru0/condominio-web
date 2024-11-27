@@ -1,0 +1,19 @@
+/* src/App.css */
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+.main-content {
+    margin-left: 280px;
+    padding: 20px;
+    background-color: #f0f2f5;
+    flex-grow: 1;
+}
+
+.main-content h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+}
