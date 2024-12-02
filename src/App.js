@@ -1,34 +1,35 @@
-// src/App.js
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
-import Navbar from "./componentes/diseño/Navbar";
-import Sidebar from "./componentes/diseño/Sidebar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import LoginPage from "./paginas/Autenticacion/LoginPage"; // Ajusta la ruta a tu estructura
+import AppRoutes from "./rutas/Routes"; // Ajusta la ruta a tu estructura
+import ProtectedRoute from "./rutas/ProtectedRoute"; // Ajusta la ruta a tu estructura
+import "./assets/estilos/App.css"; // Importación correcta de estilos
 
-// Importar las páginas
+// Componente para el contenido de la aplicación
+const AppContent = () => {
+  return (
+    <Routes>
+      {/* Ruta pública (login) */}
+      <Route path="/login" element={<LoginPage />} />
 
-// Resto del código...
+      {/* Rutas protegidas */}
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <AppRoutes />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  );
+};
 
+// Componente principal de la aplicación
 function App() {
-  const userRole = "administrador"; // Puedes reemplazarlo con lógica de autenticación real
-
   return (
     <Router>
-      <div className="app-container">
-        <Navbar />
-        <Sidebar userRole={userRole} />
-        <div className="content">
-          <Routes>
-            {/* Define las rutas para el administrador */}
-            {/* Agrega más rutas según tus páginas */}
-            <Route path="*" element={<Navigate to="/usuarios" />} />
-          </Routes>
-        </div>
-      </div>
+      <AppContent />
     </Router>
   );
 }
