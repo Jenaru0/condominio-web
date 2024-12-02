@@ -61,7 +61,7 @@ const Sidebar = () => {
                             <div className="nav-link">
                                 <i className="nav-icon">{item.icon}</i>
                                 {!isCollapsed && <span className="nav-label">{item.label}</span>}
-                                {item.subItems && (
+                                {item.subItems && !isCollapsed && (
                                     <i
                                         className={`submenu-icon ${
                                             activeMenu === index ? "open" : "closed"
@@ -75,16 +75,16 @@ const Sidebar = () => {
                             {/* Submenú */}
                             {item.subItems && (
                                 <ul
-                                    className={`sub-menu ${
-                                        isCollapsed && activeMenu === index
-                                            ? "collapsed-sub-menu expanded"
-                                            : ""
-                                    }`}
+                                    className={`${
+                                        isCollapsed
+                                            ? "collapsed-sub-menu"
+                                            : "sub-menu"
+                                    } ${activeMenu === index ? "expanded" : ""}`}
                                 >
                                     {item.subItems.map((subItem, subIndex) => (
                                         <li key={subIndex} className="sub-menu-item">
                                             <NavLink
-                                                to={!isCollapsed ? subItem.path : "#"}
+                                                to={subItem.path}
                                                 className={({ isActive }) =>
                                                     isActive
                                                         ? "sub-menu-link active"

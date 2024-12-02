@@ -9,11 +9,12 @@
     z-index: 1000;
     width: 250px;
     transition: width 0.3s ease;
-    overflow: hidden;
+    /* Eliminado overflow: hidden; */
 }
 
 .sidebar-container.collapsed {
     width: 70px;
+    overflow: visible; /* Asegura que el submenú sea visible */
 }
 
 .sidebar {
@@ -25,6 +26,7 @@
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
     transition: width 0.3s ease;
+    overflow: visible; /* Asegura que el submenú sea visible */
 }
 
 .sidebar-header {
@@ -62,7 +64,7 @@
 }
 
 .nav-item {
-    position: relative;
+    position: relative; /* Para posicionar el submenú relativo a este elemento */
     display: flex;
     align-items: center;
     padding: 12px 16px;
@@ -109,13 +111,13 @@
 
 /* Submenú */
 .sub-menu {
+    list-style: none;
     width: 80%;
     padding: 10px 0;
     display: none;
     flex-direction: column;
     margin-top: 5px;
     border-radius: 5px;
-    list-style: none;
 }
 
 .nav-item.active .sub-menu {
@@ -149,20 +151,26 @@
 
 /* Submenú flotante cuando está colapsado */
 .collapsed-sub-menu {
+    list-style: none;
     display: none;
     position: absolute;
-    left: 70px;
+    left: 100%; /* Posiciona el submenú a la derecha del nav-item */
     top: 0;
-    background-color: #1f5a8d;
+    background-color: #2869A7;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+    z-index: 100; /* Aumenta el z-index si es necesario */
+    flex-direction: column;
 }
 
-.collapsed-sub-menu.expanded {
-    display: flex;
-    flex-direction: column;
+.sidebar-container.collapsed .nav-item.active .collapsed-sub-menu {
+    display: flex; /* Muestra el submenú flotante al activarlo en la barra colapsada */
+}
+
+/* Elimina el icono del submenú en el estado colapsado */
+.sidebar-container.collapsed .submenu-icon {
+    display: none;
 }
 
 /* Tooltip para opciones colapsadas */
