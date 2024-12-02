@@ -1,0 +1,33 @@
+/* src/estilos/App.css */
+
+/* Resetea los márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.app-container {
+    display: flex;
+}
+
+/* Ajusta el contenido para que esté debajo del navbar y al lado del sidebar */
+.content {
+    margin-top: 60px; /* Altura del navbar */
+    margin-left: 250px; /* Ancho del sidebar expandido */
+    padding: 20px;
+    width: calc(100% - 250px);
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-container.collapsed + .content {
+    margin-left: 70px; /* Ancho del sidebar colapsado */
+    width: calc(100% - 70px);
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 70px; /* Sidebar colapsado por defecto en móviles */
+        width: calc(100% - 70px);
+    }
+}

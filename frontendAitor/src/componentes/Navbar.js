@@ -1,28 +1,30 @@
 // src/componentes/Navbar.js
 import React from 'react';
-import '../estilos/Navbar.css'; // Ruta corregida
+import { FaEnvelope, FaBell, FaUserCircle } from 'react-icons/fa';
+import '../estilos/Navbar.css';
 
 const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-left">
-                {/* Puedes agregar el logo aquí */}
-                <a href="/" className="navbar-logo">Condominio</a>
+                {/* Logo o título */}
+                <a href="/" className="navbar-logo">
+                    Condominio
+                </a>
             </div>
             <div className="navbar-right">
                 {/* Icono de mensajería */}
                 <div className="navbar-icon">
-                    <i className="fas fa-envelope"></i>
+                    <FaEnvelope />
                 </div>
                 {/* Icono de notificaciones */}
                 <div className="navbar-icon">
-                    <i className="fas fa-bell"></i>
+                    <FaBell />
                 </div>
-                {/* Icono de usuario */}
+                {/* Icono de usuario con menú desplegable */}
                 <div className="navbar-profile">
-                    <img src="/ruta/a/tu/foto/perfil.jpg" alt="Perfil" className="navbar-profile-pic" />
+                    <FaUserCircle className="navbar-profile-icon" />
                     <div className="navbar-profile-menu">
-                        {/* Menú desplegable de perfil */}
                         <a href="/perfil">Perfil</a>
                         <a href="/logout">Cerrar Sesión</a>
                     </div>

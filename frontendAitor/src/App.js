@@ -8,8 +8,8 @@ import Sidebar from './componentes/Sidebar';
 import Usuarios from './usuarios/administrador/paginas/Usuarios';
 import Propiedades from './usuarios/administrador/paginas/Propiedades';
 
-// Resto del código...
-
+// Importar el archivo CSS principal
+import './estilos/App.css';
 
 function App() {
     const userRole = 'administrador'; // Puedes reemplazarlo con lógica de autenticación real

@@ -1,18 +1,30 @@
+/* src/estilos/Navbar.css */
+
+/* Importación de Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #2869A7;
+    color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2869A7;
-    padding: 0 16px;
-    height: 60px;
-    color: #ffffff;
+    padding: 0 20px;
+    z-index: 1002; /* Asegura que el navbar esté por encima del sidebar */
     font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-left .navbar-logo {
     color: #ffffff;
     font-size: 1.5rem;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .navbar-right {
@@ -21,12 +33,14 @@
 }
 
 .navbar-icon {
-    margin: 0 10px;
+    margin: 0 15px;
     cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
 }
 
-.navbar-icon i {
-    font-size: 1.2rem;
+.navbar-icon:hover {
+    color: #ffc107;
 }
 
 .navbar-profile {
@@ -34,22 +48,22 @@
     cursor: pointer;
 }
 
-.navbar-profile-pic {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+.navbar-profile-icon {
+    font-size: 1.5rem;
 }
 
 .navbar-profile-menu {
     display: none;
     position: absolute;
-    top: 45px;
     right: 0;
+    top: 45px;
     background-color: #ffffff;
     color: #000000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
     overflow: hidden;
+    min-width: 150px;
+    z-index: 1003; /* Asegura que el menú esté por encima de otros elementos */
 }
 
 .navbar-profile:hover .navbar-profile-menu {
@@ -59,10 +73,30 @@
 .navbar-profile-menu a {
     display: block;
     padding: 10px 15px;
-    text-decoration: none;
     color: #000000;
+    text-decoration: none;
+    transition: background-color 0.2s;
 }
 
 .navbar-profile-menu a:hover {
     background-color: #f0f0f0;
+}
+
+.navbar-profile-menu a:last-child {
+    border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .navbar-left .navbar-logo {
+        font-size: 1.2rem;
+    }
+
+    .navbar-icon {
+        margin: 0 10px;
+        font-size: 1rem;
+    }
+
+    .navbar-profile-icon {
+        font-size: 1.2rem;
+    }
 }
