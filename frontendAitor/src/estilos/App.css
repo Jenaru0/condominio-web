@@ -11,7 +11,6 @@
     display: flex;
 }
 
-/* Ajusta el contenido para que esté debajo del navbar y al lado del sidebar */
 .content {
     margin-top: 60px; /* Altura del navbar */
     margin-left: 250px; /* Ancho del sidebar expandido */

@@ -7,10 +7,8 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-left">
-                {/* Logo o título */}
-                <a href="/" className="navbar-logo">
-                    Condominio
-                </a>
+                {/* Si deseas agregar un logo como imagen, puedes hacerlo aquí */}
+                {/* <img src="/ruta/a/tu/logo.png" alt="Logo" className="navbar-logo" /> */}
             </div>
             <div className="navbar-right">
                 {/* Icono de mensajería */}

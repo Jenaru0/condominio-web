@@ -20,11 +20,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-left .navbar-logo {
-    color: #ffffff;
-    font-size: 1.5rem;
-    text-decoration: none;
-    font-weight: 600;
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Si utilizas un logo como imagen */
+.navbar-logo {
+    height: 40px;
+    width: auto;
 }
 
 .navbar-right {
@@ -50,6 +54,11 @@
 
 .navbar-profile-icon {
     font-size: 1.5rem;
+    transition: color 0.2s;
+}
+
+.navbar-profile-icon:hover {
+    color: #ffc107;
 }
 
 .navbar-profile-menu {
@@ -87,10 +96,6 @@
 }
 
 @media (max-width: 768px) {
-    .navbar-left .navbar-logo {
-        font-size: 1.2rem;
-    }
-
     .navbar-icon {
         margin: 0 10px;
         font-size: 1rem;
