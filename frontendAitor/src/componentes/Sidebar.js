@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaChevronDown } from "react-icons/fa";
 import "../estilos/Sidebar.css";
-import sidebarConfig from "../usuarios/administrador/configuracion/sidebarConfig";
+import sidebarConfigAdmin from "../usuarios/administrador/configuracion/sidebarConfigAdmin";
 import logo from "../recursos/logo.png";
 
 const Sidebar = () => {
@@ -41,7 +41,7 @@ const Sidebar = () => {
 
                 {/* Opciones de menú */}
                 <ul className="nav">
-                    {sidebarConfig.map((item, index) => (
+                    {sidebarConfigAdmin.map((item, index) => (
                         <li
                             key={index}
                             className={`nav-item ${item.subItems ? "has-submenu" : ""} ${
@@ -50,16 +50,15 @@ const Sidebar = () => {
                             onMouseEnter={() => isCollapsed && setHoveredItem(index)}
                             onMouseLeave={() => setHoveredItem(null)}
                             onClick={() =>
-                                item.subItems
-                                    ? toggleSubMenu(index)
-                                    : setHoveredItem(null)
+                                item.subItems ? toggleSubMenu(index) : setHoveredItem(null)
                             }
                         >
-                            <NavLink
-                                to={!item.subItems ? item.path : "#"}
-                                className="nav-link"
-                                data-tooltip={isCollapsed && hoveredItem === index ? item.label : ""}
-                            >
+                            {/* Tooltip para opciones minimizadas */}
+                            {isCollapsed && hoveredItem === index && (
+                                <div className="tooltip">{item.label}</div>
+                            )}
+
+                            <div className="nav-link">
                                 <i className="nav-icon">{item.icon}</i>
                                 {!isCollapsed && <span className="nav-label">{item.label}</span>}
                                 {item.subItems && (
@@ -71,14 +70,27 @@ const Sidebar = () => {
                                         <FaChevronDown />
                                     </i>
                                 )}
-                            </NavLink>
+                            </div>
 
                             {/* Submenú */}
-                            {item.subItems && activeMenu === index && (
-                                <ul className="sub-menu">
+                            {item.subItems && (
+                                <ul
+                                    className={`sub-menu ${
+                                        isCollapsed && activeMenu === index
+                                            ? "collapsed-sub-menu expanded"
+                                            : ""
+                                    }`}
+                                >
                                     {item.subItems.map((subItem, subIndex) => (
                                         <li key={subIndex} className="sub-menu-item">
-                                            <NavLink className="sub-menu-link" to={subItem.path}>
+                                            <NavLink
+                                                to={!isCollapsed ? subItem.path : "#"}
+                                                className={({ isActive }) =>
+                                                    isActive
+                                                        ? "sub-menu-link active"
+                                                        : "sub-menu-link"
+                                                }
+                                            >
                                                 {subItem.label}
                                             </NavLink>
                                         </li>

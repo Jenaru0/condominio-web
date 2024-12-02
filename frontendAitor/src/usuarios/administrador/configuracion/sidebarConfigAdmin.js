@@ -1,6 +1,6 @@
 import { FaUsers, FaBuilding, FaTools, FaTree, FaEnvelope, FaCalendarAlt, FaMoneyBillWave, FaFileAlt } from "react-icons/fa";
 
-const sidebarConfig = [
+const sidebarConfigAdmin = [
     {
         label: "Usuarios",
         path: "/usuarios",
@@ -70,4 +70,4 @@ const sidebarConfig = [
     },
 ];
 
-export default sidebarConfig;
+export default sidebarConfigAdmin;
