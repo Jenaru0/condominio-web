@@ -1,114 +1,139 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import {
-  FaShieldAlt,
-  FaWrench,
-  FaUsers,
-  FaReceipt,
-  FaEnvelope,
-  FaCalendarAlt,
-  FaClipboardCheck,
-  FaBell,
-} from "react-icons/fa";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
+
+// Registrar componentes de Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
-  // Datos simulados para el Dashboard (puedes reemplazarlos con datos dinámicos)
-  const [dashboardData] = useState({
-    incidentesSeguridad: 1,
-    solicitudesMantenimiento: 8,
-    visitasRecientes: 3,
-    boletasPago: 10,
-    correspondencia: 2,
-    reservasProximas: 5,
-    eventosProximos: 2,
-  });
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Datos ficticios para simular una respuesta de API
+    const mockData = {
+      totalOwners: 15,
+      totalTenants: 25,
+      totalEmployees: 8,
+      totalProperties: 50,
+      totalIncome: 10000,
+      totalExpenses: 7000,
+      totalDebts: 3000,
+    };
+
+    // Simular un retraso para cargar datos
+    setTimeout(() => {
+      setStats(mockData);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-xl font-semibold">Cargando datos del dashboard...</p>
+      </div>
+    );
+  }
+
+  // Datos para los gráficos
+  const barData = {
+    labels: ["Propietarios", "Inquilinos", "Empleados", "Propiedades"],
+    datasets: [
+      {
+        label: "Totales",
+        data: [
+          stats.totalOwners,
+          stats.totalTenants,
+          stats.totalEmployees,
+          stats.totalProperties,
+        ],
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+        ],
+      },
+    ],
+  };
+
+  const pieData = {
+    labels: ["Ingresos", "Egresos", "Deudas"],
+    datasets: [
+      {
+        data: [stats.totalIncome, stats.totalExpenses, stats.totalDebts],
+        backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"],
+      },
+    ],
+  };
 
   return (
-    <div className="flex flex-col items-center w-full bg-gray-100 min-h-screen">
-      {/* Header */}
-      <header className="w-full max-w-screen-xl bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">
-          Buenos días, [Usuario]
-        </h1>
-        <button
-          className="flex items-center text-gray-800 py-2 px-4 rounded hover:bg-blue-500 focus:outline-none"
-          aria-label="Abrir notificaciones"
-        >
-          <FaBell className="text-2xl mr-2" /> Notificaciones
-        </button>
-      </header>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+        Dashboard de Administrador
+      </h1>
 
-      {/* Dashboard Cards */}
-      <section className="w-full max-w-screen-xl mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <DashboardCard
-          icon={<FaShieldAlt />}
-          title="Incidentes de Seguridad"
-          data={`${dashboardData.incidentesSeguridad} Incidente Registrado`}
-          link="/incidentes-seguridad"
-          linkText="Ver incidentes"
-        />
-        <DashboardCard
-          icon={<FaWrench />}
-          title="Solicitudes de Mantenimiento"
-          data={`${dashboardData.solicitudesMantenimiento} Pendientes`}
-          link="/solicitudes-mantenimiento"
-          linkText="Ver todas las solicitudes"
-        />
-        <DashboardCard
-          icon={<FaUsers />}
-          title="Visitas Recientes"
-          data={`${dashboardData.visitasRecientes} Autorizados`}
-          link="/visitas-recientes"
-          linkText="Ver detalles de acceso"
-        />
-        <DashboardCard
-          icon={<FaReceipt />}
-          title="Boletas de Pago Subidas"
-          data={`${dashboardData.boletasPago} Nuevas`}
-          link="/boletas-pago"
-          linkText="Ver todas las boletas"
-        />
-        <DashboardCard
-          icon={<FaEnvelope />}
-          title="Correspondencia Recibida"
-          data={`${dashboardData.correspondencia} Paquetes`}
-          link="/correspondencia-recibida"
-          linkText="Ver toda la correspondencia"
-        />
-        <DashboardCard
-          icon={<FaClipboardCheck />}
-          title="Reservas Próximas"
-          data={`${dashboardData.reservasProximas} Áreas Comunes Reservadas`}
-          link="/reservas-proximas"
-          linkText="Gestionar reservas"
-        />
-        <DashboardCard
-          icon={<FaCalendarAlt />}
-          title="Eventos del Condominio"
-          data={`${dashboardData.eventosProximos} Próximos`}
-          link="/eventos-condominio"
-          linkText="Ver eventos"
-        />
-      </section>
+      {/* Tarjetas de Resumen */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="bg-white shadow rounded-lg p-6 text-center">
+          <h3 className="text-lg font-semibold text-gray-700">Propietarios</h3>
+          <p className="text-3xl font-bold text-blue-500">
+            {stats.totalOwners}
+          </p>
+        </div>
+        <div className="bg-white shadow rounded-lg p-6 text-center">
+          <h3 className="text-lg font-semibold text-gray-700">Inquilinos</h3>
+          <p className="text-3xl font-bold text-green-500">
+            {stats.totalTenants}
+          </p>
+        </div>
+        <div className="bg-white shadow rounded-lg p-6 text-center">
+          <h3 className="text-lg font-semibold text-gray-700">Empleados</h3>
+          <p className="text-3xl font-bold text-yellow-500">
+            {stats.totalEmployees}
+          </p>
+        </div>
+        <div className="bg-white shadow rounded-lg p-6 text-center">
+          <h3 className="text-lg font-semibold text-gray-700">Propiedades</h3>
+          <p className="text-3xl font-bold text-red-500">
+            {stats.totalProperties}
+          </p>
+        </div>
+      </div>
+
+      {/* Gráficos */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Distribución de Usuarios y Propiedades
+          </h3>
+          <Bar data={barData} />
+        </div>
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Estado Financiero
+          </h3>
+          <Pie data={pieData} />
+        </div>
+      </div>
     </div>
   );
 };
-
-// Componente reutilizable para tarjetas del Dashboard
-const DashboardCard = ({ icon, title, data, link, linkText }) => (
-  <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-    <div className="flex items-center gap-4 mb-4">
-      <div className="text-blue-500 text-3xl">{icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-    </div>
-    <p className="text-gray-600 text-lg mb-4">{data}</p>
-    <Link
-      to={link}
-      className="text-blue-500 font-semibold hover:underline focus:outline-none"
-    >
-      {linkText}
-    </Link>
-  </div>
-);
 
 export default Dashboard;

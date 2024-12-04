@@ -174,13 +174,8 @@ const Sidebar = ({ onExpand, onCollapse, collapsed }) => {
           icon: FaTools,
           children: [
             {
-              to: "/mantenimiento/solicitudes",
+              to: "/mantenimiento/solicitudes-servicio",
               label: "Solicitudes de Servicio",
-              icon: FaTools,
-            },
-            {
-              to: "/mantenimiento/historial",
-              label: "Historial de Solicitudes",
               icon: FaTools,
             },
           ],

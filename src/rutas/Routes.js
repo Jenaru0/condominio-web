@@ -5,6 +5,14 @@ import ProtectedLayout from "../diseños/ProtectedLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import LoginPage from "../paginas/Autenticacion/LoginPage";
 import Dashboard from "../paginas/Dashboard/Dashboard";
+import Propietarios from "../paginas/Usuarios/Administrador/Propietarios";
+import Inquilinos from "../paginas/Usuarios/Administrador/Inquilinos";
+import Empleados from "../paginas/Usuarios/Administrador/Empleados";
+import RolesPermisos from "../paginas/Usuarios/Administrador/RolesPermisos";
+import Departamentos from "../paginas/Propiedades/Departamentos";
+import Cocheras from "../paginas/Propiedades/Cocheras";
+import SolicitudesServicio from "../paginas/Mantenimiento/Administrador/SolicitudesServicio";
+import Reservas from "../paginas/AreasComunes/Administrador/Reservas";
 import GestionUsuarios from "../paginas/Usuarios/Administrador/GestionUsuarios";
 import ResidentesInquilinos from "../paginas/Usuarios/Administrador/ResidentesInquilinos";
 import GestionCocheras from "../paginas/Propiedades/GestionCocheras";
@@ -37,6 +45,70 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/usuarios/propietarios"
+          element={
+            <ProtectedRoute>
+              <Propietarios />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/usuarios/inquilinos"
+          element={
+            <ProtectedRoute>
+              <Inquilinos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/usuarios/empleados"
+          element={
+            <ProtectedRoute>
+              <Empleados />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/usuarios/roles-permisos"
+          element={
+            <ProtectedRoute>
+              <RolesPermisos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/propiedades/departamentos"
+          element={
+            <ProtectedRoute>
+              <Departamentos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mantenimiento/solicitudes-servicio"
+          element={
+            <ProtectedRoute>
+              <SolicitudesServicio />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Areas-comunes/reservas"
+          element={
+            <ProtectedRoute>
+              <Reservas />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/propiedades/cocheras"
+          element={
+            <ProtectedRoute>
+              <Cocheras />
             </ProtectedRoute>
           }
         />
