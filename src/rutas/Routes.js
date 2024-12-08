@@ -20,19 +20,18 @@ import VerificacionPagos from "../paginas/Pagos/Administrador/VerificacionPagos"
 import EstadosCuenta from "../paginas/Pagos/Administrador/EstadosCuenta";
 import Facturacion from "../paginas/Pagos/Administrador/Facturacion";
 import GestionDocumentos from "../paginas/Documentos/Administrador/GestionDocumentos";
+import ReportesFinancieros from "../paginas/Reportes/Administrador/ReportesFinancieros";
+import ReportesOperativos from "../paginas/Reportes/Administrador/ReportesOperativos";
+import ControlAccesos from "../paginas/Seguridad/ControlAccesos";
+import IncidentesSeguridad from "../paginas/Seguridad/IncidentesSeguridad";
 import GestionUsuarios from "../paginas/Usuarios/Administrador/GestionUsuarios";
 import ResidentesInquilinos from "../paginas/Usuarios/Administrador/ResidentesInquilinos";
 import GestionCocheras from "../paginas/Propiedades/GestionCocheras";
-import Reportes from "../paginas/Reportes/Administrador/Reportes";
 import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
 import EnviarNotificaciones from "../paginas/Notificaciones/Administrador/EnviarNotificaciones";
-import MonitoreoAccesos from "../paginas/Seguridad/MonitoreoAccesos";
 import AyudaSoporte from "../paginas/AyudaSoporte/AyudaSoporte";
 import Configuracion from "../paginas/Configuracion/Configuracion";
 import Usuario from "../paginas/Usuarios/Administrador/Usuario";
-import ReportePagos from "../paginas/Reportes/Administrador/ReportePagos";
-import ReportesMantenimiento from "../paginas/Reportes/Administrador/ReportesMantenimiento";
-import ReportesCorrespondencia from "../paginas/Reportes/Administrador/ReportesCorrespondencia";
 // Importa otros componentes según sea necesario
 
 const AppRoutes = () => {
@@ -165,6 +164,38 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/reportes/financieros"
+          element={
+            <ReportesFinancieros>
+              <Eventos />
+            </ReportesFinancieros>
+          }
+        />
+        <Route
+          path="/reportes/operativos"
+          element={
+            <ReportesOperativos>
+              <Eventos />
+            </ReportesOperativos>
+          }
+        />
+        <Route
+          path="/seguridad/control-accesos"
+          element={
+            <ProtectedRoute>
+              <ControlAccesos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/seguridad/incidentes-seguridad"
+          element={
+            <ProtectedRoute>
+              <IncidentesSeguridad />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/propiedades/cocheras"
           element={
             <ProtectedRoute>
@@ -189,14 +220,6 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/reportes"
-          element={
-            <ProtectedRoute>
-              <Reportes />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/solicitudes-mantenimiento"
           element={
             <ProtectedRoute>
@@ -209,14 +232,6 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <EnviarNotificaciones />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Monitoreo-accesos"
-          element={
-            <ProtectedRoute>
-              <MonitoreoAccesos />
             </ProtectedRoute>
           }
         />
@@ -241,30 +256,6 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Usuario />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reporte-pagos"
-          element={
-            <ProtectedRoute>
-              <ReportePagos />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reportes-mantenimiento"
-          element={
-            <ProtectedRoute>
-              <ReportesMantenimiento />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reportes-correspondencia"
-          element={
-            <ProtectedRoute>
-              <ReportesCorrespondencia />
             </ProtectedRoute>
           }
         />

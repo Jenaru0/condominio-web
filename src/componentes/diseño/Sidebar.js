@@ -252,18 +252,8 @@ const Sidebar = ({ onExpand, onCollapse, collapsed }) => {
               icon: FaChartBar,
             },
             {
-              to: "/reportes/mantenimiento",
-              label: "Mantenimiento",
-              icon: FaChartBar,
-            },
-            {
-              to: "/reportes/ocupacion",
-              label: "Ocupación",
-              icon: FaChartBar,
-            },
-            {
-              to: "/reportes/eventos-reservas",
-              label: "Eventos y Reservas",
+              to: "/reportes/operativos",
+              label: "Operativos",
               icon: FaChartBar,
             },
           ],
@@ -296,7 +286,7 @@ const Sidebar = ({ onExpand, onCollapse, collapsed }) => {
               icon: FaShieldAlt,
             },
             {
-              to: "/seguridad/incidentes",
+              to: "/seguridad/incidentes-seguridad",
               label: "Incidentes de Seguridad",
               icon: FaShieldAlt,
             },

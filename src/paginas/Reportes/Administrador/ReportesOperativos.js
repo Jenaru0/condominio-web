@@ -13,8 +13,8 @@ import { Bar } from "react-chartjs-2";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// Componente para los filtros
-const FinanceFilters = ({ filters, onFilterChange }) => (
+// Componente de Filtros Operativos
+const OperativosFilters = ({ filters, onFilterChange }) => (
   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
     <input
       type="date"
@@ -28,144 +28,149 @@ const FinanceFilters = ({ filters, onFilterChange }) => (
       onChange={(e) => onFilterChange("fechaFin", e.target.value)}
       className="border rounded-lg px-4 py-2 w-full"
     />
-    <input
-      type="text"
+    <select
       value={filters.categoria}
       onChange={(e) => onFilterChange("categoria", e.target.value)}
-      placeholder="Buscar por categoría..."
       className="border rounded-lg px-4 py-2 w-full"
-    />
-    <input
-      type="text"
-      value={filters.monto}
-      onChange={(e) => onFilterChange("monto", e.target.value)}
-      placeholder="Rango de monto..."
+    >
+      <option value="">Categoría (Todos)</option>
+      <option value="Mantenimiento">Mantenimiento</option>
+      <option value="Ocupación">Ocupación</option>
+      <option value="Eventos">Eventos</option>
+    </select>
+    <select
+      value={filters.estado}
+      onChange={(e) => onFilterChange("estado", e.target.value)}
       className="border rounded-lg px-4 py-2 w-full"
-    />
+    >
+      <option value="">Estado (Todos)</option>
+      <option value="Pendiente">Pendiente</option>
+      <option value="En Proceso">En Proceso</option>
+      <option value="Finalizado">Finalizado</option>
+    </select>
   </div>
 );
 
-const Financieros = () => {
-  const [finanzas, setFinanzas] = useState([]);
-  const [filteredFinanzas, setFilteredFinanzas] = useState([]);
+const Operativos = () => {
+  const [operativos, setOperativos] = useState([]);
+  const [filteredOperativos, setFilteredOperativos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     fechaInicio: "",
     fechaFin: "",
     categoria: "",
-    monto: "",
+    estado: "",
   });
 
   const [summary, setSummary] = useState({
-    totalIngresos: 0,
-    totalEgresos: 0,
-    balance: 0,
+    totalMantenimiento: 0,
+    totalOcupacion: 0,
+    totalEventos: 0,
   });
 
   useEffect(() => {
-    // Simulación de datos de reportes financieros
-    const mockFinanzas = [
+    // Simulación de datos operativos
+    const mockOperativos = [
       {
         _id: "1",
         fecha: "2023-12-01",
         categoria: "Mantenimiento",
-        tipo: "Ingreso",
-        monto: 350.0,
+        estado: "Pendiente",
+        descripcion: "Reparar luminaria en pasillo",
       },
       {
         _id: "2",
-        fecha: "2023-12-05",
-        categoria: "Servicio de Limpieza",
-        tipo: "Egreso",
-        monto: 120.0,
+        fecha: "2023-12-03",
+        categoria: "Ocupación",
+        estado: "Finalizado",
+        descripcion: "Departamento 101 asignado a Juan Pérez",
       },
       {
         _id: "3",
-        fecha: "2023-12-10",
-        categoria: "Renta de Cocheras",
-        tipo: "Ingreso",
-        monto: 500.0,
+        fecha: "2023-12-05",
+        categoria: "Eventos",
+        estado: "En Proceso",
+        descripcion: "Organización de reunión anual",
       },
     ];
 
     setTimeout(() => {
-      setFinanzas(mockFinanzas);
-      setFilteredFinanzas(mockFinanzas);
-      calcularResumen(mockFinanzas);
+      setOperativos(mockOperativos);
+      setFilteredOperativos(mockOperativos);
+      calcularResumen(mockOperativos);
       setLoading(false);
     }, 1000);
   }, []);
 
   useEffect(() => {
-    // Aplicar filtros
-    const filtered = finanzas.filter((finanza) => {
+    // Aplicar filtros dinámicos
+    const filtered = operativos.filter((op) => {
       const matchesFechaInicio =
         !filters.fechaInicio ||
-        new Date(finanza.fecha) >= new Date(filters.fechaInicio);
+        new Date(op.fecha) >= new Date(filters.fechaInicio);
       const matchesFechaFin =
-        !filters.fechaFin ||
-        new Date(finanza.fecha) <= new Date(filters.fechaFin);
+        !filters.fechaFin || new Date(op.fecha) <= new Date(filters.fechaFin);
       const matchesCategoria =
-        !filters.categoria ||
-        finanza.categoria
-          .toLowerCase()
-          .includes(filters.categoria.toLowerCase());
-      const matchesMonto =
-        !filters.monto ||
-        parseFloat(finanza.monto) <= parseFloat(filters.monto);
+        !filters.categoria || op.categoria === filters.categoria;
+      const matchesEstado = !filters.estado || op.estado === filters.estado;
 
       return (
         matchesFechaInicio &&
         matchesFechaFin &&
         matchesCategoria &&
-        matchesMonto
+        matchesEstado
       );
     });
 
-    setFilteredFinanzas(filtered);
+    setFilteredOperativos(filtered);
     calcularResumen(filtered);
-  }, [filters, finanzas]);
+  }, [filters, operativos]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
   };
 
   const calcularResumen = (data) => {
-    const totalIngresos = data
-      .filter((finanza) => finanza.tipo === "Ingreso")
-      .reduce((sum, finanza) => sum + finanza.monto, 0);
-    const totalEgresos = data
-      .filter((finanza) => finanza.tipo === "Egreso")
-      .reduce((sum, finanza) => sum + finanza.monto, 0);
+    const totalMantenimiento = data.filter(
+      (op) => op.categoria === "Mantenimiento"
+    ).length;
+    const totalOcupacion = data.filter(
+      (op) => op.categoria === "Ocupación"
+    ).length;
+    const totalEventos = data.filter((op) => op.categoria === "Eventos").length;
 
     setSummary({
-      totalIngresos,
-      totalEgresos,
-      balance: totalIngresos - totalEgresos,
+      totalMantenimiento,
+      totalOcupacion,
+      totalEventos,
     });
   };
 
   const exportarExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredFinanzas);
+    const worksheet = XLSX.utils.json_to_sheet(filteredOperativos);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Financieros");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Operativos");
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
     saveAs(
       new Blob([excelBuffer], { type: "application/octet-stream" }),
-      "reportes_financieros.xlsx"
+      "reportes_operativos.xlsx"
     );
   };
 
   const datosGrafico = {
-    labels: ["Ingresos", "Egresos"],
+    labels: ["Mantenimiento", "Ocupación", "Eventos"],
     datasets: [
       {
-        label: "Resumen Financiero",
-        data: [summary.totalIngresos, summary.totalEgresos],
-        backgroundColor: ["#4CAF50", "#F44336"],
+        label: "Operaciones Totales",
+        data: [
+          summary.totalMantenimiento,
+          summary.totalOcupacion,
+          summary.totalEventos,
+        ],
+        backgroundColor: ["#4CAF50", "#2196F3", "#FFC107"],
       },
     ],
   };
@@ -173,9 +178,7 @@ const Financieros = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-xl font-semibold">
-          Cargando reportes financieros...
-        </p>
+        <p className="text-xl font-semibold">Cargando reportes operativos...</p>
       </div>
     );
   }
@@ -183,34 +186,37 @@ const Financieros = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Reportes Financieros
+        Reportes Operativos
       </h1>
 
       {/* Filtros */}
-      <FinanceFilters filters={filters} onFilterChange={handleFilterChange} />
+      <OperativosFilters
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
 
       {/* Resumen */}
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Resumen</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-green-100 text-green-800 rounded-lg">
-            <p className="text-lg font-semibold">Total Ingresos</p>
-            <p className="text-2xl">S/ {summary.totalIngresos.toFixed(2)}</p>
-          </div>
-          <div className="p-4 bg-red-100 text-red-800 rounded-lg">
-            <p className="text-lg font-semibold">Total Egresos</p>
-            <p className="text-2xl">S/ {summary.totalEgresos.toFixed(2)}</p>
+            <p className="text-lg font-semibold">Mantenimiento</p>
+            <p className="text-2xl">{summary.totalMantenimiento}</p>
           </div>
           <div className="p-4 bg-blue-100 text-blue-800 rounded-lg">
-            <p className="text-lg font-semibold">Balance</p>
-            <p className="text-2xl">S/ {summary.balance.toFixed(2)}</p>
+            <p className="text-lg font-semibold">Ocupación</p>
+            <p className="text-2xl">{summary.totalOcupacion}</p>
+          </div>
+          <div className="p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+            <p className="text-lg font-semibold">Eventos</p>
+            <p className="text-2xl">{summary.totalEventos}</p>
           </div>
         </div>
       </div>
 
       {/* Gráfico */}
       <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Gráfico Financiero</h2>
+        <h2 className="text-xl font-semibold mb-4">Gráfico Operativo</h2>
         <Bar data={datosGrafico} />
       </div>
 
@@ -229,18 +235,18 @@ const Financieros = () => {
             <tr className="bg-gray-200">
               <th className="px-4 py-2 text-left">Fecha</th>
               <th className="px-4 py-2 text-left">Categoría</th>
-              <th className="px-4 py-2 text-left">Tipo</th>
-              <th className="px-4 py-2 text-left">Monto</th>
+              <th className="px-4 py-2 text-left">Estado</th>
+              <th className="px-4 py-2 text-left">Descripción</th>
             </tr>
           </thead>
           <tbody>
-            {filteredFinanzas.length > 0 ? (
-              filteredFinanzas.map((finanza) => (
-                <tr key={finanza._id} className="border-t">
-                  <td className="px-4 py-2">{finanza.fecha}</td>
-                  <td className="px-4 py-2">{finanza.categoria}</td>
-                  <td className="px-4 py-2">{finanza.tipo}</td>
-                  <td className="px-4 py-2">S/ {finanza.monto.toFixed(2)}</td>
+            {filteredOperativos.length > 0 ? (
+              filteredOperativos.map((op) => (
+                <tr key={op._id} className="border-t">
+                  <td className="px-4 py-2">{op.fecha}</td>
+                  <td className="px-4 py-2">{op.categoria}</td>
+                  <td className="px-4 py-2">{op.estado}</td>
+                  <td className="px-4 py-2">{op.descripcion}</td>
                 </tr>
               ))
             ) : (
@@ -257,4 +263,4 @@ const Financieros = () => {
   );
 };
 
-export default Financieros;
+export default Operativos;
