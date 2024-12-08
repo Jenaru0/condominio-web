@@ -213,7 +213,7 @@ const Sidebar = ({ onExpand, onCollapse, collapsed }) => {
           icon: FaMoneyBill,
           children: [
             {
-              to: "/pagos/verificacion",
+              to: "/pagos/verificacion-pagos",
               label: "Verificación de Pagos",
               icon: FaMoneyBill,
             },
@@ -235,13 +235,8 @@ const Sidebar = ({ onExpand, onCollapse, collapsed }) => {
           icon: FaFileAlt,
           children: [
             {
-              to: "/documentos/contratos",
-              label: "Contratos y Documentos Legales",
-              icon: FaFileAlt,
-            },
-            {
-              to: "/documentos/reglamentos",
-              label: "Reglamentos",
+              to: "/documentos/gestion-documentos",
+              label: "Gestión de documentos",
               icon: FaFileAlt,
             },
           ],

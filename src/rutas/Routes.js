@@ -13,16 +13,20 @@ import Departamentos from "../paginas/Propiedades/Departamentos";
 import Cocheras from "../paginas/Propiedades/Cocheras";
 import SolicitudesServicio from "../paginas/Mantenimiento/Administrador/SolicitudesServicio";
 import Reservas from "../paginas/AreasComunes/Administrador/Reservas";
+import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/ConfiguracionAreas";
+import Correspondencia from "../paginas/Correspondencia/Administrador/Correspondencia";
+import Eventos from "../paginas/Eventos/Administrador/Eventos";
+import VerificacionPagos from "../paginas/Pagos/Administrador/VerificacionPagos";
+import EstadosCuenta from "../paginas/Pagos/Administrador/EstadosCuenta";
+import Facturacion from "../paginas/Pagos/Administrador/Facturacion";
+import GestionDocumentos from "../paginas/Documentos/Administrador/GestionDocumentos";
 import GestionUsuarios from "../paginas/Usuarios/Administrador/GestionUsuarios";
 import ResidentesInquilinos from "../paginas/Usuarios/Administrador/ResidentesInquilinos";
 import GestionCocheras from "../paginas/Propiedades/GestionCocheras";
 import Reportes from "../paginas/Reportes/Administrador/Reportes";
 import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
 import EnviarNotificaciones from "../paginas/Notificaciones/Administrador/EnviarNotificaciones";
-import GestionCorrespondencia from "../paginas/Correspondencia/Administrador/GestionCorrespondencia";
-import GestionEventos from "../paginas/Eventos/Administrador/GestionEventos";
 import MonitoreoAccesos from "../paginas/Seguridad/MonitoreoAccesos";
-import Contratos from "../paginas/Documentos/Administrador/Contratos";
 import AyudaSoporte from "../paginas/AyudaSoporte/AyudaSoporte";
 import Configuracion from "../paginas/Configuracion/Configuracion";
 import Usuario from "../paginas/Usuarios/Administrador/Usuario";
@@ -105,6 +109,62 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/Areas-comunes/configuracion"
+          element={
+            <ProtectedRoute>
+              <ConfiguracionAreas />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/correspondencia"
+          element={
+            <ProtectedRoute>
+              <Correspondencia />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/eventos"
+          element={
+            <ProtectedRoute>
+              <Eventos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pagos/verificacion-pagos"
+          element={
+            <VerificacionPagos>
+              <Eventos />
+            </VerificacionPagos>
+          }
+        />
+        <Route
+          path="/pagos/estados-de-cuenta"
+          element={
+            <EstadosCuenta>
+              <Eventos />
+            </EstadosCuenta>
+          }
+        />
+        <Route
+          path="/pagos/facturacion"
+          element={
+            <Facturacion>
+              <Eventos />
+            </Facturacion>
+          }
+        />
+        <Route
+          path="/documentos/gestion-documentos"
+          element={
+            <GestionDocumentos>
+              <Eventos />
+            </GestionDocumentos>
+          }
+        />
+        <Route
           path="/propiedades/cocheras"
           element={
             <ProtectedRoute>
@@ -153,34 +213,10 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/gestion-correspondencia"
-          element={
-            <ProtectedRoute>
-              <GestionCorrespondencia />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Gestion-eventos"
-          element={
-            <ProtectedRoute>
-              <GestionEventos />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/Monitoreo-accesos"
           element={
             <ProtectedRoute>
               <MonitoreoAccesos />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Contratos"
-          element={
-            <ProtectedRoute>
-              <Contratos />
             </ProtectedRoute>
           }
         />
