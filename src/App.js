@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./paginas/Autenticacion/LoginPage"; // Ajusta la ruta a tu estructura
 import AppRoutes from "./rutas/Routes"; // Ajusta la ruta a tu estructura
 import ProtectedRoute from "./rutas/ProtectedRoute"; // Ajusta la ruta a tu estructura
-import "./assets/estilos/App.css"; // Importación correcta de estilos
+import "./componentes/estilos/App.css"; // Importación correcta de estilos
 
 // Componente para el contenido de la aplicación
 const AppContent = () => {

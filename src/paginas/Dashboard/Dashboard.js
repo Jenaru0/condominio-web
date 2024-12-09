@@ -1,3 +1,4 @@
+// Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
@@ -12,12 +13,12 @@ import { Bar, Pie } from "react-chartjs-2";
 
 // Registrar componentes de Chart.js
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    ArcElement,
+    Tooltip,
+    Legend
 );
 
 const Dashboard = () => {
@@ -45,9 +46,9 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-xl font-semibold">Cargando datos del dashboard...</p>
-      </div>
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-xl font-semibold">Cargando datos del dashboard...</p>
+        </div>
     );
   }
 
@@ -84,55 +85,55 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Dashboard de Administrador
-      </h1>
+      <div className="p-6 bg-gray-100 min-h-screen overflow-y-auto scrollbar-thin scrollbar-track-scrollbarTrack scrollbar-thumb-scrollbarThumb hover:scrollbar-thumb-scrollbarThumbHover active:scrollbar-thumb-scrollbarThumbActive scrollbar-thumb-rounded-scrollbar">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          Dashboard de Administrador
+        </h1>
 
-      {/* Tarjetas de Resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h3 className="text-lg font-semibold text-gray-700">Propietarios</h3>
-          <p className="text-3xl font-bold text-blue-500">
-            {stats.totalOwners}
-          </p>
+        {/* Tarjetas de Resumen */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div className="bg-white shadow rounded-lg p-6 text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Propietarios</h3>
+            <p className="text-3xl font-bold text-blue-500">
+              {stats.totalOwners}
+            </p>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6 text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Inquilinos</h3>
+            <p className="text-3xl font-bold text-green-500">
+              {stats.totalTenants}
+            </p>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6 text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Empleados</h3>
+            <p className="text-3xl font-bold text-yellow-500">
+              {stats.totalEmployees}
+            </p>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6 text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Propiedades</h3>
+            <p className="text-3xl font-bold text-red-500">
+              {stats.totalProperties}
+            </p>
+          </div>
         </div>
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h3 className="text-lg font-semibold text-gray-700">Inquilinos</h3>
-          <p className="text-3xl font-bold text-green-500">
-            {stats.totalTenants}
-          </p>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h3 className="text-lg font-semibold text-gray-700">Empleados</h3>
-          <p className="text-3xl font-bold text-yellow-500">
-            {stats.totalEmployees}
-          </p>
-        </div>
-        <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h3 className="text-lg font-semibold text-gray-700">Propiedades</h3>
-          <p className="text-3xl font-bold text-red-500">
-            {stats.totalProperties}
-          </p>
+
+        {/* Gráficos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Distribución de Usuarios y Propiedades
+            </h3>
+            <Bar data={barData} />
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              Estado Financiero
+            </h3>
+            <Pie data={pieData} />
+          </div>
         </div>
       </div>
-
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">
-            Distribución de Usuarios y Propiedades
-          </h3>
-          <Bar data={barData} />
-        </div>
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">
-            Estado Financiero
-          </h3>
-          <Pie data={pieData} />
-        </div>
-      </div>
-    </div>
   );
 };
 
