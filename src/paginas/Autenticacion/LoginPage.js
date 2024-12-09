@@ -15,16 +15,11 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); // Reset error state
+    setError(null);
     try {
-      console.log("Datos enviados:", { email, password }); // Depuración
       await login(email, password);
       navigate("/dashboard");
     } catch (error) {
-      console.error(
-        "Error al iniciar sesión:",
-        error.response || error.message
-      );
       setError("Credenciales incorrectas. Intenta nuevamente.");
     } finally {
       setLoading(false);
@@ -32,125 +27,156 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
-      {/* Sección Izquierda */}
-      <div className="md:w-1/2 flex flex-col items-center justify-center bg-gray-800 text-white p-8">
-        <img
-          src="https://www.grupo-sanjose.com/data/foto/gran_1437497471_218267892.jpg"
-          alt="Condominio Parques de la Huaca"
-          className="w-2/3 rounded-lg shadow-lg"
-        />
-        <h2 className="text-3xl font-bold mt-4">
-          Condominio Parques de la Huaca
-        </h2>
-        <p className="text-gray-300 mt-2">
-          Gestiona tu condominio de manera eficiente y transparente.
-        </p>
-      </div>
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 relative">
+        {/* Decoración de Fondo */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-blue-400 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-blue-600 rounded-full opacity-20 blur-3xl"></div>
 
-      {/* Sección Derecha */}
-      <div className="md:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
-          <h3 className="text-2xl font-bold mb-4">Iniciar Sesión</h3>
-          <p className="text-gray-600 mb-6">
-            Accede para gestionar tu condominio
-          </p>
+        <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+          {/* Sección Izquierda */}
+          <div className="md:w-1/2 bg-gradient-to-b from-blue-500 to-blue-600 text-white p-10 flex flex-col justify-center items-center relative rounded-l-3xl">
+            <img
+                src="https://www.grupo-sanjose.com/data/foto/gran_1437497471_218267892.jpg"
+                alt="Condominio Parques de la Huaca"
+                className="w-3/4 rounded-xl shadow-xl"
+            />
+            <h2 className="text-4xl font-bold mt-6 text-center">
+              Condominio Parques de la Huaca
+            </h2>
+            <p className="text-gray-200 mt-4 text-center text-lg leading-relaxed">
+              Gestiona tu condominio de manera eficiente, segura y transparente.
+            </p>
 
-          {/* Mensaje de Error */}
-          {error && (
-            <div className="mb-4 p-2 bg-red-100 text-red-600 rounded">
-              {error}
-            </div>
-          )}
+            {/* Elementos decorativos */}
+            <div className="absolute top-0 left-0 w-40 h-40 bg-blue-700 opacity-20 blur-2xl rounded-full"></div>
+            <div className="absolute bottom-0 right-0 w-52 h-52 bg-blue-800 opacity-30 blur-2xl rounded-full"></div>
+          </div>
 
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+          {/* Sección Derecha */}
+          <div className="md:w-1/2 p-10 flex items-center justify-center rounded-r-3xl">
+            <div className="w-full max-w-md">
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">
+                Iniciar Sesión
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Accede para gestionar tu condominio
+              </p>
 
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
-
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="remember-me"
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-800"
-                >
-                  Recuérdame
-                </label>
-              </div>
-              <Link
-                to="/olvidaste-contrasena"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full px-4 py-2 text-white font-medium rounded-lg shadow ${
-                loading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
-              } transition`}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <span className="loader animate-spin mr-2"></span>
-                  Cargando...
-                </span>
-              ) : (
-                "Iniciar Sesión"
+              {error && (
+                  <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-400 rounded-lg">
+                    {error}
+                  </div>
               )}
-            </button>
-          </form>
+
+              <form onSubmit={handleLogin} className="space-y-6">
+                {/* Input: Correo Electrónico */}
+                <div>
+                  <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                  >
+                    Correo Electrónico
+                  </label>
+                  <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      placeholder="ejemplo@correo.com"
+                      className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                  />
+                </div>
+
+                {/* Input: Contraseña */}
+                <div>
+                  <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                  >
+                    Contraseña
+                  </label>
+                  <div className="relative">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="••••••••"
+                        className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    />
+                    <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-blue-500"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label="Mostrar u ocultar contraseña"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Opciones: Recuérdame y Olvidé mi Contraseña */}
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center text-sm text-gray-600">
+                    <input
+                        type="checkbox"
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="ml-2">Recuérdame</span>
+                  </label>
+                  <Link
+                      to="/olvidaste-contrasena"
+                      className="text-sm text-blue-500 hover:text-blue-700"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
+
+                {/* Botón: Iniciar Sesión */}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full py-3 text-lg font-semibold text-white rounded-xl shadow-xl ${
+                        loading
+                            ? "bg-blue-400 cursor-not-allowed"
+                            : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                    } transition duration-300`}
+                >
+                  {loading ? (
+                      <span className="flex items-center justify-center">
+                    <svg
+                        className="w-6 h-6 mr-2 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                      <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                      ></circle>
+                      <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                    Cargando...
+                  </span>
+                  ) : (
+                      "Iniciar Sesión"
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

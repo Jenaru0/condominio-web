@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client"; // Importa createRoot en lugar de render
-import "./assets/estilos/index.css";
+import "./componentes/estilos/index.css";
 import App from "./App";
-// src/index.js
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AuthProvider } from "./contextos/AuthContext";

@@ -1,3 +1,58 @@
+/* src/componentes/estilos/index.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    /* Estilos personalizados para el scrollbar */
+    .custom-scrollbar {
+        /* Para navegadores basados en WebKit (Chrome, Safari) */
+        scrollbar-width: thin; /* Para Firefox */
+    }
+
+    /* WebKit Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* Ocultar los botones del scrollbar en WebKit */
+    .custom-scrollbar::-webkit-scrollbar-button {
+        width: 0;
+        height: 0;
+        display: none; /* Intentar ocultar los botones */
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent; /* Sin fondo */
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #b0bec5; /* Gris claro */
+        border-radius: 9999px; /* Bordes completamente redondeados */
+        border: 2px solid transparent; /* Espacio para bordes redondeados */
+        background-clip: padding-box; /* Asegura que el borde no afecte el color */
+    }
+
+    .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+        background-color: #90a4ae; /* Gris más oscuro en hover */
+    }
+
+    .custom-scrollbar:active::-webkit-scrollbar-thumb {
+        background-color: #78909c; /* Gris aún más oscuro al hacer click */
+    }
+
+    /* Firefox Scrollbar */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #b0bec5 transparent;
+    }
+
+    .custom-scrollbar:hover {
+        scrollbar-color: #90a4ae transparent;
+    }
+
+    .custom-scrollbar:active {
+        scrollbar-color: #78909c transparent;
+    }
+}
