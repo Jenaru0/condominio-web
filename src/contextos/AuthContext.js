@@ -34,27 +34,15 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setIsLoading(true);
-      setError(null);
-
-      const data = await loginService(email, password);
-      console.log("Data received from API:", data); // Verifica que el token y el usuario estén presentes
-
-      // Verifica si los datos existen antes de intentar usarlos
-      if (!data || !data.token || !data.user) {
-        throw new Error(
-          "La respuesta de la API no contiene los datos esperados."
-        );
-      }
-
-      const { token, user } = data;
-
+      setError(null); // Limpiar errores previos
+      const { token, user } = await loginService(email, password);
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
     } catch (error) {
       console.error("Error en el inicio de sesión:", error);
       setError(error.response?.data?.message || "Error en el inicio de sesión");
-      throw error;
+      throw error; // Para que el componente que llama pueda manejarlo
     } finally {
       setIsLoading(false);
     }
