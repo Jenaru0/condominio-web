@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
+import {
+  obtenerHabitaciones,
+  crearHabitacion,
+  actualizarHabitacion,
+  eliminarHabitacion,
+} from "../../api/habitacionService";
+import { obtenerUsuarios } from "../../api/usuarioService";
+import { obtenerEdificios } from "../../api/edificioService";
 
 const Departamentos = () => {
-  const [departments, setDepartments] = useState([]);
-  const [buildings, setBuildings] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]); // Habitaciones
+  const [buildings, setBuildings] = useState([]); // Edificios
+  const [users, setUsers] = useState([]); // Usuarios
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
-    id: null,
+    _id: null,
     numero: "",
     piso: "",
     edificio_id: "",
@@ -17,65 +25,89 @@ const Departamentos = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // Datos ficticios para departamentos, edificios y usuarios
-    const mockBuildings = [
-      { id: "1", nombre: "Edificio A" },
-      { id: "2", nombre: "Edificio B" },
-    ];
-
-    const mockUsers = [
-      { id: "101", name: "Juan Pérez", tipo_residente: "propietario" },
-      { id: "102", name: "Carlos Gómez", tipo_residente: "inquilino" },
-      { id: "103", name: "María López", tipo_residente: "propietario" },
-      { id: "104", name: "Ana López", tipo_residente: "inquilino" },
-    ];
-
-    const mockDepartments = [
-      {
-        id: 1,
-        numero: "101",
-        piso: 1,
-        edificio_id: "1",
-        propietario_asociado: "101",
-        inquilino_asociado: "102",
-      },
-      {
-        id: 2,
-        numero: "202",
-        piso: 2,
-        edificio_id: "2",
-        propietario_asociado: "103",
-        inquilino_asociado: "104",
-      },
-    ];
-
-    // Simular carga de datos
-    setTimeout(() => {
-      setBuildings(mockBuildings);
-      setUsers(mockUsers);
-      setDepartments(mockDepartments);
-      setLoading(false);
-    }, 1000);
+    cargarDatos();
   }, []);
+
+  const cargarDatos = async () => {
+    setLoading(true);
+    try {
+      const [habitacionesResponse, edificiosResponse, usuariosResponse] =
+        await Promise.allSettled([
+          obtenerHabitaciones(),
+          obtenerEdificios(),
+          obtenerUsuarios(),
+        ]);
+
+      if (habitacionesResponse.status === "fulfilled") {
+        setDepartments(habitacionesResponse.value?.data || []);
+      } else {
+        console.error(
+          "Error al cargar habitaciones:",
+          habitacionesResponse.reason
+        );
+      }
+
+      if (edificiosResponse.status === "fulfilled") {
+        setBuildings(edificiosResponse.value?.data || []);
+      } else {
+        console.error("Error al cargar edificios:", edificiosResponse.reason);
+      }
+
+      if (usuariosResponse.status === "fulfilled") {
+        setUsers(usuariosResponse.value?.data || []);
+      } else {
+        console.error("Error al cargar usuarios:", usuariosResponse.reason);
+      }
+    } catch (error) {
+      console.error("Error inesperado al cargar datos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isEditing) {
-      // Actualizar departamento existente
-      const updatedDepartments = departments.map((dep) =>
-        dep.id === form.id ? form : dep
-      );
-      setDepartments(updatedDepartments);
-      alert("Departamento actualizado con éxito");
-    } else {
-      // Crear nuevo departamento
-      const newDepartment = { ...form, id: departments.length + 1 };
-      setDepartments([...departments, newDepartment]);
-      alert("Departamento creado con éxito");
-    }
+    const habitacionData = {
+      numero: form.numero,
+      piso: form.piso,
+      edificio_id: form.edificio_id || null,
+      propietario_asociado: form.propietario_asociado || null,
+      inquilino_asociado: form.inquilino_asociado || null,
+    };
 
-    resetForm();
+    try {
+      // Validación de duplicados
+      const existeDuplicado = departments.some(
+        (dep) =>
+          dep.numero === form.numero &&
+          dep.piso === form.piso &&
+          dep.edificio_id === form.edificio_id &&
+          dep._id !== form._id // Excluir la habitación actual en edición
+      );
+
+      if (existeDuplicado) {
+        alert("Ya existe una habitación con estos datos.");
+        return;
+      }
+
+      if (isEditing) {
+        await actualizarHabitacion(form._id, habitacionData);
+        alert("Departamento actualizado con éxito");
+      } else {
+        await crearHabitacion(habitacionData);
+        alert("Departamento creado con éxito");
+      }
+
+      resetForm();
+      cargarDatos();
+    } catch (error) {
+      console.error("Error al guardar el departamento:", error);
+      alert(
+        error.response?.data?.message ||
+          "Ocurrió un error al guardar el departamento."
+      );
+    }
   };
 
   const handleEdit = (department) => {
@@ -83,18 +115,24 @@ const Departamentos = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (
       window.confirm("¿Estás seguro de que deseas eliminar este departamento?")
     ) {
-      setDepartments(departments.filter((dep) => dep.id !== id));
-      alert("Departamento eliminado con éxito");
+      try {
+        await eliminarHabitacion(id);
+        alert("Departamento eliminado con éxito");
+        cargarDatos();
+      } catch (error) {
+        console.error("Error al eliminar el departamento:", error);
+        alert("Ocurrió un error al eliminar el departamento.");
+      }
     }
   };
 
   const resetForm = () => {
     setForm({
-      id: null,
+      _id: null,
       numero: "",
       piso: "",
       edificio_id: "",
@@ -114,21 +152,10 @@ const Departamentos = () => {
     );
   }
 
-  // Filtrar departamentos por búsqueda
-  const filteredDepartments = departments.filter(
-    (dep) =>
-      dep.numero.toLowerCase().includes(search.toLowerCase()) ||
-      buildings
-        .find((b) => b.id === dep.edificio_id)
-        ?.nombre.toLowerCase()
-        .includes(search.toLowerCase())
-  );
-
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Departamentos</h1>
 
-      {/* Buscador */}
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"
@@ -139,7 +166,6 @@ const Departamentos = () => {
         />
       </div>
 
-      {/* Formulario de Creación/Edición */}
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">
           {isEditing ? "Editar Departamento" : "Crear Nuevo Departamento"}
@@ -172,7 +198,7 @@ const Departamentos = () => {
           >
             <option value="">Seleccionar Edificio</option>
             {buildings.map((building) => (
-              <option key={building.id} value={building.id}>
+              <option key={building._id} value={building._id}>
                 {building.nombre}
               </option>
             ))}
@@ -188,7 +214,7 @@ const Departamentos = () => {
             {users
               .filter((user) => user.tipo_residente === "propietario")
               .map((user) => (
-                <option key={user.id} value={user.id}>
+                <option key={user._id} value={user._id}>
                   {user.name}
                 </option>
               ))}
@@ -204,21 +230,30 @@ const Departamentos = () => {
             {users
               .filter((user) => user.tipo_residente === "inquilino")
               .map((user) => (
-                <option key={user.id} value={user.id}>
+                <option key={user._id} value={user._id}>
                   {user.name}
                 </option>
               ))}
           </select>
+
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-lg"
           >
             {isEditing ? "Guardar Cambios" : "Crear Departamento"}
           </button>
+          {isEditing && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+            >
+              Cancelar
+            </button>
+          )}
         </form>
       </div>
 
-      {/* Tabla de Departamentos */}
       <div className="bg-white shadow rounded-lg p-6">
         <table className="table-auto w-full">
           <thead>
@@ -232,21 +267,18 @@ const Departamentos = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredDepartments.map((department) => (
-              <tr key={department.id} className="border-t">
+            {departments.map((department) => (
+              <tr key={department._id} className="border-t">
                 <td className="px-4 py-2">{department.numero}</td>
                 <td className="px-4 py-2">{department.piso}</td>
                 <td className="px-4 py-2">
-                  {buildings.find((b) => b.id === department.edificio_id)
-                    ?.nombre || "N/A"}
+                  {department.edificio_id?.nombre || "N/A"}
                 </td>
                 <td className="px-4 py-2">
-                  {users.find((u) => u.id === department.propietario_asociado)
-                    ?.name || "N/A"}
+                  {department.propietario_asociado?.name || "N/A"}
                 </td>
                 <td className="px-4 py-2">
-                  {users.find((u) => u.id === department.inquilino_asociado)
-                    ?.name || "N/A"}
+                  {department.inquilino_asociado?.name || "N/A"}
                 </td>
                 <td className="px-4 py-2 flex gap-2">
                   <button
@@ -256,7 +288,7 @@ const Departamentos = () => {
                     Editar
                   </button>
                   <button
-                    onClick={() => handleDelete(department.id)}
+                    onClick={() => handleDelete(department._id)}
                     className="bg-red-500 text-white px-2 py-1 rounded-lg"
                   >
                     Eliminar

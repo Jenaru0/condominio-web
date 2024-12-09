@@ -24,7 +24,6 @@ import ReportesFinancieros from "../paginas/Reportes/Administrador/ReportesFinan
 import ReportesOperativos from "../paginas/Reportes/Administrador/ReportesOperativos";
 import ControlAccesos from "../paginas/Seguridad/ControlAccesos";
 import IncidentesSeguridad from "../paginas/Seguridad/IncidentesSeguridad";
-import GestionUsuarios from "../paginas/Usuarios/Administrador/GestionUsuarios";
 import ResidentesInquilinos from "../paginas/Usuarios/Administrador/ResidentesInquilinos";
 import GestionCocheras from "../paginas/Propiedades/GestionCocheras";
 import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
@@ -256,14 +255,6 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Usuario />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/gestion-usuarios"
-          element={
-            <ProtectedRoute>
-              <GestionUsuarios />
             </ProtectedRoute>
           }
         />
