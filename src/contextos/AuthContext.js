@@ -17,43 +17,44 @@ export const AuthProvider = ({ children }) => {
       const fetchUser = async () => {
         try {
           const response = await axios.get("http://localhost:5001/api/auth/me");
-          setUser(response.data.user); // Obtener datos del usuario desde la respuesta
+          setUser(response.data.user); // Usuario autenticado
         } catch (error) {
           console.error("Error al restaurar la sesión:", error);
-          logout(); // Si falla, cerrar sesión
+          logout(); // Cierra sesión si el token no es válido
         } finally {
           setIsLoading(false); // Termina el estado de carga
         }
       };
       fetchUser();
     } else {
-      setIsLoading(false); // No hay token, termina el estado de carga
+      setIsLoading(false); // Termina el estado de carga si no hay token
     }
   }, []);
 
   const login = async (email, password) => {
     try {
       setIsLoading(true);
-      setError(null); // Limpiar errores previos
+      setError(null);
 
-      // Verificar si las credenciales coinciden con las que deben ser aceptadas
-      if (email === "prueba@ejemplo.com" && password === "123123") {
-        // Generar un token simulado (esto debe ser hecho en el backend)
-        const simulatedToken = "simulated_token"; // Reemplaza esto con un token real de tu backend
-        const user = { email }; // Aquí puedes estructurar los datos del usuario como desees
+      const data = await loginService(email, password);
+      console.log("Data received from API:", data); // Verifica que el token y el usuario estén presentes
 
-        // Simular una respuesta exitosa
-        localStorage.setItem("token", simulatedToken);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${simulatedToken}`;
-        setUser(user);
-      } else {
-        // Si las credenciales no coinciden, lanzamos un error
-        throw new Error("Credenciales incorrectas");
+      // Verifica si los datos existen antes de intentar usarlos
+      if (!data || !data.token || !data.user) {
+        throw new Error(
+          "La respuesta de la API no contiene los datos esperados."
+        );
       }
+
+      const { token, user } = data;
+
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setUser(user);
     } catch (error) {
       console.error("Error en el inicio de sesión:", error);
-      setError(error.message || "Error en el inicio de sesión");
-      throw error; // Para que el componente que llama pueda manejarlo
+      setError(error.response?.data?.message || "Error en el inicio de sesión");
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   const refreshToken = async () => {
     try {
       const response = await axios.post(
-          "http://localhost:5001/api/auth/refresh"
+        "http://localhost:5001/api/auth/refresh"
       );
       const { token } = response.data;
       localStorage.setItem("token", token);
@@ -82,25 +83,25 @@ export const AuthProvider = ({ children }) => {
 
   // Interceptor para manejar errores 401 y renovar tokens automáticamente
   axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401) {
-          try {
-            await refreshToken();
-            return axios(error.config); // Reintentar solicitud original
-          } catch (refreshError) {
-            console.error("No se pudo refrescar el token:", refreshError);
-            throw refreshError;
-          }
+    (response) => response,
+    async (error) => {
+      if (error.response?.status === 401) {
+        try {
+          await refreshToken();
+          return axios(error.config); // Reintentar solicitud original
+        } catch (refreshError) {
+          console.error("No se pudo refrescar el token:", refreshError);
+          throw refreshError;
         }
-        throw error;
       }
+      throw error;
+    }
   );
 
   return (
-      <AuthContext.Provider value={{ user, login, logout, isLoading, error }}>
-        {children}
-      </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, error }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

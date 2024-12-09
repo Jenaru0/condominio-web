@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   obtenerHabitaciones,
   crearHabitacion,
@@ -9,9 +9,9 @@ import { obtenerUsuarios } from "../../api/usuarioService";
 import { obtenerEdificios } from "../../api/edificioService";
 
 const Departamentos = () => {
-  const [departments, setDepartments] = useState([]); // Habitaciones
-  const [buildings, setBuildings] = useState([]); // Edificios
-  const [users, setUsers] = useState([]); // Usuarios
+  const [departments, setDepartments] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     _id: null,
@@ -23,10 +23,28 @@ const Departamentos = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [search, setSearch] = useState("");
+  const [filteredDepartments, setFilteredDepartments] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const departmentsPerPage = 10;
 
   useEffect(() => {
     cargarDatos();
   }, []);
+
+  const filtrarDepartamentos = useCallback(() => {
+    const lowerSearch = search.toLowerCase();
+    const filtered = departments.filter(
+      (dep) =>
+        dep.numero.toString().toLowerCase().includes(lowerSearch) ||
+        dep.edificio_id?.nombre.toLowerCase().includes(lowerSearch) ||
+        dep.piso.toLowerCase().includes(lowerSearch)
+    );
+    setFilteredDepartments(filtered);
+  }, [search, departments]);
+
+  useEffect(() => {
+    filtrarDepartamentos();
+  }, [filtrarDepartamentos]);
 
   const cargarDatos = async () => {
     setLoading(true);
@@ -40,23 +58,14 @@ const Departamentos = () => {
 
       if (habitacionesResponse.status === "fulfilled") {
         setDepartments(habitacionesResponse.value?.data || []);
-      } else {
-        console.error(
-          "Error al cargar habitaciones:",
-          habitacionesResponse.reason
-        );
       }
 
       if (edificiosResponse.status === "fulfilled") {
         setBuildings(edificiosResponse.value?.data || []);
-      } else {
-        console.error("Error al cargar edificios:", edificiosResponse.reason);
       }
 
       if (usuariosResponse.status === "fulfilled") {
         setUsers(usuariosResponse.value?.data || []);
-      } else {
-        console.error("Error al cargar usuarios:", usuariosResponse.reason);
       }
     } catch (error) {
       console.error("Error inesperado al cargar datos:", error);
@@ -71,47 +80,49 @@ const Departamentos = () => {
     const habitacionData = {
       numero: form.numero,
       piso: form.piso,
-      edificio_id: form.edificio_id || null,
-      propietario_asociado: form.propietario_asociado || null,
-      inquilino_asociado: form.inquilino_asociado || null,
+      edificio_id: form.edificio_id || "",
+      propietario_asociado: form.propietario_asociado || "",
+      inquilino_asociado: form.inquilino_asociado || "",
     };
 
+    const existeDuplicado = departments.some(
+      (dep) =>
+        dep.numero === form.numero &&
+        dep.piso === form.piso &&
+        dep.edificio_id === form.edificio_id &&
+        dep._id !== form._id
+    );
+
+    if (existeDuplicado) {
+      alert("Ya existe un departamento con estos datos.");
+      return;
+    }
+
     try {
-      // Validación de duplicados
-      const existeDuplicado = departments.some(
-        (dep) =>
-          dep.numero === form.numero &&
-          dep.piso === form.piso &&
-          dep.edificio_id === form.edificio_id &&
-          dep._id !== form._id // Excluir la habitación actual en edición
-      );
-
-      if (existeDuplicado) {
-        alert("Ya existe una habitación con estos datos.");
-        return;
-      }
-
       if (isEditing) {
         await actualizarHabitacion(form._id, habitacionData);
-        alert("Departamento actualizado con éxito");
+        alert("Departamento actualizado correctamente.");
       } else {
         await crearHabitacion(habitacionData);
-        alert("Departamento creado con éxito");
+        alert("Departamento creado correctamente.");
       }
-
       resetForm();
       cargarDatos();
     } catch (error) {
       console.error("Error al guardar el departamento:", error);
-      alert(
-        error.response?.data?.message ||
-          "Ocurrió un error al guardar el departamento."
-      );
+      alert("Ocurrió un error al guardar el departamento.");
     }
   };
 
   const handleEdit = (department) => {
-    setForm(department);
+    setForm({
+      _id: department._id,
+      numero: department.numero,
+      piso: department.piso,
+      edificio_id: department.edificio_id || "",
+      propietario_asociado: department.propietario_asociado || "",
+      inquilino_asociado: department.inquilino_asociado || "",
+    });
     setIsEditing(true);
   };
 
@@ -121,7 +132,7 @@ const Departamentos = () => {
     ) {
       try {
         await eliminarHabitacion(id);
-        alert("Departamento eliminado con éxito");
+        alert("Departamento eliminado correctamente.");
         cargarDatos();
       } catch (error) {
         console.error("Error al eliminar el departamento:", error);
@@ -142,21 +153,28 @@ const Departamentos = () => {
     setIsEditing(false);
   };
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const currentDepartments = filteredDepartments.slice(
+    (currentPage - 1) * departmentsPerPage,
+    currentPage * departmentsPerPage
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-xl font-semibold">
-          Cargando lista de departamentos...
-        </p>
+        <p className="text-xl font-semibold">Cargando...</p>
       </div>
     );
   }
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Departamentos</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+        Gestión de Departamentos
+      </h1>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <input
           type="text"
           value={search}
@@ -267,7 +285,7 @@ const Departamentos = () => {
             </tr>
           </thead>
           <tbody>
-            {departments.map((department) => (
+            {currentDepartments.map((department) => (
               <tr key={department._id} className="border-t">
                 <td className="px-4 py-2">{department.numero}</td>
                 <td className="px-4 py-2">{department.piso}</td>
@@ -298,6 +316,26 @@ const Departamentos = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center mt-4">
+          {Array.from(
+            {
+              length: Math.ceil(
+                filteredDepartments.length / departmentsPerPage
+              ),
+            },
+            (_, i) => i + 1
+          ).map((page) => (
+            <button
+              key={page}
+              onClick={() => paginate(page)}
+              className={`px-3 py-1 mx-1 rounded ${
+                currentPage === page ? "bg-blue-500 text-white" : "bg-gray-300"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
