@@ -1,23 +1,30 @@
-// models/User.js
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  telefono: { type: String, required: true },
+  DNI: { type: String, unique: true, required: true },
+  email: { type: String, unique: true, required: true },
+  telefono: { type: String },
   rol: {
     type: String,
+    enum: ["residente", "administrador", "empleado"],
     required: true,
-    enum: ["residente", "administrador", "seguridad"],
   },
   tipo_residente: {
     type: String,
     enum: ["propietario", "inquilino"],
-    required: false,
+    default: null,
   },
-  habitacion_id: { type: mongoose.Schema.Types.ObjectId, ref: "Habitacion" },
-  propietario_asociado: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  habitacion_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Habitacion",
+    default: null,
+  },
+  propietario_asociado: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
   password: { type: String, required: true },
 });
 

@@ -1,279 +1,148 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const Joi = require("joi");
-const Edificio = require("../models/Edificio"); // Importar el modelo de edificio
-const Habitacion = require("../models/Habitacion"); // Asegúrate de importar el modelo Habitacion
+const Habitacion = require("../models/Habitacion");
 
-// Esquema de validación para usuarios
-const userSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-  telefono: Joi.string().min(9).max(15).required(),
-  rol: Joi.string().valid("residente", "administrador", "seguridad").required(),
-  tipo_residente: Joi.when("rol", {
-    is: "residente",
-    then: Joi.string().valid("propietario", "inquilino").required(),
-    otherwise: Joi.forbidden(),
-  }),
-  edificio_id: Joi.when("rol", {
-    is: "residente",
-    then: Joi.string().required(), // Obligatorio para residentes
-    otherwise: Joi.allow(null),
-  }),
-  piso: Joi.when("rol", {
-    is: "residente",
-    then: Joi.number().required(), // Obligatorio para residentes
-    otherwise: Joi.allow(null),
-  }),
-  habitacion_id: Joi.when("rol", {
-    is: "residente",
-    then: Joi.string().required(), // Obligatorio para residentes
-    otherwise: Joi.allow(null),
-  }),
-  propietario_asociado: Joi.when("tipo_residente", {
-    is: "inquilino",
-    then: Joi.string().required(), // Obligatorio para inquilinos
-    otherwise: Joi.allow(null),
-  }),
-  password: Joi.string().min(8).required(),
-});
-
-// Registro de usuario
-exports.registerUser = async (req, res) => {
+// Obtener todos los usuarios con filtros opcionales
+exports.obtenerUsuarios = async (req, res) => {
   try {
-    // Validar datos de entrada
-    const { error } = userSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({
-        mensaje: "Datos inválidos",
-        detalle: error.details[0].message,
-      });
-    }
+    const { rol, tipo_residente, nombre, email, habitacion } = req.query;
+    const filtro = {};
 
-    // Extraer datos del cuerpo de la solicitud
-    const { name, email, password } = req.body;
+    if (rol) filtro.rol = rol;
+    if (tipo_residente) filtro.tipo_residente = tipo_residente;
+    if (nombre) filtro.name = { $regex: nombre, $options: "i" };
+    if (email) filtro.email = { $regex: email, $options: "i" };
+    if (habitacion) filtro.habitacion_id = habitacion;
 
-    // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      console.log("Usuario ya existe");
-      return res.status(400).json({ message: "El usuario ya existe" });
-    }
+    const usuarios = await User.find(filtro)
+      .populate("habitacion_id", "numero piso")
+      .populate("propietario_asociado", "name email");
 
-    // Encriptar la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Crear el nuevo usuario
-    const newUser = new User({ name, email, password: hashedPassword });
-    await newUser.save();
-
-    // Generar y devolver un token
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.status(201).json({ token, user: { id: newUser._id, name, email } });
+    res.status(200).json(usuarios);
   } catch (error) {
-    console.error("Error en el registro:", error);
-    res.status(500).json({ message: "Error al registrar el usuario", error });
+    console.error("Error al obtener usuarios:", error.message);
+    res.status(500).json({ error: "Error al obtener usuarios" });
   }
 };
 
-// Login de usuario
-exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+// Crear un nuevo usuario
+exports.crearUsuario = async (req, res) => {
   try {
-    // Buscar el usuario por correo electrónico
-    const usuario = await User.findOne({ email });
-    if (!usuario) {
-      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    console.log("Datos recibidos en el backend:", req.body);
+
+    const { name, DNI, email, rol, tipo_residente, habitacion_id, password } =
+      req.body;
+
+    // Validaciones personalizadas
+    if (!["residente", "administrador", "empleado"].includes(rol)) {
+      return res.status(400).json({ error: "Rol no válido" });
     }
 
-    // Verificar la contraseña
-    const esValido = await bcrypt.compare(password, usuario.password);
-    if (!esValido) {
-      return res.status(400).json({ mensaje: "Credenciales incorrectas" });
-    }
-
-    // Generar el token
-    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.json({
-      token,
-      usuario: { id: usuario._id, name: usuario.name, email: usuario.email },
-    });
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-    res.status(500).json({ mensaje: "Error al iniciar sesión", error });
-  }
-};
-
-// Obtener perfil del usuario
-exports.getUserProfile = async (req, res) => {
-  try {
-    console.log("req.user:", req.user); // Para depuración
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ mensaje: "Usuario no encontrado" });
-    }
-
-    res.json({
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    });
-  } catch (error) {
-    console.error("Error al obtener el perfil del usuario:", error);
-    res.status(500).json({ mensaje: "Error al obtener el perfil del usuario" });
-  }
-};
-
-// Crear usuario
-exports.createUser = async (req, res) => {
-  try {
-    console.log("Datos recibidos para crear usuario:", req.body);
-
-    const { error } = userSchema.validate(req.body);
-    if (error) {
-      console.log("Error de validación:", error.details[0].message);
-      return res.status(400).json({
-        mensaje: "Datos inválidos",
-        detalle: error.details[0].message,
-      });
-    }
-
-    const {
-      name,
-      email,
-      telefono,
-      rol,
-      tipo_residente,
-      edificio_id,
-      piso,
-      habitacion_id,
-      propietario_asociado,
-      password,
-    } = req.body;
-
-    console.log("Validando edificio con ID:", edificio_id);
-    const edificio = await Edificio.findById(edificio_id);
-    if (!edificio) {
-      console.log("Edificio no encontrado");
-      return res.status(404).json({ mensaje: "Edificio no encontrado" });
-    }
-
-    console.log("Validando piso:", piso);
-    const pisoSeleccionado = edificio.pisos.find((p) => p.piso === piso);
-    if (!pisoSeleccionado) {
-      console.log("Piso no encontrado");
-      return res.status(404).json({ mensaje: "Piso no encontrado" });
-    }
-
-    console.log("Validando habitación:", habitacion_id);
-    const habitacionSeleccionada = pisoSeleccionado.habitaciones.find(
-      (h) => h._id.toString() === habitacion_id && !h.ocupado
-    );
-    if (!habitacionSeleccionada) {
-      console.log("Habitación ocupada o no encontrada");
+    if (!password) {
       return res
         .status(400)
-        .json({ mensaje: "Habitación ocupada o no encontrada" });
+        .json({ error: "El campo 'password' es obligatorio." });
     }
 
-    console.log("Creando usuario...");
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const usuarioData = {
+    if (
+      tipo_residente &&
+      !["propietario", "inquilino"].includes(tipo_residente)
+    ) {
+      return res.status(400).json({ error: "Tipo de residente no válido" });
+    }
+
+    if (habitacion_id && !(await Habitacion.findById(habitacion_id))) {
+      return res.status(400).json({ error: "La habitación no existe" });
+    }
+
+    const nuevoUsuario = new User({
       name,
+      DNI,
       email,
-      telefono,
       rol,
-      password: hashedPassword,
-      habitacion_id,
       tipo_residente,
-      propietario_asociado,
-    };
+      habitacion_id: habitacion_id || null,
+      password,
+    });
 
-    const newUser = new User(usuarioData);
-    await newUser.save();
-
-    habitacionSeleccionada.ocupado = true;
-    await edificio.save();
-
-    res
-      .status(201)
-      .json({ mensaje: "Usuario creado correctamente", usuario: newUser });
+    await nuevoUsuario.save();
+    res.status(201).json(nuevoUsuario);
   } catch (error) {
-    console.error("Error al crear el usuario:", error);
-    res.status(500).json({ mensaje: "Error al crear el usuario", error });
+    console.error("Error completo:", error);
+
+    // Manejar errores de validación de Mongoose
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Manejar errores de clave duplicada
+    if (error.code === 11000) {
+      const campoDuplicado = Object.keys(error.keyValue)[0];
+      return res
+        .status(400)
+        .json({ error: `El ${campoDuplicado} ya está registrado` });
+    }
+
+    res.status(400).json({ error: "Error al crear usuario" });
   }
 };
 
-// Obtener todos los usuarios
-exports.getUsers = async (req, res) => {
-  try {
-    console.log("Intentando obtener usuarios...");
-    const users = await User.find()
-      .populate("habitacion_id", "numero piso edificio_id")
-      .populate("propietario_asociado", "name email telefono");
-
-    console.log("Usuarios encontrados:", users);
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
-    res.status(500).json({ mensaje: "Error al obtener los usuarios", error });
-  }
-};
-
-// Actualizar usuario
-exports.updateUser = async (req, res) => {
+// Editar un usuario existente
+exports.editarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Intentando actualizar usuario con ID:", id);
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+    const datosActualizados = req.body;
+
+    if (
+      datosActualizados.habitacion_id &&
+      !(await Habitacion.findById(datosActualizados.habitacion_id))
+    ) {
+      return res.status(400).json({ error: "La habitación no existe" });
+    }
+
+    const usuario = await User.findByIdAndUpdate(id, datosActualizados, {
       new: true,
     });
-    console.log("Usuario actualizado:", updatedUser);
-    res.status(200).json(updatedUser);
+    if (!usuario)
+      return res.status(404).json({ error: "Usuario no encontrado" });
+
+    res.status(200).json(usuario);
   } catch (error) {
-    console.error("Error al actualizar usuario:", error);
-    res.status(500).json({ mensaje: "Error al actualizar el usuario", error });
+    console.error("Error al editar usuario:", error.message);
+    res.status(400).json({ error: "Error al editar usuario" });
   }
 };
 
-// Eliminar usuario
-exports.deleteUser = async (req, res) => {
+// Eliminar un usuario
+exports.eliminarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Intentando eliminar usuario con ID:", id);
+    const usuario = await User.findById(id);
 
-    const user = await User.findById(id);
+    if (!usuario)
+      return res.status(404).json({ error: "Usuario no encontrado" });
 
-    if (user?.rol === "residente" && user?.habitacion_id) {
-      console.log("Liberando habitación del usuario...");
-      const edificio = await Edificio.findOne({
-        "pisos.habitaciones._id": user.habitacion_id,
-      });
-
-      if (edificio) {
-        const piso = edificio.pisos.find((p) =>
-          p.habitaciones.some((h) => h._id.toString() === user.habitacion_id)
-        );
-
-        const habitacion = piso.habitaciones.find(
-          (h) => h._id.toString() === user.habitacion_id
-        );
-
-        habitacion.ocupado = false;
-        await edificio.save();
-      }
-    }
-
-    await User.findByIdAndDelete(id);
-    res.status(200).json({ mensaje: "Usuario eliminado exitosamente" });
+    await usuario.deleteOne();
+    res.status(200).json({ message: "Usuario eliminado correctamente" });
   } catch (error) {
-    console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ mensaje: "Error al eliminar el usuario", error });
+    console.error("Error al eliminar usuario:", error.message);
+    res.status(500).json({ error: "Error al eliminar usuario" });
   }
+};
+
+// Listar propietarios
+exports.listarPropietarios = async (req, res) => {
+  req.query.tipo_residente = "propietario";
+  return this.obtenerUsuarios(req, res);
+};
+
+// Listar inquilinos
+exports.listarInquilinos = async (req, res) => {
+  req.query.tipo_residente = "inquilino";
+  return this.obtenerUsuarios(req, res);
+};
+
+// Listar empleados
+exports.listarEmpleados = async (req, res) => {
+  req.query.rol = "empleado";
+  return this.obtenerUsuarios(req, res);
 };

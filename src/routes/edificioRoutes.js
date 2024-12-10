@@ -1,12 +1,10 @@
-const express = require('express');
-const { createEdificio, getEdificios, updateEdificio, deleteEdificio } = require('../controllers/edificioController');
-const authMiddleware = require('../middlewares/authMiddleware');
-
+const express = require("express");
 const router = express.Router();
+const edificioController = require("../controllers/edificioController");
 
-router.post('/', authMiddleware, createEdificio);
-router.get('/', authMiddleware, getEdificios);
-router.put('/:id', authMiddleware, updateEdificio);
-router.delete('/:id', authMiddleware, deleteEdificio);
+router.get("/", edificioController.listarEdificios);
+router.post("/", edificioController.crearEdificio);
+router.put("/:id", edificioController.editarEdificio);
+router.delete("/:id", edificioController.eliminarEdificio);
 
 module.exports = router;
