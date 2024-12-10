@@ -10,7 +10,13 @@ import {
 
 const FormularioPropietario = ({ open, onClose, propietario, onSave }) => {
   const [form, setForm] = React.useState(
-    propietario || { name: "", email: "", DNI: "" }
+    propietario || {
+      name: "",
+      email: "",
+      DNI: "",
+      rol: "residente",
+      tipo_residente: "propietario",
+    }
   );
 
   const handleChange = (field, value) => {
@@ -18,7 +24,18 @@ const FormularioPropietario = ({ open, onClose, propietario, onSave }) => {
   };
 
   const handleSubmit = () => {
-    onSave(form);
+    // Validar campos antes de guardar
+    if (!form.name || !form.email || !form.DNI || !form.password) {
+      alert("Todos los campos, incluida la contraseña, son obligatorios.");
+      return;
+    }
+
+    // Enviar datos al backend
+    onSave({
+      ...form,
+      rol: "residente",
+      tipo_residente: "propietario",
+    });
     onClose();
   };
 
@@ -47,6 +64,15 @@ const FormularioPropietario = ({ open, onClose, propietario, onSave }) => {
           fullWidth
           value={form.DNI}
           onChange={(e) => handleChange("DNI", e.target.value)}
+        />
+        <TextField
+          label="Contraseña"
+          type="password"
+          fullWidth
+          value={form.password || ""}
+          onChange={(e) => handleChange("password", e.target.value)}
+          sx={{ marginBottom: "16px" }}
+          required
         />
       </DialogContent>
       <DialogActions>
