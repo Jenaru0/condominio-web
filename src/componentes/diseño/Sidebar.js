@@ -1,23 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-    FaTachometerAlt,
-    FaUser,
-    FaHome,
-    FaChevronDown,
-    FaChevronUp,
-    FaMoneyBill,
-    FaChartBar,
-    FaCar,
-    FaBuilding,
-    FaTools,
-    FaCalendarAlt,
-    FaCogs,
-    FaFileAlt,
-    FaBell,
-    FaShieldAlt,
-    FaEnvelope,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import linksAdministrador from "../navegacion/BarraLateralAdministrador";
 
 const SidebarOption = ({
                            to,
@@ -35,29 +19,39 @@ const SidebarOption = ({
     return (
         <li
             ref={optionRef}
-            className={`relative flex items-center py-2 px-2 rounded-lg transition-colors duration-300 ${
-                isActive ? "bg-blue-600 font-semibold" : ""
-            } ${collapsed ? "justify-center" : "justify-start"} 
-            ${!isActive && !isDropdown ? "hover:bg-blue-500" : ""} 
-            ${isDropdown && !isActive ? "hover:bg-blue-500" : ""}`}
+            className={`relative flex items-center py-2 px-3 rounded-lg transition-all duration-300 ${
+                isActive ? "bg-blue-600 font-semibold text-white" : "text-white"
+            } hover:bg-blue-500 ${
+                collapsed ? "justify-center" : "justify-start"
+            }`}
             onClick={isDropdown ? onClick : undefined}
             style={{ cursor: isDropdown ? "pointer" : "default" }}
         >
             <div className="flex items-center space-x-2">
                 <Icon className="text-lg text-white" />
-                {!collapsed && <span className="text-sm text-white">{label}</span>}
+                <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                        collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+                    }`}
+                >
+                    <span className="text-sm whitespace-nowrap">{label}</span>
+                </div>
             </div>
             {isDropdown && !collapsed && (
-                <div className="ml-auto text-white">
-                    {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+                <div className="ml-auto">
+                    {isOpen ? <FaChevronUp className="text-white" /> : <FaChevronDown className="text-white" />}
                 </div>
             )}
             {!isDropdown && to && (
-                <Link to={to} className="absolute inset-0" aria-label={label} />
+                <Link
+                    to={to}
+                    className="absolute inset-0 no-underline"
+                    aria-label={label}
+                />
             )}
             {collapsed && isDropdown && isOpen && (
                 <div
-                    className="absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50"
+                    className="absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50 transform origin-top-left transition-all duration-300"
                     style={{
                         top: optionRef.current ? optionRef.current.offsetTop : 0,
                         marginLeft: "8px",
@@ -67,14 +61,14 @@ const SidebarOption = ({
                         {items?.map((item, index) => (
                             <li
                                 key={index}
-                                className="hover:bg-blue-600 rounded-md p-2 flex items-center justify-start transition-colors duration-200 w-full"
+                                className="hover:bg-blue-600 rounded-md p-2 flex items-center transition-all duration-200"
                             >
                                 <Link
                                     to={item.to}
                                     className="flex items-center space-x-3 text-sm text-white no-underline w-full"
                                 >
-                                    <item.icon className="text-lg" />
-                                    <span className="flex-1">{item.label}</span>
+                                    <item.icon className="text-lg text-white" />
+                                    <span className="flex-1 whitespace-nowrap">{item.label}</span>
                                 </Link>
                             </li>
                         ))}
@@ -106,8 +100,12 @@ const SidebarDropdown = ({
                 collapsed={collapsed}
                 items={items}
             />
-            {!collapsed && isOpen && (
-                <ul className="pl-8 mt-1 space-y-1">
+            {!collapsed && (
+                <ul
+                    className={`pl-8 mt-1 space-y-1 transition-all duration-300 ${
+                        isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                    } overflow-hidden`}
+                >
                     {items.map((item, index) => (
                         <SidebarOption
                             key={item.to || index}
@@ -152,104 +150,7 @@ const Sidebar = ({ collapsed }) => {
         }
     }, [collapsed]);
 
-    const sidebarLinks = [
-        { to: "/dashboard", icon: FaTachometerAlt, label: "Dashboard" },
-        {
-            dropdown: true,
-            label: "Usuarios",
-            icon: FaUser,
-            children: [
-                { to: "/usuarios/propietarios", label: "Propietarios", icon: FaUser },
-                { to: "/usuarios/inquilinos", label: "Inquilinos", icon: FaUser },
-                { to: "/usuarios/empleados", label: "Empleados", icon: FaUser },
-                { to: "/usuarios/roles-permisos", label: "Roles y Permisos", icon: FaUser },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Propiedades",
-            icon: FaHome,
-            children: [
-                { to: "/propiedades/departamentos", label: "Departamentos", icon: FaBuilding },
-                { to: "/propiedades/cocheras", label: "Cocheras", icon: FaCar },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Mantenimiento",
-            icon: FaTools,
-            children: [
-                { to: "/mantenimiento/solicitudes-servicio", label: "Solicitudes de Servicio", icon: FaTools },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Áreas Comunes",
-            icon: FaBuilding,
-            children: [
-                { to: "/areas-comunes/reservas", label: "Reservas", icon: FaCalendarAlt },
-                { to: "/areas-comunes/configuracion", label: "Configuración de Áreas", icon: FaCogs },
-            ],
-        },
-        { to: "/correspondencia", icon: FaEnvelope, label: "Correspondencia" },
-        { to: "/eventos", icon: FaCalendarAlt, label: "Eventos" },
-        {
-            dropdown: true,
-            label: "Pagos",
-            icon: FaMoneyBill,
-            children: [
-                { to: "/pagos/verificacion-pagos", label: "Verificación de Pagos", icon: FaMoneyBill },
-                { to: "/pagos/estados-de-cuenta", label: "Estados de Cuenta", icon: FaFileAlt },
-                { to: "/pagos/facturacion", label: "Facturación", icon: FaFileAlt },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Documentos",
-            icon: FaFileAlt,
-            children: [
-                { to: "/documentos/gestion-documentos", label: "Gestión de Documentos", icon: FaFileAlt },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Reportes",
-            icon: FaChartBar,
-            children: [
-                { to: "/reportes/financieros", label: "Financieros", icon: FaChartBar },
-                { to: "/reportes/operativos", label: "Operativos", icon: FaChartBar },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Notificaciones",
-            icon: FaBell,
-            children: [
-                { to: "/notificaciones/enviar", label: "Enviar Notificaciones", icon: FaBell },
-                { to: "/notificaciones/historial", label: "Historial de Notificaciones", icon: FaBell },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Seguridad",
-            icon: FaShieldAlt,
-            children: [
-                { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
-                { to: "/seguridad/incidentes-seguridad", label: "Incidentes de Seguridad", icon: FaShieldAlt },
-            ],
-        },
-        {
-            dropdown: true,
-            label: "Configuración",
-            icon: FaCogs,
-            children: [
-                { to: "/configuracion/perfil", label: "Perfil de Administrador", icon: FaCogs },
-                { to: "/configuracion/preferencias", label: "Preferencias del Sistema", icon: FaCogs },
-            ],
-        },
-    ];
-
-    const processedLinks = sidebarLinks.map((link) => {
+    const processedLinks = linksAdministrador.map((link) => {
         if (link.dropdown) {
             const childrenProcessed = link.children.map((child) => ({
                 ...child,
