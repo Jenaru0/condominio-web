@@ -19,23 +19,25 @@ const SidebarOption = ({
     return (
         <li
             ref={optionRef}
-            className={`relative flex items-center py-2 px-3 rounded-lg transition-all duration-300 ${
+            className={`relative flex items-center ${
+                collapsed ? "justify-center" : "px-3"
+            } py-1 rounded-lg transition-all duration-300 ${
                 isActive ? "bg-blue-600 font-semibold text-white" : "text-white"
             } hover:bg-blue-500`}
             onClick={isDropdown ? onClick : undefined}
             style={{ cursor: isDropdown ? "pointer" : "default" }}
         >
-            {/* Contenedor de ícono y texto */}
-            <div className="flex items-center w-full">
+            {/* Ícono */}
+            <div className="flex items-center justify-center w-8 h-8">
                 <Icon className="text-lg text-white" />
-                <div
-                    className={`overflow-hidden transition-all duration-300 flex-1 ml-3 ${
-                        collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                    }`}
-                >
+            </div>
+
+            {/* Contenedor de texto: no renderizar si está colapsado */}
+            {!collapsed && (
+                <div className="ml-3 flex-1 transition-all duration-300">
                     <span className="text-sm text-left whitespace-nowrap">{label}</span>
                 </div>
-            </div>
+            )}
 
             {/* Flecha para desplegar subopciones */}
             {isDropdown && !collapsed && (
@@ -191,27 +193,14 @@ const Sidebar = ({ collapsed }) => {
                             onClick={() => handleDropdownClick(index)}
                         />
                     ) : (
-                        <li key={index}>
-                            <Link
-                                to={link.to}
-                                className={`flex items-center py-2 px-3 rounded-lg transition-all duration-300 ${
-                                    link.isActive
-                                        ? "bg-blue-600 font-semibold text-white"
-                                        : "text-white"
-                                } hover:bg-blue-500 no-underline`}
-                            >
-                                <link.icon className="text-lg text-white" />
-                                <div
-                                    className={`overflow-hidden transition-all duration-300 flex-1 ml-3 ${
-                                        collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-                                    }`}
-                                >
-                  <span className="text-sm text-left whitespace-nowrap">
-                    {link.label}
-                  </span>
-                                </div>
-                            </Link>
-                        </li>
+                        <SidebarOption
+                            key={index}
+                            to={link.to}
+                            label={link.label}
+                            icon={link.icon}
+                            isActive={link.isActive}
+                            collapsed={collapsed}
+                        />
                     )
                 )}
             </ul>
