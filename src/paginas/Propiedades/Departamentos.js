@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  obtenerHabitaciones,
+  listarHabitaciones,
   crearHabitacion,
-  actualizarHabitacion,
+  editarHabitacion,
   eliminarHabitacion,
 } from "../../api/habitacionService";
 import { obtenerUsuarios } from "../../api/usuarioService";
-import { obtenerEdificios } from "../../api/edificioService";
+import { listarEdificios } from "../../api/edificioService";
 
 const Departamentos = () => {
   const [departments, setDepartments] = useState([]);
   const [buildings, setBuildings] = useState([]);
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     _id: null,
     numero: "",
@@ -27,85 +27,77 @@ const Departamentos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const departmentsPerPage = 10;
 
-  useEffect(() => {
-    cargarDatos();
-  }, []);
+  const cargarDatos = async () => {
+    setLoading(true);
+    try {
+      const [habitacionesResponse, edificiosResponse, usuariosResponse] =
+        await Promise.all([
+          listarHabitaciones(),
+          listarEdificios(),
+          obtenerUsuarios(),
+        ]);
+
+      console.log("Usuarios Response:", usuariosResponse); // Verificar contenido de usuarios
+
+      // Validar respuestas y asignar a los estados correspondientes
+      setDepartments(habitacionesResponse || []);
+      setBuildings(edificiosResponse || []);
+      setUsers(Array.isArray(usuariosResponse) ? usuariosResponse : []);
+
+      if (!Array.isArray(usuariosResponse) || usuariosResponse.length === 0) {
+        console.warn("No se encontraron usuarios en la API.");
+      }
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      alert("Ocurrió un error al cargar los datos. Inténtalo nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtrarDepartamentos = useCallback(() => {
     const lowerSearch = search.toLowerCase();
     const filtered = departments.filter(
       (dep) =>
         dep.numero.toString().toLowerCase().includes(lowerSearch) ||
-        dep.edificio_id?.nombre.toLowerCase().includes(lowerSearch) ||
-        dep.piso.toLowerCase().includes(lowerSearch)
+        dep.edificio_id?.nombre?.toLowerCase().includes(lowerSearch) ||
+        dep.piso.toString().toLowerCase().includes(lowerSearch)
     );
     setFilteredDepartments(filtered);
   }, [search, departments]);
 
   useEffect(() => {
+    cargarDatos();
+  }, []);
+
+  useEffect(() => {
     filtrarDepartamentos();
   }, [filtrarDepartamentos]);
 
-  const cargarDatos = async () => {
-    setLoading(true);
-    try {
-      const [habitacionesResponse, edificiosResponse, usuariosResponse] =
-        await Promise.allSettled([
-          obtenerHabitaciones(),
-          obtenerEdificios(),
-          obtenerUsuarios(),
-        ]);
-
-      if (habitacionesResponse.status === "fulfilled") {
-        setDepartments(habitacionesResponse.value?.data || []);
-      }
-
-      if (edificiosResponse.status === "fulfilled") {
-        setBuildings(edificiosResponse.value?.data || []);
-      }
-
-      if (usuariosResponse.status === "fulfilled") {
-        setUsers(usuariosResponse.value?.data || []);
-      }
-    } catch (error) {
-      console.error("Error inesperado al cargar datos:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const habitacionData = {
-      numero: form.numero,
-      piso: form.piso,
-      edificio_id: form.edificio_id || "",
-      propietario_asociado: form.propietario_asociado || "",
-      inquilino_asociado: form.inquilino_asociado || "",
-    };
-
-    const existeDuplicado = departments.some(
-      (dep) =>
-        dep.numero === form.numero &&
-        dep.piso === form.piso &&
-        dep.edificio_id === form.edificio_id &&
-        dep._id !== form._id
-    );
-
-    if (existeDuplicado) {
-      alert("Ya existe un departamento con estos datos.");
-      return;
-    }
-
     try {
+      const existeDuplicado = departments.some(
+        (dep) =>
+          dep.numero === form.numero &&
+          dep.piso === form.piso &&
+          dep.edificio_id === form.edificio_id &&
+          dep._id !== form._id
+      );
+
+      if (existeDuplicado) {
+        alert("Ya existe un departamento con estos datos.");
+        return;
+      }
+
       if (isEditing) {
-        await actualizarHabitacion(form._id, habitacionData);
+        await editarHabitacion(form._id, form);
         alert("Departamento actualizado correctamente.");
       } else {
-        await crearHabitacion(habitacionData);
+        await crearHabitacion(form);
         alert("Departamento creado correctamente.");
       }
+
       resetForm();
       cargarDatos();
     } catch (error) {
@@ -119,9 +111,9 @@ const Departamentos = () => {
       _id: department._id,
       numero: department.numero,
       piso: department.piso,
-      edificio_id: department.edificio_id || "",
-      propietario_asociado: department.propietario_asociado || "",
-      inquilino_asociado: department.inquilino_asociado || "",
+      edificio_id: department.edificio_id?._id || "",
+      propietario_asociado: department.propietario_asociado?._id || "",
+      inquilino_asociado: department.inquilino_asociado?._id || "",
     });
     setIsEditing(true);
   };
@@ -153,8 +145,14 @@ const Departamentos = () => {
     setIsEditing(false);
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const filteredOwners = users.filter(
+    (user) => user.tipo_residente === "propietario"
+  );
+  const filteredTenants = users.filter(
+    (user) => user.tipo_residente === "inquilino"
+  );
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const currentDepartments = filteredDepartments.slice(
     (currentPage - 1) * departmentsPerPage,
     currentPage * departmentsPerPage
@@ -201,7 +199,7 @@ const Departamentos = () => {
             required
           />
           <input
-            type="text"
+            type="number"
             value={form.piso}
             onChange={(e) => setForm({ ...form, piso: e.target.value })}
             placeholder="Piso"
@@ -229,13 +227,17 @@ const Departamentos = () => {
             className="border rounded-lg px-4 py-2 w-full"
           >
             <option value="">Seleccionar Propietario</option>
-            {users
-              .filter((user) => user.tipo_residente === "propietario")
-              .map((user) => (
+            {filteredOwners.length > 0 ? (
+              filteredOwners.map((user) => (
                 <option key={user._id} value={user._id}>
                   {user.name}
                 </option>
-              ))}
+              ))
+            ) : (
+              <option value="" disabled>
+                No hay propietarios disponibles
+              </option>
+            )}
           </select>
           <select
             value={form.inquilino_asociado}
@@ -245,13 +247,17 @@ const Departamentos = () => {
             className="border rounded-lg px-4 py-2 w-full"
           >
             <option value="">Seleccionar Inquilino</option>
-            {users
-              .filter((user) => user.tipo_residente === "inquilino")
-              .map((user) => (
+            {filteredTenants.length > 0 ? (
+              filteredTenants.map((user) => (
                 <option key={user._id} value={user._id}>
                   {user.name}
                 </option>
-              ))}
+              ))
+            ) : (
+              <option value="" disabled>
+                No hay inquilinos disponibles
+              </option>
+            )}
           </select>
 
           <button
