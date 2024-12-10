@@ -1,5 +1,4 @@
-// Sidebar.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
     FaTachometerAlt,
@@ -29,33 +28,58 @@ const SidebarOption = ({
                            collapsed,
                            isOpen,
                            onClick,
+                           items,
                        }) => {
+    const optionRef = useRef(null);
+
     return (
         <li
+            ref={optionRef}
             className={`relative flex items-center py-2 px-2 rounded-lg transition-colors duration-300 ${
-                isActive || isOpen ? "bg-blue-600 font-semibold" : "hover:bg-blue-500"
-            } ${collapsed ? "justify-center" : "justify-start"}`}
+                isActive ? "bg-blue-600 font-semibold" : ""
+            } ${collapsed ? "justify-center" : "justify-start"} 
+            ${!isActive && !isDropdown ? "hover:bg-blue-500" : ""} 
+            ${isDropdown && !isActive ? "hover:bg-blue-500" : ""}`}
             onClick={isDropdown ? onClick : undefined}
             style={{ cursor: isDropdown ? "pointer" : "default" }}
         >
-            <div className="w-10 flex justify-center items-center">
-                {Icon && <Icon className="text-lg text-white" />}
+            <div className="flex items-center space-x-2">
+                <Icon className="text-lg text-white" />
+                {!collapsed && <span className="text-sm text-white">{label}</span>}
             </div>
-
-            {!collapsed && (
-                <div className="flex-1 overflow-hidden transition-[max-width] duration-300 whitespace-nowrap inline-block">
-                    <span className="text-sm text-white ml-2">{label}</span>
-                </div>
-            )}
-
             {isDropdown && !collapsed && (
-                <div className="w-6 flex justify-center items-center text-white">
+                <div className="ml-auto text-white">
                     {isOpen ? <FaChevronUp /> : <FaChevronDown />}
                 </div>
             )}
-
             {!isDropdown && to && (
                 <Link to={to} className="absolute inset-0" aria-label={label} />
+            )}
+            {collapsed && isDropdown && isOpen && (
+                <div
+                    className="absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50"
+                    style={{
+                        top: optionRef.current ? optionRef.current.offsetTop : 0,
+                        marginLeft: "8px",
+                    }}
+                >
+                    <ul className="space-y-1 p-2">
+                        {items?.map((item, index) => (
+                            <li
+                                key={index}
+                                className="hover:bg-blue-600 rounded-md p-2 flex items-center justify-start transition-colors duration-200 w-full"
+                            >
+                                <Link
+                                    to={item.to}
+                                    className="flex items-center space-x-3 text-sm text-white no-underline w-full"
+                                >
+                                    <item.icon className="text-lg" />
+                                    <span className="flex-1">{item.label}</span>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
         </li>
     );
@@ -69,43 +93,64 @@ const SidebarDropdown = ({
                              isActive,
                              isOpen,
                              onClick,
-                         }) => (
-    <>
-        <SidebarOption
-            label={label}
-            icon={Icon}
-            isDropdown
-            isOpen={isOpen}
-            onClick={onClick}
-            isActive={isActive}
-            collapsed={collapsed}
-        />
-        {!collapsed && isOpen && (
-            <ul className="pl-8 mt-1 space-y-1">
-                {items.map((item, index) => (
-                    <SidebarOption
-                        key={item.to || index}
-                        to={item.to}
-                        label={item.label}
-                        icon={item.icon}
-                        collapsed={collapsed}
-                        isActive={item.isActive}
-                        isOpen={false}
-                        isDropdown={false}
-                    />
-                ))}
-            </ul>
-        )}
-    </>
-);
+                         }) => {
+    return (
+        <div className="relative">
+            <SidebarOption
+                label={label}
+                icon={Icon}
+                isDropdown
+                isOpen={isOpen}
+                onClick={onClick}
+                isActive={isActive}
+                collapsed={collapsed}
+                items={items}
+            />
+            {!collapsed && isOpen && (
+                <ul className="pl-8 mt-1 space-y-1">
+                    {items.map((item, index) => (
+                        <SidebarOption
+                            key={item.to || index}
+                            to={item.to}
+                            label={item.label}
+                            icon={item.icon}
+                            collapsed={collapsed}
+                            isActive={item.isActive}
+                            isOpen={false}
+                            isDropdown={false}
+                        />
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+};
 
 const Sidebar = ({ collapsed }) => {
     const location = useLocation();
-    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const [openDropdownExpanded, setOpenDropdownExpanded] = useState(null);
+    const [openDropdownCollapsed, setOpenDropdownCollapsed] = useState(null);
 
     const handleDropdownClick = (index) => {
-        setOpenDropdown(openDropdown === index ? null : index);
+        if (collapsed) {
+            setOpenDropdownCollapsed(
+                openDropdownCollapsed === index ? null : index
+            );
+        } else {
+            setOpenDropdownExpanded(
+                openDropdownExpanded === index ? null : index
+            );
+        }
     };
+
+    useEffect(() => {
+        if (collapsed) {
+            setOpenDropdownExpanded(null);
+        } else {
+            setOpenDropdownCollapsed(null);
+        }
+    }, [collapsed]);
 
     const sidebarLinks = [
         { to: "/dashboard", icon: FaTachometerAlt, label: "Dashboard" },
@@ -134,11 +179,7 @@ const Sidebar = ({ collapsed }) => {
             label: "Mantenimiento",
             icon: FaTools,
             children: [
-                {
-                    to: "/mantenimiento/solicitudes-servicio",
-                    label: "Solicitudes de Servicio",
-                    icon: FaTools,
-                },
+                { to: "/mantenimiento/solicitudes-servicio", label: "Solicitudes de Servicio", icon: FaTools },
             ],
         },
         {
@@ -147,11 +188,7 @@ const Sidebar = ({ collapsed }) => {
             icon: FaBuilding,
             children: [
                 { to: "/areas-comunes/reservas", label: "Reservas", icon: FaCalendarAlt },
-                {
-                    to: "/areas-comunes/configuracion",
-                    label: "Configuración de Áreas",
-                    icon: FaCogs,
-                },
+                { to: "/areas-comunes/configuracion", label: "Configuración de Áreas", icon: FaCogs },
             ],
         },
         { to: "/correspondencia", icon: FaEnvelope, label: "Correspondencia" },
@@ -171,7 +208,7 @@ const Sidebar = ({ collapsed }) => {
             label: "Documentos",
             icon: FaFileAlt,
             children: [
-                { to: "/documentos/gestion-documentos", label: "Gestión de documentos", icon: FaFileAlt },
+                { to: "/documentos/gestion-documentos", label: "Gestión de Documentos", icon: FaFileAlt },
             ],
         },
         {
@@ -221,8 +258,7 @@ const Sidebar = ({ collapsed }) => {
             const anyChildActive = childrenProcessed.some((child) => child.isActive);
             return { ...link, children: childrenProcessed, isActive: anyChildActive };
         } else {
-            const isActive = link.to && location.pathname === link.to;
-            return { ...link, isActive };
+            return { ...link, isActive: link.to && location.pathname === link.to };
         }
     });
 
@@ -230,39 +266,37 @@ const Sidebar = ({ collapsed }) => {
         <div
             className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-blue-700 text-white shadow-lg transition-all duration-300 ${
                 collapsed ? "w-20" : "w-64"
-            } overflow-y-auto scrollbar-thin scrollbar-track-scrollbarTrack scrollbar-thumb-scrollbarThumb hover:scrollbar-thumb-scrollbarThumbHover active:scrollbar-thumb-scrollbarThumbActive scrollbar-thumb-rounded-scrollbar`}
+            }`}
         >
-            <ul className="mt-4 space-y-2 px-2">
-                {processedLinks.map((link, index) => {
-                    const isOpen = openDropdown === index;
-                    if (link.dropdown) {
-                        return (
-                            <SidebarDropdown
-                                key={index}
-                                label={link.label}
-                                icon={link.icon}
-                                items={link.children}
-                                collapsed={collapsed}
-                                isActive={link.isActive}
-                                isOpen={isOpen}
-                                onClick={() => handleDropdownClick(index)}
-                            />
-                        );
-                    } else {
-                        return (
-                            <SidebarOption
-                                key={index}
-                                to={link.to}
-                                label={link.label}
-                                icon={link.icon}
-                                collapsed={collapsed}
-                                isActive={link.isActive}
-                                isOpen={false}
-                                isDropdown={false}
-                            />
-                        );
-                    }
-                })}
+            <ul className="space-y-1 pt-2 px-2">
+                {processedLinks.map((link, index) =>
+                    link.dropdown ? (
+                        <SidebarDropdown
+                            key={index}
+                            label={link.label}
+                            icon={link.icon}
+                            items={link.children}
+                            collapsed={collapsed}
+                            isActive={link.isActive}
+                            isOpen={
+                                collapsed
+                                    ? openDropdownCollapsed === index
+                                    : openDropdownExpanded === index
+                            }
+                            onClick={() => handleDropdownClick(index)}
+                        />
+                    ) : (
+                        <SidebarOption
+                            key={index}
+                            to={link.to}
+                            label={link.label}
+                            icon={link.icon}
+                            isActive={link.isActive}
+                            collapsed={collapsed}
+                            isDropdown={false}
+                        />
+                    )
+                )}
             </ul>
         </div>
     );
