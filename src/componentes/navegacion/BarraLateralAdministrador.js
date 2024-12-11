@@ -45,7 +45,7 @@ const linksAdministrador = [
         label: "Mantenimiento",
         icon: FaTools,
         children: [
-            { to: "/mantenimiento/solicitudes-servicio", label: "Solicitudes de Servicio", icon: FaTools },
+            { to: "/mantenimiento/solicitudes", label: "Solicitudes de Mantenimiento", icon: FaTools },
             { to: "/mantenimiento/historial-solicitudes", label: "Historial de Solicitudes", icon: FaFileAlt },
         ],
     },

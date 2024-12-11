@@ -11,8 +11,7 @@ import Empleados from "../paginas/Usuarios/Administrador/empleados/Empleados";
 import RolesPermisos from "../paginas/Usuarios/Administrador/rolesypermisos/RolesPermisos";
 import Departamentos from "../paginas/Propiedades/departamentos/Departamentos";
 import Cocheras from "../paginas/Propiedades/cocheras/Cocheras";
-import SolicitudesServicio from "../paginas/Mantenimiento/Administrador/SolicitudesServicio";
-import HistorialSolicitudes from "../paginas/Mantenimiento/Administrador/HistorialSolicitudes";
+import HistorialSolicitudes from "../paginas/Mantenimiento/Administrador/HistorialSolicitudes/HistorialSolicitudes";
 import Reservas from "../paginas/AreasComunes/Administrador/reservas/Reservas";
 import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/configuracionAreas/ConfiguracionAreas";
 import Correspondencia from "../paginas/Correspondencia/Administrador/Correspondencia";
@@ -26,7 +25,7 @@ import ReportesFinancieros from "../paginas/Reportes/Administrador/ReportesFinan
 import ReportesOperativos from "../paginas/Reportes/Administrador/ReportesOperativos";
 import ControlAccesos from "../paginas/Seguridad/ControlAccesos";
 import IncidentesSeguridad from "../paginas/Seguridad/IncidentesSeguridad";
-import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
+import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/solicitudesMantenimiento/SolicitudesMantenimiento";
 import EnviarNotificaciones from "../paginas/Notificaciones/Administrador/EnviarNotificaciones";
 import HistorialNotificaciones from "../paginas/Notificaciones/Administrador/HistorialNotificaciones";
 import AyudaSoporte from "../paginas/AyudaSoporte/AyudaSoporte";
@@ -92,10 +91,10 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/mantenimiento/solicitudes-servicio"
+          path="/mantenimiento/solicitudes"
           element={
             <ProtectedRoute>
-              <SolicitudesServicio />
+              <SolicitudesMantenimiento />
             </ProtectedRoute>
           }
         />
