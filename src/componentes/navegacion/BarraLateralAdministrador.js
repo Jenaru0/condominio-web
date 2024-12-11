@@ -69,13 +69,9 @@ const linksAdministrador = [
         ],
     },
     {
-        dropdown: true,
-        label: "Documentos",
+        to: "/documentos/gestion-documentos",
         icon: FaFileAlt,
-        children: [
-            { to: "/documentos/gestion-documentos", label: "Gestión de Documentos", icon: FaFileAlt },
-            { to: "/documentos/reglamentos", label: "Reglamentos", icon: FaFileAlt },
-        ],
+        label: "Documentos",
     },
     {
         dropdown: true,
