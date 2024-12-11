@@ -29,6 +29,9 @@ const ListaPropietarios = ({ propietarios, onEdit, onDelete }) => (
           <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
             Email
           </TableCell>
+          <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
+            Teléfono
+          </TableCell>
           <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>DNI</TableCell>
           <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
             Departamento
@@ -54,6 +57,7 @@ const ListaPropietarios = ({ propietarios, onEdit, onDelete }) => (
           >
             <TableCell>{propietario.name}</TableCell>
             <TableCell>{propietario.email}</TableCell>
+            <TableCell>{propietario.telefono || "No disponible"}</TableCell>
             <TableCell>{propietario.DNI}</TableCell>
             <TableCell>
               {propietario.habitacion_id?.numero || "Sin departamento"}
