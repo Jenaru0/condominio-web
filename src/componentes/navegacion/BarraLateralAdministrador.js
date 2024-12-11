@@ -45,8 +45,8 @@ const linksAdministrador = [
         label: "Mantenimiento",
         icon: FaTools,
         children: [
-            { to: "/mantenimiento/solicitudes", label: "Solicitudes de Servicio", icon: FaTools },
-            { to: "/mantenimiento/historial", label: "Historial de Solicitudes", icon: FaFileAlt },
+            { to: "/mantenimiento/solicitudes-servicio", label: "Solicitudes de Servicio", icon: FaTools },
+            { to: "/mantenimiento/historial-solicitudes", label: "Historial de Solicitudes", icon: FaFileAlt },
         ],
     },
     {
@@ -63,8 +63,8 @@ const linksAdministrador = [
         label: "Pagos",
         icon: FaMoneyBill,
         children: [
-            { to: "/pagos/verificacion", label: "Verificación de Pagos", icon: FaMoneyBill },
-            { to: "/pagos/estados-cuenta", label: "Estados de Cuenta", icon: FaFileAlt },
+            { to: "/pagos/verificacion-pagos", label: "Verificación de Pagos", icon: FaMoneyBill },
+            { to: "/pagos/estados-de-cuenta", label: "Estados de Cuenta", icon: FaFileAlt },
             { to: "/pagos/facturacion", label: "Facturación", icon: FaFileAlt },
         ],
     },
@@ -73,7 +73,7 @@ const linksAdministrador = [
         label: "Documentos",
         icon: FaFileAlt,
         children: [
-            { to: "/documentos/gestion", label: "Gestión de Documentos", icon: FaFileAlt },
+            { to: "/documentos/gestion-documentos", label: "Gestión de Documentos", icon: FaFileAlt },
             { to: "/documentos/reglamentos", label: "Reglamentos", icon: FaFileAlt },
         ],
     },
@@ -91,8 +91,8 @@ const linksAdministrador = [
         label: "Notificaciones",
         icon: FaBell,
         children: [
-            { to: "/notificaciones/enviar", label: "Enviar Notificaciones", icon: FaBell },
-            { to: "/notificaciones/historial", label: "Historial de Notificaciones", icon: FaBell },
+            { to: "/enviar-notificaciones", label: "Enviar Notificaciones", icon: FaBell },
+            { to: "/historial-notificaciones", label: "Historial de Notificaciones", icon: FaBell },
         ],
     },
     {
@@ -101,7 +101,7 @@ const linksAdministrador = [
         icon: FaShieldAlt,
         children: [
             { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
-            { to: "/seguridad/incidentes", label: "Incidentes de Seguridad", icon: FaShieldAlt },
+            { to: "/seguridad/incidentes-seguridad", label: "Incidentes de Seguridad", icon: FaShieldAlt },
         ],
     },
 ];

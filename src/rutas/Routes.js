@@ -12,6 +12,7 @@ import RolesPermisos from "../paginas/Usuarios/Administrador/rolesypermisos/Role
 import Departamentos from "../paginas/Propiedades/departamentos/Departamentos";
 import Cocheras from "../paginas/Propiedades/cocheras/Cocheras";
 import SolicitudesServicio from "../paginas/Mantenimiento/Administrador/SolicitudesServicio";
+import HistorialSolicitudes from "../paginas/Mantenimiento/Administrador/HistorialSolicitudes";
 import Reservas from "../paginas/AreasComunes/Administrador/reservas/Reservas";
 import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/configuracionAreas/ConfiguracionAreas";
 import Correspondencia from "../paginas/Correspondencia/Administrador/Correspondencia";
@@ -20,12 +21,14 @@ import VerificacionPagos from "../paginas/Pagos/Administrador/VerificacionPagos"
 import EstadosCuenta from "../paginas/Pagos/Administrador/EstadosCuenta";
 import Facturacion from "../paginas/Pagos/Administrador/Facturacion";
 import GestionDocumentos from "../paginas/Documentos/Administrador/GestionDocumentos";
+import Reglamentos from "../paginas/Documentos/Administrador/Reglamentos";
 import ReportesFinancieros from "../paginas/Reportes/Administrador/ReportesFinancieros";
 import ReportesOperativos from "../paginas/Reportes/Administrador/ReportesOperativos";
 import ControlAccesos from "../paginas/Seguridad/ControlAccesos";
 import IncidentesSeguridad from "../paginas/Seguridad/IncidentesSeguridad";
 import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
 import EnviarNotificaciones from "../paginas/Notificaciones/Administrador/EnviarNotificaciones";
+import HistorialNotificaciones from "../paginas/Notificaciones/Administrador/HistorialNotificaciones";
 import AyudaSoporte from "../paginas/AyudaSoporte/AyudaSoporte";
 import Configuracion from "../paginas/Configuracion/Configuracion";
 import Usuario from "../paginas/Usuarios/Administrador/Usuario";
@@ -96,6 +99,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+          <Route
+              path="/mantenimiento/historial-solicitudes"
+              element={
+                  <ProtectedRoute>
+                      <HistorialSolicitudes />
+                  </ProtectedRoute>
+              }
+          />
         <Route
           path="/Areas-comunes/reservas"
           element={
@@ -160,6 +171,14 @@ const AppRoutes = () => {
             </GestionDocumentos>
           }
         />
+          <Route
+              path="/documentos/reglamentos"
+              element={
+                  <Reglamentos>
+                      <Eventos />
+                  </Reglamentos>
+              }
+          />
         <Route
           path="/reportes/financieros"
           element={
@@ -216,6 +235,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+          <Route
+              path="/historial-notificaciones"
+              element={
+                  <ProtectedRoute>
+                      <HistorialNotificaciones />
+                  </ProtectedRoute>
+              }
+          />
         <Route
           path="/ayuda-soporte"
           element={
