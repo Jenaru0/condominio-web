@@ -3,53 +3,118 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 
-// Componente de filtros
-const IncidentFilters = ({ filters, onFilterChange }) => (
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <select
-      value={filters.estado}
-      onChange={(e) => onFilterChange("estado", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
+// Colores por estado
+const estadoColores = {
+  Pendiente: "#FFC107", // Amarillo
+  "En Proceso": "#007BFF", // Azul
+  Resuelto: "#28A745", // Verde
+};
+
+// Encabezado
+const EncabezadoIncidentes = () => (
+    <motion.div
+        className="mb-8 flex justify-between items-center"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1 }}
     >
-      <option value="">Estado (Todos)</option>
-      <option value="Pendiente">Pendiente</option>
-      <option value="En Proceso">En Proceso</option>
-      <option value="Resuelto">Resuelto</option>
-    </select>
-    <select
-      value={filters.prioridad}
-      onChange={(e) => onFilterChange("prioridad", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    >
-      <option value="">Prioridad (Todas)</option>
-      <option value="Alta">Alta</option>
-      <option value="Media">Media</option>
-      <option value="Baja">Baja</option>
-    </select>
-    <input
-      type="date"
-      value={filters.fechaInicio}
-      onChange={(e) => onFilterChange("fechaInicio", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-    <input
-      type="date"
-      value={filters.fechaFin}
-      onChange={(e) => onFilterChange("fechaFin", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-    <input
-      type="text"
-      value={filters.busqueda}
-      onChange={(e) => onFilterChange("busqueda", e.target.value)}
-      placeholder="Buscar por descripción..."
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-  </div>
+      <h1 className="text-4xl font-bold text-gray-800 border-b-4 border-blue-500 pb-2">
+        Incidentes de Seguridad
+      </h1>
+    </motion.div>
 );
 
-// Componente principal
+// Filtros
+const IncidentFilters = ({ filters, onFilterChange, onApplyFilters, onResetFilters }) => (
+    <Box
+        sx={{
+          backgroundColor: "#ffffff",
+          padding: "16px",
+          borderRadius: "8px",
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+          marginBottom: "16px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "16px",
+        }}
+    >
+      <Box sx={{ minWidth: "200px" }}>
+        <Typography>Estado</Typography>
+        <select
+            value={filters.estado}
+            onChange={(e) => onFilterChange("estado", e.target.value)}
+            className="border rounded-lg px-4 py-2 w-full"
+        >
+          <option value="">Todos</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Resuelto">Resuelto</option>
+        </select>
+      </Box>
+      <Box sx={{ minWidth: "200px" }}>
+        <Typography>Prioridad</Typography>
+        <select
+            value={filters.prioridad}
+            onChange={(e) => onFilterChange("prioridad", e.target.value)}
+            className="border rounded-lg px-4 py-2 w-full"
+        >
+          <option value="">Todas</option>
+          <option value="Alta">Alta</option>
+          <option value="Media">Media</option>
+          <option value="Baja">Baja</option>
+        </select>
+      </Box>
+      <Box sx={{ minWidth: "200px" }}>
+        <Typography>Fecha Inicio</Typography>
+        <input
+            type="date"
+            value={filters.fechaInicio}
+            onChange={(e) => onFilterChange("fechaInicio", e.target.value)}
+            className="border rounded-lg px-4 py-2 w-full"
+        />
+      </Box>
+      <Box sx={{ minWidth: "200px" }}>
+        <Typography>Fecha Fin</Typography>
+        <input
+            type="date"
+            value={filters.fechaFin}
+            onChange={(e) => onFilterChange("fechaFin", e.target.value)}
+            className="border rounded-lg px-4 py-2 w-full"
+        />
+      </Box>
+      <Box sx={{ minWidth: "200px" }}>
+        <Typography>Buscar</Typography>
+        <input
+            type="text"
+            value={filters.busqueda}
+            onChange={(e) => onFilterChange("busqueda", e.target.value)}
+            placeholder="Buscar descripción..."
+            className="border rounded-lg px-4 py-2 w-full"
+        />
+      </Box>
+      <Box sx={{ display: "flex", gap: "8px" }}>
+        <Button
+            variant="contained"
+            onClick={onApplyFilters}
+            sx={{ backgroundColor: "#1d4ed8", textTransform: "none" }}
+        >
+          Aplicar
+        </Button>
+        <Button
+            variant="outlined"
+            onClick={onResetFilters}
+            sx={{ color: "#1d4ed8", borderColor: "#1d4ed8", textTransform: "none" }}
+        >
+          Limpiar
+        </Button>
+      </Box>
+    </Box>
+);
+
 const IncidentesSeguridad = () => {
   const [incidentes, setIncidentes] = useState([]);
   const [filteredIncidentes, setFilteredIncidentes] = useState([]);
@@ -70,29 +135,10 @@ const IncidentesSeguridad = () => {
   });
 
   useEffect(() => {
-    // Simulación de datos de incidentes
     const mockIncidentes = [
-      {
-        _id: "1",
-        descripcion: "Robo en el Edificio A, Piso 3",
-        fechaIncidente: "2023-12-01",
-        prioridad: "Alta",
-        estado: "Pendiente",
-      },
-      {
-        _id: "2",
-        descripcion: "Daño material en el estacionamiento",
-        fechaIncidente: "2023-11-25",
-        prioridad: "Media",
-        estado: "En Proceso",
-      },
-      {
-        _id: "3",
-        descripcion: "Acceso no autorizado en la entrada principal",
-        fechaIncidente: "2023-12-05",
-        prioridad: "Alta",
-        estado: "Resuelto",
-      },
+      { _id: "1", descripcion: "Robo en el Edificio A", fechaIncidente: "2023-12-01", prioridad: "Alta", estado: "Pendiente" },
+      { _id: "2", descripcion: "Daño en estacionamiento", fechaIncidente: "2023-11-25", prioridad: "Media", estado: "En Proceso" },
+      { _id: "3", descripcion: "Acceso no autorizado", fechaIncidente: "2023-12-05", prioridad: "Alta", estado: "Resuelto" },
     ];
 
     setTimeout(() => {
@@ -105,27 +151,15 @@ const IncidentesSeguridad = () => {
 
   useEffect(() => {
     const filtered = incidentes.filter((incidente) => {
-      const matchesEstado =
-        !filters.estado || incidente.estado === filters.estado;
-      const matchesPrioridad =
-        !filters.prioridad || incidente.prioridad === filters.prioridad;
+      const matchesEstado = !filters.estado || incidente.estado === filters.estado;
+      const matchesPrioridad = !filters.prioridad || incidente.prioridad === filters.prioridad;
       const matchesFechaInicio =
-        !filters.fechaInicio ||
-        new Date(incidente.fechaIncidente) >= new Date(filters.fechaInicio);
+          !filters.fechaInicio || new Date(incidente.fechaIncidente) >= new Date(filters.fechaInicio);
       const matchesFechaFin =
-        !filters.fechaFin ||
-        new Date(incidente.fechaIncidente) <= new Date(filters.fechaFin);
-      const matchesBusqueda = incidente.descripcion
-        .toLowerCase()
-        .includes(filters.busqueda.toLowerCase());
+          !filters.fechaFin || new Date(incidente.fechaIncidente) <= new Date(filters.fechaFin);
+      const matchesBusqueda = incidente.descripcion.toLowerCase().includes(filters.busqueda.toLowerCase());
 
-      return (
-        matchesEstado &&
-        matchesPrioridad &&
-        matchesFechaInicio &&
-        matchesFechaFin &&
-        matchesBusqueda
-      );
+      return matchesEstado && matchesPrioridad && matchesFechaInicio && matchesFechaFin && matchesBusqueda;
     });
 
     setFilteredIncidentes(filtered);
@@ -147,19 +181,9 @@ const IncidentesSeguridad = () => {
   const exportarExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredIncidentes);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      "Incidentes de Seguridad"
-    );
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    saveAs(
-      new Blob([excelBuffer], { type: "application/octet-stream" }),
-      "incidentes_seguridad.xlsx"
-    );
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Incidentes de Seguridad");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([excelBuffer], { type: "application/octet-stream" }), "incidentes_seguridad.xlsx");
   };
 
   const dataChart = {
@@ -174,60 +198,86 @@ const IncidentesSeguridad = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-xl font-semibold">Cargando incidentes...</p>
-      </div>
-    );
+    return <LoadingSpinner text="Cargando incidentes de seguridad..." />;
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Incidentes de Seguridad
-      </h1>
+      <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
+        <EncabezadoIncidentes />
 
-      {/* Filtros */}
-      <IncidentFilters filters={filters} onFilterChange={handleFilterChange} />
+        {/* Filtros */}
+        <IncidentFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onApplyFilters={() => console.log("Aplicar filtros")}
+            onResetFilters={() => setFilters({ estado: "", prioridad: "", fechaInicio: "", fechaFin: "", busqueda: "" })}
+        />
 
-      {/* Estadísticas */}
-      <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
-        <Pie data={dataChart} />
-      </div>
+        {/* Estadísticas */}
+        <Box className="bg-white shadow rounded-lg p-6 mb-6" sx={{ maxWidth: "600px", margin: "auto" }}>
+          <Typography variant="h6" className="text-xl font-semibold mb-4">Estadísticas</Typography>
+          <Pie data={dataChart} />
+        </Box>
 
-      {/* Tabla */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="mb-4 flex justify-end">
-          <button
-            onClick={exportarExcel}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-          >
-            Exportar a Excel
-          </button>
-        </div>
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2 text-left">Descripción</th>
-              <th className="px-4 py-2 text-left">Fecha</th>
-              <th className="px-4 py-2 text-left">Prioridad</th>
-              <th className="px-4 py-2 text-left">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredIncidentes.map((incidente) => (
-              <tr key={incidente._id} className="border-t">
-                <td className="px-4 py-2">{incidente.descripcion}</td>
-                <td className="px-4 py-2">{incidente.fechaIncidente}</td>
-                <td className="px-4 py-2">{incidente.prioridad}</td>
-                <td className="px-4 py-2">{incidente.estado}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+        {/* Tabla */}
+        <TableContainer
+            component={Paper}
+            sx={{
+              marginTop: "16px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+        >
+          <Box className="flex justify-end p-4">
+            <Button
+                variant="contained"
+                onClick={exportarExcel}
+                sx={{ backgroundColor: "#1d4ed8", textTransform: "none", "&:hover": { backgroundColor: "#1e40af" } }}
+            >
+              Exportar a Excel
+            </Button>
+          </Box>
+          <Table>
+            <TableHead sx={{ backgroundColor: "#1d4ed8" }}>
+              <TableRow>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Descripción</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Prioridad</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredIncidentes.map((incidente) => (
+                  <TableRow
+                      key={incidente._id}
+                      hover
+                      sx={{
+                        "&:hover": { backgroundColor: "#e0f2fe" },
+                        transition: "background-color 0.3s ease",
+                      }}
+                  >
+                    <TableCell>{incidente.descripcion}</TableCell>
+                    <TableCell>{incidente.fechaIncidente}</TableCell>
+                    <TableCell>{incidente.prioridad}</TableCell>
+                    <TableCell>
+                  <span
+                      style={{
+                        backgroundColor: estadoColores[incidente.estado],
+                        color: "#ffffff",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontWeight: 600,
+                      }}
+                  >
+                    {incidente.estado}
+                  </span>
+                    </TableCell>
+                  </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
   );
 };
 

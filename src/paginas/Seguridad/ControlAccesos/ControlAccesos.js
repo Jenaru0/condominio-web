@@ -3,43 +3,19 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
+import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
+import AccessFilters from "./FiltrosAccesos";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material";
 
-// Componente de filtros
-const AccessFilters = ({ filters, onFilterChange }) => (
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <select
-      value={filters.tipoUsuario}
-      onChange={(e) => onFilterChange("tipoUsuario", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    >
-      <option value="">Tipo de Usuario (Todos)</option>
-      <option value="Residente">Residente</option>
-      <option value="Visitante">Visitante</option>
-      <option value="Empleado">Empleado</option>
-    </select>
-    <input
-      type="date"
-      value={filters.fechaInicio}
-      onChange={(e) => onFilterChange("fechaInicio", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-    <input
-      type="date"
-      value={filters.fechaFin}
-      onChange={(e) => onFilterChange("fechaFin", e.target.value)}
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-    <input
-      type="text"
-      value={filters.busqueda}
-      onChange={(e) => onFilterChange("busqueda", e.target.value)}
-      placeholder="Buscar por DNI, nombre, zona..."
-      className="border rounded-lg px-4 py-2 w-full"
-    />
-  </div>
-);
-
-// Componente principal
 const ControlAccesos = () => {
   const [accesos, setAccesos] = useState([]);
   const [filteredAccesos, setFilteredAccesos] = useState([]);
@@ -55,7 +31,6 @@ const ControlAccesos = () => {
   const [stats, setStats] = useState({ entradas: 0, salidas: 0 });
 
   useEffect(() => {
-    // Simulación de datos de accesos
     const mockAccesos = [
       {
         _id: "1",
@@ -97,25 +72,25 @@ const ControlAccesos = () => {
   useEffect(() => {
     const filtered = accesos.filter((acceso) => {
       const matchesTipoUsuario =
-        !filters.tipoUsuario || acceso.tipoUsuario === filters.tipoUsuario;
+          !filters.tipoUsuario || acceso.tipoUsuario === filters.tipoUsuario;
       const matchesFechaInicio =
-        !filters.fechaInicio ||
-        new Date(acceso.fechaEntrada) >= new Date(filters.fechaInicio);
+          !filters.fechaInicio ||
+          new Date(acceso.fechaEntrada) >= new Date(filters.fechaInicio);
       const matchesFechaFin =
-        !filters.fechaFin ||
-        new Date(acceso.fechaEntrada) <= new Date(filters.fechaFin);
+          !filters.fechaFin ||
+          new Date(acceso.fechaEntrada) <= new Date(filters.fechaFin);
       const matchesBusqueda =
-        acceso.nombre.toLowerCase().includes(filters.busqueda.toLowerCase()) ||
-        acceso.dni.includes(filters.busqueda) ||
-        acceso.zonaAcceso
-          .toLowerCase()
-          .includes(filters.busqueda.toLowerCase());
+          acceso.nombre.toLowerCase().includes(filters.busqueda.toLowerCase()) ||
+          acceso.dni.includes(filters.busqueda) ||
+          acceso.zonaAcceso
+              .toLowerCase()
+              .includes(filters.busqueda.toLowerCase());
 
       return (
-        matchesTipoUsuario &&
-        matchesFechaInicio &&
-        matchesFechaFin &&
-        matchesBusqueda
+          matchesTipoUsuario &&
+          matchesFechaInicio &&
+          matchesFechaFin &&
+          matchesBusqueda
       );
     });
 
@@ -142,8 +117,8 @@ const ControlAccesos = () => {
       type: "array",
     });
     saveAs(
-      new Blob([excelBuffer], { type: "application/octet-stream" }),
-      "control_accesos.xlsx"
+        new Blob([excelBuffer], { type: "application/octet-stream" }),
+        "control_accesos.xlsx"
     );
   };
 
@@ -159,72 +134,99 @@ const ControlAccesos = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-xl font-semibold">
-          Cargando registros de accesos...
-        </p>
-      </div>
-    );
+    return <LoadingSpinner text="Cargando registros de accesos..." />;
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Control de Accesos
-      </h1>
+      <div className="p-6 bg-gray-100 min-h-screen">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          Control de Accesos
+        </h1>
 
-      {/* Filtros */}
-      <AccessFilters filters={filters} onFilterChange={handleFilterChange} />
+        {/* Filtros */}
+        <AccessFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onApplyFilters={() => console.log("Aplicar filtros")}
+            onResetFilters={() =>
+                setFilters({ tipoUsuario: "", fechaInicio: "", fechaFin: "", busqueda: "" })
+            }
+        />
 
-      {/* Estadísticas */}
-      <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
-        <Bar data={dataChart} />
-      </div>
+        {/* Estadísticas */}
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
+          <Bar data={dataChart} />
+        </div>
 
-      {/* Tabla */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="mb-4 flex justify-end">
-          <button
-            onClick={exportarExcel}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        {/* Tabla */}
+        <div className="flex justify-end mb-4">
+          <Button
+              variant="contained"
+              onClick={exportarExcel}
+              sx={{
+                backgroundColor: "#1d4ed8",
+                textTransform: "none",
+                fontWeight: 600,
+                "&:hover": { backgroundColor: "#1e40af" },
+              }}
           >
             Exportar a Excel
-          </button>
+          </Button>
         </div>
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2 text-left">Nombre</th>
-              <th className="px-4 py-2 text-left">DNI</th>
-              <th className="px-4 py-2 text-left">Tipo</th>
-              <th className="px-4 py-2 text-left">Zona</th>
-              <th className="px-4 py-2 text-left">Entrada</th>
-              <th className="px-4 py-2 text-left">Salida</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAccesos.map((acceso) => (
-              <tr key={acceso._id} className="border-t">
-                <td className="px-4 py-2">{acceso.nombre}</td>
-                <td className="px-4 py-2">{acceso.dni}</td>
-                <td className="px-4 py-2">{acceso.tipoUsuario}</td>
-                <td className="px-4 py-2">{acceso.zonaAcceso}</td>
-                <td className="px-4 py-2">
-                  {new Date(acceso.fechaEntrada).toLocaleString()}
-                </td>
-                <td className="px-4 py-2">
-                  {acceso.fechaSalida
-                    ? new Date(acceso.fechaSalida).toLocaleString()
-                    : "N/A"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TableContainer
+            component={Paper}
+            sx={{
+              marginTop: "16px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+        >
+          <Table>
+            <TableHead sx={{ backgroundColor: "#1d4ed8" }}>
+              <TableRow>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
+                  Nombre
+                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>DNI</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Zona</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
+                  Entrada
+                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
+                  Salida
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredAccesos.map((acceso) => (
+                  <TableRow
+                      key={acceso._id}
+                      hover
+                      sx={{
+                        "&:hover": { backgroundColor: "#e0f2fe" },
+                        transition: "background-color 0.3s ease",
+                      }}
+                  >
+                    <TableCell>{acceso.nombre}</TableCell>
+                    <TableCell>{acceso.dni}</TableCell>
+                    <TableCell>{acceso.tipoUsuario}</TableCell>
+                    <TableCell>{acceso.zonaAcceso}</TableCell>
+                    <TableCell>
+                      {new Date(acceso.fechaEntrada).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      {acceso.fechaSalida
+                          ? new Date(acceso.fechaSalida).toLocaleString()
+                          : "N/A"}
+                    </TableCell>
+                  </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
-    </div>
   );
 };
 
