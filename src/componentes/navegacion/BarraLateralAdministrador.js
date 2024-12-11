@@ -27,7 +27,7 @@ const linksAdministrador = [
         children: [
             { to: "/usuarios/propietarios", label: "Propietarios", icon: FaUser },
             { to: "/usuarios/inquilinos", label: "Inquilinos", icon: FaUser },
-            { to: "/usuarios/empleados", label: "Empleados", icon: FaUser },
+            /*{ to: "/usuarios/empleados", label: "Empleados", icon: FaUser },*/
             { to: "/usuarios/roles-permisos", label: "Roles y Permisos", icon: FaUser },
         ],
     },
