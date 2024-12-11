@@ -5,15 +5,15 @@ import ProtectedLayout from "../diseños/ProtectedLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import LoginPage from "../paginas/Autenticacion/LoginPage";
 import Dashboard from "../paginas/Dashboard/Dashboard";
-import Propietarios from "../paginas/Usuarios/Administrador/Propietarios";
-import Inquilinos from "../paginas/Usuarios/Administrador/Inquilinos";
-import Empleados from "../paginas/Usuarios/Administrador/Empleados";
-import RolesPermisos from "../paginas/Usuarios/Administrador/RolesPermisos";
-import Departamentos from "../paginas/Propiedades/Departamentos";
-import Cocheras from "../paginas/Propiedades/Cocheras";
+import Propietarios from "../paginas/Usuarios/Administrador/propietarios/Propietarios";
+import Inquilinos from "../paginas/Usuarios/Administrador/inquilinos/Inquilinos";
+import Empleados from "../paginas/Usuarios/Administrador/empleados/Empleados";
+import RolesPermisos from "../paginas/Usuarios/Administrador/rolesypermisos/RolesPermisos";
+import Departamentos from "../paginas/Propiedades/departamentos/Departamentos";
+import Cocheras from "../paginas/Propiedades/cocheras/Cocheras";
 import SolicitudesServicio from "../paginas/Mantenimiento/Administrador/SolicitudesServicio";
-import Reservas from "../paginas/AreasComunes/Administrador/Reservas";
-import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/ConfiguracionAreas";
+import Reservas from "../paginas/AreasComunes/Administrador/reservas/Reservas";
+import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/configuracionAreas/ConfiguracionAreas";
 import Correspondencia from "../paginas/Correspondencia/Administrador/Correspondencia";
 import Eventos from "../paginas/Eventos/Administrador/Eventos";
 import VerificacionPagos from "../paginas/Pagos/Administrador/VerificacionPagos";
@@ -24,8 +24,6 @@ import ReportesFinancieros from "../paginas/Reportes/Administrador/ReportesFinan
 import ReportesOperativos from "../paginas/Reportes/Administrador/ReportesOperativos";
 import ControlAccesos from "../paginas/Seguridad/ControlAccesos";
 import IncidentesSeguridad from "../paginas/Seguridad/IncidentesSeguridad";
-import ResidentesInquilinos from "../paginas/Usuarios/Administrador/ResidentesInquilinos";
-import GestionCocheras from "../paginas/Propiedades/GestionCocheras";
 import SolicitudesMantenimiento from "../paginas/Mantenimiento/Administrador/SolicitudesMantenimiento";
 import EnviarNotificaciones from "../paginas/Notificaciones/Administrador/EnviarNotificaciones";
 import AyudaSoporte from "../paginas/AyudaSoporte/AyudaSoporte";
@@ -199,22 +197,6 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Cocheras />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/residentes-inquilinos"
-          element={
-            <ProtectedRoute>
-              <ResidentesInquilinos />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/gestion-cocheras"
-          element={
-            <ProtectedRoute>
-              <GestionCocheras />
             </ProtectedRoute>
           }
         />

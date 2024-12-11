@@ -38,8 +38,6 @@ const linksAdministrador = [
         children: [
             { to: "/propiedades/departamentos", label: "Departamentos", icon: FaBuilding },
             { to: "/propiedades/cocheras", label: "Cocheras", icon: FaCar },
-            { to: "/propiedades/gestion-departamentos", label: "Gestión de Departamentos", icon: FaBuilding },
-            { to: "/propiedades/gestion-cocheras", label: "Gestión de Cocheras", icon: FaCar },
         ],
     },
     {
@@ -104,15 +102,6 @@ const linksAdministrador = [
         children: [
             { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
             { to: "/seguridad/incidentes", label: "Incidentes de Seguridad", icon: FaShieldAlt },
-        ],
-    },
-    {
-        dropdown: true,
-        label: "Configuración",
-        icon: FaCogs,
-        children: [
-            { to: "/configuracion/perfil", label: "Perfil", icon: FaCogs },
-            { to: "/configuracion/preferencias", label: "Preferencias", icon: FaCogs },
         ],
     },
 ];
