@@ -13,35 +13,39 @@ const SidebarOption = ({
                            isOpen,
                            onClick,
                            items,
+                           onClose,
                        }) => {
     const optionRef = useRef(null);
 
-    return (
+    return isDropdown ? (
         <li
             ref={optionRef}
             className={`relative flex items-center ${
                 collapsed ? "justify-center" : "px-3"
             } py-1 rounded-lg transition-all duration-300 ${
-                isActive ? "bg-blue-600 font-semibold text-white" : "text-white"
+                isActive ? "bg-blue-600 text-white" : "text-white"
             } hover:bg-blue-500`}
-            onClick={isDropdown ? onClick : undefined}
-            style={{ cursor: isDropdown ? "pointer" : "default" }}
+            onClick={() => {
+                onClick();
+            }}
+            style={{ cursor: "pointer" }}
         >
-            {/* Ícono */}
-            <div className="flex items-center justify-center w-8 h-8">
+            <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
                 <Icon className="text-lg text-white" />
             </div>
 
-            {/* Contenedor de texto: no renderizar si está colapsado */}
             {!collapsed && (
                 <div className="ml-3 flex-1 transition-all duration-300">
                     <span className="text-sm text-left whitespace-nowrap">{label}</span>
                 </div>
             )}
 
-            {/* Flecha para desplegar subopciones */}
-            {isDropdown && !collapsed && (
-                <div className="ml-auto">
+            {!collapsed && isDropdown && (
+                <div
+                    className={`ml-auto transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                >
                     {isOpen ? (
                         <FaChevronUp className="text-white" />
                     ) : (
@@ -50,11 +54,12 @@ const SidebarOption = ({
                 </div>
             )}
 
-            {/* Subopciones flotantes cuando está colapsado */}
             {collapsed && isDropdown && (
                 <div
                     className={`absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50 transition-all duration-300 ${
-                        isOpen ? "block" : "hidden"
+                        isOpen
+                            ? "opacity-100 pointer-events-auto translate-y-0"
+                            : "opacity-0 pointer-events-none -translate-y-2"
                     }`}
                     style={{
                         top: optionRef.current ? optionRef.current.offsetTop : 0,
@@ -63,22 +68,72 @@ const SidebarOption = ({
                 >
                     <ul className="space-y-1 p-2">
                         {items?.map((item, index) => (
-                            <li
+                            <SubOption
                                 key={index}
-                                className="hover:bg-blue-600 rounded-md p-2 flex items-center transition-all duration-200"
-                            >
-                                <Link
-                                    to={item.to}
-                                    className="flex items-center space-x-3 text-sm text-white no-underline w-full"
-                                >
-                                    <item.icon className="text-lg text-white" />
-                                    <span className="flex-1 text-left">{item.label}</span>
-                                </Link>
-                            </li>
+                                item={item}
+                                isActive={item.isActive}
+                                onClose={onClose}
+                            />
                         ))}
                     </ul>
                 </div>
             )}
+        </li>
+    ) : (
+        <li
+            className={`relative flex items-center ${
+                collapsed ? "justify-center" : "px-3"
+            } py-1 rounded-lg transition-all duration-300 ${
+                isActive ? "bg-blue-600 font-semibold text-white" : "text-white"
+            } hover:bg-blue-500`}
+            onClick={() => {
+                if (collapsed) onClose();
+            }}
+        >
+            <Link
+                to={to}
+                className={`flex items-center ${
+                    collapsed ? "justify-center" : "space-x-3"
+                } w-full no-underline text-white`}
+            >
+                <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
+                    <Icon className="text-lg text-white" />
+                </div>
+                {!collapsed && (
+                    <div className="ml-3 flex-1 transition-all duration-300">
+                        <span className="text-sm text-left whitespace-nowrap">{label}</span>
+                    </div>
+                )}
+            </Link>
+        </li>
+    );
+};
+
+const SubOption = ({ item, onClose }) => {
+    const { to, label, icon: Icon, isActive } = item;
+
+    return (
+        <li
+            className={`rounded-md p-2 flex items-center transition-all duration-200 ${
+                isActive ? "bg-blue-600" : "hover:bg-blue-500"
+            }`}
+            onClick={() => onClose()}
+        >
+            <Link
+                to={to}
+                className="flex items-center space-x-3 text-sm text-white no-underline w-full"
+            >
+                <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
+                    <Icon className="text-lg text-white" />
+                </div>
+                <span
+                    className={`flex-1 text-left transition-all duration-300 ${
+                        isActive ? "font-semibold" : ""
+                    }`}
+                >
+                    {label}
+                </span>
+            </Link>
         </li>
     );
 };
@@ -91,6 +146,7 @@ const SidebarDropdown = ({
                              isActive,
                              isOpen,
                              onClick,
+                             onClose,
                          }) => {
     return (
         <div className="relative">
@@ -103,26 +159,19 @@ const SidebarDropdown = ({
                 isActive={isActive}
                 collapsed={collapsed}
                 items={items}
+                onClose={onClose}
             />
             {!collapsed && (
                 <ul
-                    className={`pl-8 mt-1 space-y-1 transition-all duration-300 ${
-                        isOpen ? "block" : "hidden"
+                    className={`pl-8 mt-1 space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${
+                        isOpen
+                            ? "opacity-100 scale-y-100 max-h-screen"
+                            : "opacity-0 scale-y-0 max-h-0"
                     }`}
+                    style={{ transformOrigin: "top" }}
                 >
                     {items.map((item, index) => (
-                        <li
-                            key={index}
-                            className="hover:bg-blue-600 rounded-md p-2 flex items-center transition-all duration-200"
-                        >
-                            <Link
-                                to={item.to}
-                                className="flex items-center space-x-3 text-sm text-white no-underline w-full"
-                            >
-                                <item.icon className="text-lg text-white" />
-                                <span className="flex-1 text-left">{item.label}</span>
-                            </Link>
-                        </li>
+                        <SubOption key={index} item={item} onClose={onClose} />
                     ))}
                 </ul>
             )}
@@ -148,10 +197,13 @@ const Sidebar = ({ collapsed }) => {
         }
     };
 
+    const handleCloseDropdown = () => {
+        setOpenDropdownCollapsed(null);
+        setOpenDropdownExpanded(null);
+    };
+
     useEffect(() => {
-        if (collapsed) {
-            setOpenDropdownExpanded(null);
-        } else {
+        if (!collapsed) {
             setOpenDropdownCollapsed(null);
         }
     }, [collapsed]);
@@ -191,6 +243,7 @@ const Sidebar = ({ collapsed }) => {
                                     : openDropdownExpanded === index
                             }
                             onClick={() => handleDropdownClick(index)}
+                            onClose={handleCloseDropdown}
                         />
                     ) : (
                         <SidebarOption
@@ -200,6 +253,7 @@ const Sidebar = ({ collapsed }) => {
                             icon={link.icon}
                             isActive={link.isActive}
                             collapsed={collapsed}
+                            onClose={handleCloseDropdown}
                         />
                     )
                 )}
