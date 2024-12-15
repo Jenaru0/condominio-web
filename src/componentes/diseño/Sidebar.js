@@ -25,9 +25,7 @@ const SidebarOption = ({
             } py-1 rounded-lg transition-all duration-300 ${
                 isActive ? "bg-blue-600 text-white" : "text-white"
             } hover:bg-blue-500`}
-            onClick={() => {
-                onClick();
-            }}
+            onClick={onClick}
             style={{ cursor: "pointer" }}
         >
             <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
@@ -35,7 +33,7 @@ const SidebarOption = ({
             </div>
 
             {!collapsed && (
-                <div className="ml-3 flex-1 transition-all duration-300">
+                <div className="ml-3 flex-1">
                     <span className="text-sm text-left whitespace-nowrap">{label}</span>
                 </div>
             )}
@@ -56,7 +54,7 @@ const SidebarOption = ({
 
             {collapsed && isDropdown && (
                 <div
-                    className={`absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50 transition-all duration-300 ${
+                    className={`absolute left-full bg-blue-700 text-white rounded-lg shadow-lg w-48 z-50 ${
                         isOpen
                             ? "opacity-100 pointer-events-auto translate-y-0"
                             : "opacity-0 pointer-events-none -translate-y-2"
@@ -68,12 +66,7 @@ const SidebarOption = ({
                 >
                     <ul className="space-y-1 p-2">
                         {items?.map((item, index) => (
-                            <SubOption
-                                key={index}
-                                item={item}
-                                isActive={item.isActive}
-                                onClose={onClose}
-                            />
+                            <SubOption key={index} item={item} onClose={onClose} />
                         ))}
                     </ul>
                 </div>
@@ -86,9 +79,7 @@ const SidebarOption = ({
             } py-1 rounded-lg transition-all duration-300 ${
                 isActive ? "bg-blue-600 font-semibold text-white" : "text-white"
             } hover:bg-blue-500`}
-            onClick={() => {
-                if (collapsed) onClose();
-            }}
+            onClick={() => collapsed && onClose()}
         >
             <Link
                 to={to}
@@ -100,7 +91,7 @@ const SidebarOption = ({
                     <Icon className="text-lg text-white" />
                 </div>
                 {!collapsed && (
-                    <div className="ml-3 flex-1 transition-all duration-300">
+                    <div className="ml-3 flex-1">
                         <span className="text-sm text-left whitespace-nowrap">{label}</span>
                     </div>
                 )}
@@ -117,7 +108,7 @@ const SubOption = ({ item, onClose }) => {
             className={`rounded-md p-2 flex items-center transition-all duration-200 ${
                 isActive ? "bg-blue-600" : "hover:bg-blue-500"
             }`}
-            onClick={() => onClose()}
+            onClick={onClose}
         >
             <Link
                 to={to}
@@ -126,13 +117,9 @@ const SubOption = ({ item, onClose }) => {
                 <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
                     <Icon className="text-lg text-white" />
                 </div>
-                <span
-                    className={`flex-1 text-left transition-all duration-300 ${
-                        isActive ? "font-semibold" : ""
-                    }`}
-                >
-          {label}
-        </span>
+                <span className={`flex-1 text-left ${isActive ? "font-semibold" : ""}`}>
+                    {label}
+                </span>
             </Link>
         </li>
     );
@@ -147,41 +134,31 @@ const SidebarDropdown = ({
                              isOpen,
                              onClick,
                              onClose,
-                         }) => {
-    return (
-        <div className="relative">
-            <SidebarOption
-                label={label}
-                icon={Icon}
-                isDropdown
-                isOpen={isOpen}
-                onClick={onClick}
-                isActive={isActive}
-                collapsed={collapsed}
-                items={items}
-                onClose={onClose}
-            />
-            {!collapsed && (
-                <ul
-                    className={`pl-8 mt-1 space-y-1 overflow-hidden transition-all duration-500 ease-in-out ${
-                        isOpen
-                            ? "opacity-100 scale-y-100 max-h-screen"
-                            : "opacity-0 scale-y-0 max-h-0"
-                    }`}
-                    style={{ transformOrigin: "top" }}
-                >
-                    {items.map((item, index) => (
-                        <SubOption key={index} item={item} onClose={onClose} />
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-};
+                         }) => (
+    <div className="relative">
+        <SidebarOption
+            label={label}
+            icon={Icon}
+            isDropdown
+            isOpen={isOpen}
+            onClick={onClick}
+            isActive={isActive}
+            collapsed={collapsed}
+            items={items}
+            onClose={onClose}
+        />
+        {!collapsed && isOpen && (
+            <ul className="pl-8 mt-1 space-y-1 overflow-hidden max-h-[400px] overflow-y-auto scrollbar-hide">
+                {items.map((item, index) => (
+                    <SubOption key={index} item={item} onClose={onClose} />
+                ))}
+            </ul>
+        )}
+    </div>
+);
 
 const Sidebar = ({ collapsed }) => {
     const location = useLocation();
-
     const [openDropdownExpanded, setOpenDropdownExpanded] = useState(null);
     const [openDropdownCollapsed, setOpenDropdownCollapsed] = useState(null);
 
@@ -227,7 +204,11 @@ const Sidebar = ({ collapsed }) => {
                 collapsed ? "w-20" : "w-64"
             }`}
         >
-            <ul className="space-y-1 pt-2 px-2">
+            <ul
+                className={`space-y-1 pt-2 px-2 ${
+                    collapsed ? "overflow-visible" : "overflow-y-auto h-full scrollbar-hide"
+                }`}
+            >
                 {processedLinks.map((link, index) =>
                     link.dropdown ? (
                         <SidebarDropdown

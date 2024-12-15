@@ -42,6 +42,16 @@ const linksAdministrador = [
     },
     {
         dropdown: true,
+        label: "Pagos",
+        icon: FaMoneyBill,
+        children: [
+            { to: "/pagos/verificacion-pagos", label: "Verificación de Pagos", icon: FaMoneyBill },
+            { to: "/pagos/estados-de-cuenta", label: "Estados de Cuenta", icon: FaFileAlt },
+            { to: "/pagos/facturacion", label: "Facturación", icon: FaFileAlt },
+        ],
+    },
+    {
+        dropdown: true,
         label: "Mantenimiento",
         icon: FaTools,
         children: [
@@ -60,18 +70,12 @@ const linksAdministrador = [
     },
     {
         dropdown: true,
-        label: "Pagos",
-        icon: FaMoneyBill,
+        label: "Seguridad",
+        icon: FaShieldAlt,
         children: [
-            { to: "/pagos/verificacion-pagos", label: "Verificación de Pagos", icon: FaMoneyBill },
-            { to: "/pagos/estados-de-cuenta", label: "Estados de Cuenta", icon: FaFileAlt },
-            { to: "/pagos/facturacion", label: "Facturación", icon: FaFileAlt },
+            { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
+            { to: "/seguridad/incidentes-seguridad", label: "Incidentes de Seguridad", icon: FaShieldAlt },
         ],
-    },
-    {
-        to: "/documentos/gestion-documentos",
-        icon: FaFileAlt,
-        label: "Documentos",
     },
     {
         dropdown: true,
@@ -83,28 +87,24 @@ const linksAdministrador = [
         ],
     },
     {
+        to: "/documentos/gestion-documentos",
+        icon: FaFileAlt,
+        label: "Documentos",
+    },
+    {
         to: "/enviar-notificaciones",
         icon: FaBell,
         label: "Enviar notificaciones",
     },
     {
-        dropdown: true,
-        label: "Seguridad",
-        icon: FaShieldAlt,
-        children: [
-            { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
-            { to: "/seguridad/incidentes-seguridad", label: "Incidentes de Seguridad", icon: FaShieldAlt },
-        ],
+        to: "/eventos",
+        icon: FaCalendarAlt,
+        label: "Eventos",
     },
     {
         to: "/correspondencia",
-        icon: FaEnvelope,  // Cambio de FaTachometerAlt a FaEnvelope para correspondencia
+        icon: FaEnvelope,
         label: "Correspondencia",
-    },
-    {
-        to: "/eventos",
-        icon: FaCalendarAlt,  // Cambio de FaTachometerAlt a FaCalendarAlt para eventos
-        label: "Eventos",
     },
 ];
 
