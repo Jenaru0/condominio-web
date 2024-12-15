@@ -9,7 +9,7 @@ import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import { Bar } from "react-chartjs-2";
 
 const Financieros = () => {
-  const [finanzas, setFinanzas] = useState([]);
+  // const [finanzas, setFinanzas] = useState([]);
   const [filteredFinanzas, setFilteredFinanzas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -31,7 +31,8 @@ const Financieros = () => {
       { _id: "3", fecha: "2023-12-10", categoria: "Renta", tipo: "Ingreso", monto: 500 },
     ];
     setTimeout(() => {
-      setFinanzas(mockFinanzas);
+      // setFinanzas(mockFinanzas);
+      setFilteredFinanzas(mockFinanzas);
       setFilteredFinanzas(mockFinanzas);
       calcularResumen(mockFinanzas);
       setLoading(false);

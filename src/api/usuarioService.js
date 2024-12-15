@@ -85,3 +85,16 @@ export const listarInquilinos = async () => {
     throw error;
   }
 };
+
+
+export const listarEmpleados = async () => {
+  try {
+      const response = await axios.get(`${API_URL}/empleados`); // Usa la ruta directa
+      return response.data;
+  } catch (error) {
+      console.error(
+        "Error al listar empleados:",
+        error.response?.data || error.message);
+      throw error;
+  }
+};
