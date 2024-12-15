@@ -1,31 +1,24 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 
-const EstadisticasAccesos = ({ dataChart }) => (
-    <Box
-        sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            gap: "16px",
-            marginBottom: "16px",
-        }}
-    >
-        <Box
-            sx={{
-                flex: 1,
-                backgroundColor: "#ffffff",
-                borderRadius: "8px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-                padding: "16px",
-            }}
-        >
-            <Typography variant="h6" sx={{ marginBottom: "16px" }}>
-                Estadísticas de Accesos
-            </Typography>
+const EstadisticasAccesos = ({ stats }) => {
+    const dataChart = {
+        labels: ["Entradas", "Salidas"],
+        datasets: [
+            {
+                label: "Estadísticas de Accesos",
+                data: [stats.entradas, stats.salidas],
+                backgroundColor: ["#4CAF50", "#FFC107"],
+            },
+        ],
+    };
+
+    return (
+        <div className="bg-white shadow p-4 rounded-lg mb-6">
+            <h2 className="text-xl font-bold mb-4">Estadísticas</h2>
             <Bar data={dataChart} />
-        </Box>
-    </Box>
-);
+        </div>
+    );
+};
 
 export default EstadisticasAccesos;

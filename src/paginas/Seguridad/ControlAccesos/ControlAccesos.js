@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
-import { Bar } from "react-chartjs-2";
-import "chart.js/auto";
 import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
 import Encabezado from "../../../componentes/comunes/Encabezado";
 import AccessFilters from "./FiltrosAccesos";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-} from "@mui/material";
+import EstadisticasAccesos from "./EstadisticasAccesos";
+import ListaAccesos from "./ListaAccesos";
 
 const ControlAccesos = () => {
   const [accesos, setAccesos] = useState([]);
@@ -27,8 +17,6 @@ const ControlAccesos = () => {
     busqueda: "",
   });
   const [loading, setLoading] = useState(true);
-
-  // Estadísticas de accesos
   const [stats, setStats] = useState({ entradas: 0, salidas: 0 });
 
   useEffect(() => {
@@ -70,149 +58,49 @@ const ControlAccesos = () => {
     }, 1000);
   }, []);
 
-  useEffect(() => {
-    const filtered = accesos.filter((acceso) => {
-      const matchesTipoUsuario =
-          !filters.tipoUsuario || acceso.tipoUsuario === filters.tipoUsuario;
-      const matchesFechaInicio =
-          !filters.fechaInicio ||
-          new Date(acceso.fechaEntrada) >= new Date(filters.fechaInicio);
-      const matchesFechaFin =
-          !filters.fechaFin ||
-          new Date(acceso.fechaEntrada) <= new Date(filters.fechaFin);
-      const matchesBusqueda =
-          acceso.nombre.toLowerCase().includes(filters.busqueda.toLowerCase()) ||
-          acceso.dni.includes(filters.busqueda) ||
-          acceso.zonaAcceso
-              .toLowerCase()
-              .includes(filters.busqueda.toLowerCase());
-
-      return (
-          matchesTipoUsuario &&
-          matchesFechaInicio &&
-          matchesFechaFin &&
-          matchesBusqueda
-      );
-    });
-
-    setFilteredAccesos(filtered);
-    calcularEstadisticas(filtered);
-  }, [filters, accesos]);
-
   const calcularEstadisticas = (data) => {
     const entradas = data.filter((acceso) => acceso.fechaEntrada).length;
     const salidas = data.filter((acceso) => acceso.fechaSalida).length;
     setStats({ entradas, salidas });
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+
+    const filtered = accesos.filter((acceso) => {
+      const matchesTipoUsuario =
+          !newFilters.tipoUsuario || acceso.tipoUsuario === newFilters.tipoUsuario;
+      const matchesBusqueda =
+          acceso.nombre.toLowerCase().includes(newFilters.busqueda.toLowerCase()) ||
+          acceso.dni.includes(newFilters.busqueda);
+      return matchesTipoUsuario && matchesBusqueda;
+    });
+
+    setFilteredAccesos(filtered);
+    calcularEstadisticas(filtered);
   };
 
   const exportarExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredAccesos);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Control de Accesos");
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    saveAs(
-        new Blob([excelBuffer], { type: "application/octet-stream" }),
-        "control_accesos.xlsx"
-    );
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([excelBuffer], { type: "application/octet-stream" }), "control_accesos.xlsx");
   };
 
-  const dataChart = {
-    labels: ["Entradas", "Salidas"],
-    datasets: [
-      {
-        label: "Estadísticas de Accesos",
-        data: [stats.entradas, stats.salidas],
-        backgroundColor: ["#4CAF50", "#FFC107"],
-      },
-    ],
-  };
-
-  if (loading) {
-    return <LoadingSpinner text="Cargando registros de accesos..." />;
-  }
+  if (loading) return <LoadingSpinner text="Cargando registros de accesos..." />;
 
   return (
       <div className="p-6 bg-gray-100 min-h-screen">
-        {/* Encabezado reutilizable */}
-        <div className="flex justify-between items-center mb-6">
-          <Encabezado titulo="Control de Accesos" />
-        </div>
-
-        {/* Filtros */}
-        <AccessFilters
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onApplyFilters={() => console.log("Aplicar filtros")}
-            onResetFilters={() =>
-                setFilters({
-                  tipoUsuario: "",
-                  fechaInicio: "",
-                  fechaFin: "",
-                  busqueda: "",
-                })
-            }
-        />
-
-        {/* Estadísticas */}
-        <div className="bg-white shadow rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Estadísticas</h2>
-          <Bar data={dataChart} />
-        </div>
-
-        {/* Botón de exportar */}
-        <div className="flex justify-end mb-4">
-          <Button
-              variant="contained"
-              onClick={exportarExcel}
-              sx={{
-                backgroundColor: "#1d4ed8",
-                textTransform: "none",
-                fontWeight: 600,
-                "&:hover": { backgroundColor: "#1e40af" },
-              }}
-          >
+        <Encabezado titulo="Control de Accesos" />
+        <AccessFilters filters={filters} onFilterChange={handleFilterChange} />
+        <EstadisticasAccesos stats={stats} />
+        <div className="flex justify-end my-4">
+          <button onClick={exportarExcel} className="bg-blue-600 text-white px-4 py-2 rounded">
             Exportar a Excel
-          </Button>
+          </button>
         </div>
-
-        {/* Tabla de accesos */}
-        <TableContainer component={Paper} sx={{ borderRadius: "12px" }}>
-          <Table>
-            <TableHead sx={{ backgroundColor: "#1d4ed8" }}>
-              <TableRow>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>DNI</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Zona</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Entrada</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Salida</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredAccesos.map((acceso) => (
-                  <TableRow key={acceso._id} hover>
-                    <TableCell>{acceso.nombre}</TableCell>
-                    <TableCell>{acceso.dni}</TableCell>
-                    <TableCell>{acceso.tipoUsuario}</TableCell>
-                    <TableCell>{acceso.zonaAcceso}</TableCell>
-                    <TableCell>{new Date(acceso.fechaEntrada).toLocaleString()}</TableCell>
-                    <TableCell>
-                      {acceso.fechaSalida
-                          ? new Date(acceso.fechaSalida).toLocaleString()
-                          : "N/A"}
-                    </TableCell>
-                  </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <ListaAccesos accesos={filteredAccesos} />
       </div>
   );
 };
