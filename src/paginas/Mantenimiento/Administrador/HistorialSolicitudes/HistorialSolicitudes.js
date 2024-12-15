@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoHistorialSolicitudes from "./EncabezadoHistorialSolicitudes";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
 import FiltrosHistorialSolicitudes from "./FiltrosHistorialSolicitudes";
 import ListaHistorialSolicitudes from "./ListaHistorialSolicitudes";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -34,7 +34,9 @@ const HistorialSolicitudes = () => {
 
         setTimeout(() => {
             setSolicitudes(mockData);
-            setFilteredSolicitudes(mockData.filter((s) => ["Resuelto", "Cancelado"].includes(s.estado)));
+            setFilteredSolicitudes(
+                mockData.filter((s) => ["Resuelto", "Cancelado"].includes(s.estado))
+            );
             setLoading(false);
         }, 2000);
     }, []);
@@ -43,9 +45,13 @@ const HistorialSolicitudes = () => {
         const { estado, residente, fechaDesde, fechaHasta } = filters;
         const filtered = solicitudes.filter((s) => {
             const matchesEstado = !estado || s.estado === estado;
-            const matchesResidente = !residente || s.residente.toLowerCase().includes(residente.toLowerCase());
-            const matchesFechaDesde = !fechaDesde || new Date(s.fechaSolicitud) >= new Date(fechaDesde);
-            const matchesFechaHasta = !fechaHasta || new Date(s.fechaSolicitud) <= new Date(fechaHasta);
+            const matchesResidente =
+                !residente ||
+                s.residente.toLowerCase().includes(residente.toLowerCase());
+            const matchesFechaDesde =
+                !fechaDesde || new Date(s.fechaSolicitud) >= new Date(fechaDesde);
+            const matchesFechaHasta =
+                !fechaHasta || new Date(s.fechaSolicitud) <= new Date(fechaHasta);
 
             return matchesEstado && matchesResidente && matchesFechaDesde && matchesFechaHasta;
         });
@@ -58,7 +64,12 @@ const HistorialSolicitudes = () => {
 
     return (
         <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-            <EncabezadoHistorialSolicitudes />
+            {/* Encabezado reutilizable */}
+            <div className="mb-8">
+                <Encabezado titulo="Historial de Solicitudes" />
+            </div>
+
+            {/* Filtros y lista */}
             <FiltrosHistorialSolicitudes onFilter={handleFilter} />
             <ListaHistorialSolicitudes solicitudes={filteredSolicitudes} />
         </Box>

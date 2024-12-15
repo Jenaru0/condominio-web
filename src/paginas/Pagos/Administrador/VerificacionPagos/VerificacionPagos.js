@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoVerificacionPagos from "./EncabezadoVerificacionPagos";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
 import FiltrosPagos from "./FiltrosPagos";
 import TablaPagos from "./TablaPagos";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -16,6 +16,7 @@ const VerificacionPagos = () => {
     busqueda: "",
   });
 
+  // Simulación de carga de datos
   useEffect(() => {
     const mockPagos = [
       {
@@ -57,27 +58,25 @@ const VerificacionPagos = () => {
     }, 2000);
   }, []);
 
+  // Aplicar filtros
   useEffect(() => {
     const filtered = pagos.filter((pago) => {
       const matchesEstado = !filters.estado || pago.estado === filters.estado;
       const matchesFechaInicio =
-          !filters.fechaInicio ||
-          new Date(pago.fecha_pago) >= new Date(filters.fechaInicio);
+          !filters.fechaInicio || new Date(pago.fecha_pago) >= new Date(filters.fechaInicio);
       const matchesFechaFin =
-          !filters.fechaFin ||
-          new Date(pago.fecha_pago) <= new Date(filters.fechaFin);
+          !filters.fechaFin || new Date(pago.fecha_pago) <= new Date(filters.fechaFin);
       const matchesBusqueda =
           pago.concepto.toLowerCase().includes(filters.busqueda.toLowerCase()) ||
           pago.usuario.toLowerCase().includes(filters.busqueda.toLowerCase());
 
-      return (
-          matchesEstado && matchesFechaInicio && matchesFechaFin && matchesBusqueda
-      );
+      return matchesEstado && matchesFechaInicio && matchesFechaFin && matchesBusqueda;
     });
 
     setFilteredPagos(filtered);
   }, [filters, pagos]);
 
+  // Manejar cambios en los filtros
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -88,8 +87,15 @@ const VerificacionPagos = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoVerificacionPagos />
+        {/* Encabezado reutilizable */}
+        <div className="mb-8">
+          <Encabezado titulo="Verificación de Pagos" />
+        </div>
+
+        {/* Filtros */}
         <FiltrosPagos filters={filters} onFilterChange={handleFilterChange} />
+
+        {/* Tabla de pagos */}
         <TablaPagos pagos={filteredPagos} />
       </Box>
   );

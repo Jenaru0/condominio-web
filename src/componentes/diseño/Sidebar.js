@@ -131,8 +131,8 @@ const SubOption = ({ item, onClose }) => {
                         isActive ? "font-semibold" : ""
                     }`}
                 >
-                    {label}
-                </span>
+          {label}
+        </span>
             </Link>
         </li>
     );
@@ -223,7 +223,7 @@ const Sidebar = ({ collapsed }) => {
 
     return (
         <div
-            className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-blue-700 text-white shadow-lg transition-all duration-300 ${
+            className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-blue-700 text-white shadow-lg transition-all duration-300 z-40 ${
                 collapsed ? "w-20" : "w-64"
             }`}
         >

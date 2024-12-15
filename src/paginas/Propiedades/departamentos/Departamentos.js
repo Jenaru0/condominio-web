@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import EncabezadoDepartamentos from "./EncabezadoDepartamentos";
+import Encabezado from "../../../componentes/comunes/Encabezado";
+import Boton from "../../../componentes/comunes/Boton";
 import ListaDepartamentos from "./ListaDepartamentos";
 import FormularioDepartamento from "./FormularioDepartamento";
 import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
@@ -41,7 +42,7 @@ const Departamentos = () => {
       }
     };
 
-    setTimeout(cargarDatos, 3000); // Simulación de retraso de 3 segundos
+    setTimeout(cargarDatos, 3000); // Simulación de retraso
   }, []);
 
   const handleSave = async (form) => {
@@ -51,7 +52,8 @@ const Departamentos = () => {
       } else {
         await crearHabitacion(form);
       }
-      await listarHabitaciones().then(setDepartamentos);
+      const habitaciones = await listarHabitaciones();
+      setDepartamentos(habitaciones);
     } catch (error) {
       console.error("Error al guardar departamento:", error);
     }
@@ -76,7 +78,8 @@ const Departamentos = () => {
   const handleDelete = async () => {
     try {
       await eliminarHabitacion(deleteId);
-      await listarHabitaciones().then(setDepartamentos);
+      const habitaciones = await listarHabitaciones();
+      setDepartamentos(habitaciones);
     } catch (error) {
       console.error("Error al eliminar departamento:", error);
     }
@@ -89,12 +92,20 @@ const Departamentos = () => {
 
   return (
       <div className="p-6 bg-gray-100 min-h-screen">
-        <EncabezadoDepartamentos onAdd={() => setDialogOpen(true)} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Departamentos" />
+          <Boton label="+ Crear Departamento" onClick={() => setDialogOpen(true)} />
+        </div>
+
+        {/* Lista de departamentos */}
         <ListaDepartamentos
             departamentos={departamentos}
             onEdit={handleEdit}
             onDelete={openConfirmDialog}
         />
+
+        {/* Formulario para agregar o editar departamentos */}
         {dialogOpen && (
             <FormularioDepartamento
                 open={dialogOpen}
@@ -106,6 +117,8 @@ const Departamentos = () => {
                 tenants={usuarios.filter((u) => u.tipo_residente === "inquilino")}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

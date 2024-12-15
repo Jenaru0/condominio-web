@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoEmpleados from "./EncabezadoEmpleados";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaEmpleados from "./ListaEmpleados";
 import FormularioEmpleado from "./FormularioEmpleado";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -58,7 +59,7 @@ const Empleados = () => {
           prev.map((e) => (e.id === selectedEmpleado.id ? { ...form } : e))
       );
     } else {
-      setEmpleados((prev) => [...prev, { ...form }]);
+      setEmpleados((prev) => [...prev, { ...form, id: Date.now() }]);
     }
     handleCloseDialog();
   };
@@ -84,12 +85,20 @@ const Empleados = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoEmpleados onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con Botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Empleados" />
+          <Boton label="+ Crear Empleado" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de empleados */}
         <ListaEmpleados
             empleados={empleados}
             onEdit={handleOpenDialog}
             onDelete={handleOpenDeleteDialog}
         />
+
+        {/* Formulario de empleados */}
         {dialogOpen && (
             <FormularioEmpleado
                 open={dialogOpen}
@@ -98,6 +107,8 @@ const Empleados = () => {
                 onSave={handleSave}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         <ConfirmacionEliminacion
             open={deleteDialogOpen}
             onClose={handleCloseDeleteDialog}

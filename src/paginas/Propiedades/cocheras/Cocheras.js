@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoCocheras from "./EncabezadoCocheras";
+import Encabezado from "../../../componentes/comunes/Encabezado";
+import Boton from "../../../componentes/comunes/Boton";
 import ListaCocheras from "./ListaCocheras";
 import FormularioCochera from "./FormularioCochera";
 import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
@@ -97,13 +98,21 @@ const Cocheras = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoCocheras onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con el botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Cocheras" />
+          <Boton label="+ Crear Cochera" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de cocheras */}
         <ListaCocheras
             cocheras={cocheras}
             users={users}
             onEdit={handleOpenDialog}
             onDelete={openConfirmDialog}
         />
+
+        {/* Formulario para agregar o editar cocheras */}
         {dialogOpen && (
             <FormularioCochera
                 open={dialogOpen}
@@ -113,6 +122,8 @@ const Cocheras = () => {
                 users={users}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

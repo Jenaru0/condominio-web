@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoFinancieros from "./EncabezadoFinancieros";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosFinancieros from "./FiltrosFinancieros";
 import ResumenFinancieros from "./ResumenFinancieros";
 import TablaFinancieros from "./TablaFinancieros";
@@ -56,7 +57,13 @@ const Financieros = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoFinancieros />
+        {/* Encabezado reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Reportes Financieros" />
+          <Boton label="+ Crear Reporte" onClick={() => console.log("Crear reporte")} />
+        </div>
+
+        {/* Contenido principal */}
         <FiltrosFinancieros filters={filters} onFilterChange={handleFilterChange} />
         <ResumenFinancieros
             resumen={summary}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoAreas from "./EncabezadoAreas";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaAreas from "./ListaAreas";
 import FormularioArea from "./FormularioArea";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -11,6 +12,7 @@ const ConfiguracionAreas = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedArea, setSelectedArea] = useState(null);
 
+  // Simulación de carga inicial de datos
   useEffect(() => {
     const cargarDatos = () => {
       const mockAreas = [
@@ -52,6 +54,7 @@ const ConfiguracionAreas = () => {
     cargarDatos();
   }, []);
 
+  // Abrir y cerrar diálogo
   const handleOpenDialog = (area = null) => {
     setSelectedArea(area);
     setDialogOpen(true);
@@ -62,19 +65,19 @@ const ConfiguracionAreas = () => {
     setDialogOpen(false);
   };
 
+  // Guardar o actualizar área
   const handleSave = (form) => {
     if (selectedArea) {
-      // Actualizar área existente
       setAreas((prev) =>
           prev.map((a) => (a.id === selectedArea.id ? { ...form } : a))
       );
     } else {
-      // Crear nueva área
       setAreas((prev) => [...prev, { ...form, id: Date.now() }]);
     }
     handleCloseDialog();
   };
 
+  // Eliminar área
   const handleDelete = (id) => {
     if (window.confirm("¿Estás seguro de eliminar esta área?")) {
       setAreas((prev) => prev.filter((area) => area.id !== id));
@@ -94,12 +97,20 @@ const ConfiguracionAreas = () => {
             fontFamily: "'Montserrat', sans-serif",
           }}
       >
-        <EncabezadoAreas onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Configuración de Áreas Comunes" />
+          <Boton label="+ Crear Área" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de áreas */}
         <ListaAreas
             areas={areas}
             onEdit={handleOpenDialog}
             onDelete={handleDelete}
         />
+
+        {/* Formulario de área */}
         {dialogOpen && (
             <FormularioArea
                 open={dialogOpen}

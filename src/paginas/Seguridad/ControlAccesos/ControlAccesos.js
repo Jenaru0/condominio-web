@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import LoadingSpinner from "../../../componentes/comunes/LoadingSpinner";
+import Encabezado from "../../../componentes/comunes/Encabezado";
 import AccessFilters from "./FiltrosAccesos";
 import {
   Table,
@@ -139,9 +140,10 @@ const ControlAccesos = () => {
 
   return (
       <div className="p-6 bg-gray-100 min-h-screen">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">
-          Control de Accesos
-        </h1>
+        {/* Encabezado reutilizable */}
+        <div className="flex justify-between items-center mb-6">
+          <Encabezado titulo="Control de Accesos" />
+        </div>
 
         {/* Filtros */}
         <AccessFilters
@@ -149,7 +151,12 @@ const ControlAccesos = () => {
             onFilterChange={handleFilterChange}
             onApplyFilters={() => console.log("Aplicar filtros")}
             onResetFilters={() =>
-                setFilters({ tipoUsuario: "", fechaInicio: "", fechaFin: "", busqueda: "" })
+                setFilters({
+                  tipoUsuario: "",
+                  fechaInicio: "",
+                  fechaFin: "",
+                  busqueda: "",
+                })
             }
         />
 
@@ -159,7 +166,7 @@ const ControlAccesos = () => {
           <Bar data={dataChart} />
         </div>
 
-        {/* Tabla */}
+        {/* Botón de exportar */}
         <div className="flex justify-end mb-4">
           <Button
               variant="contained"
@@ -174,48 +181,28 @@ const ControlAccesos = () => {
             Exportar a Excel
           </Button>
         </div>
-        <TableContainer
-            component={Paper}
-            sx={{
-              marginTop: "16px",
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            }}
-        >
+
+        {/* Tabla de accesos */}
+        <TableContainer component={Paper} sx={{ borderRadius: "12px" }}>
           <Table>
             <TableHead sx={{ backgroundColor: "#1d4ed8" }}>
               <TableRow>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
-                  Nombre
-                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
                 <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>DNI</TableCell>
                 <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
                 <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Zona</TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
-                  Entrada
-                </TableCell>
-                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>
-                  Salida
-                </TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Entrada</TableCell>
+                <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Salida</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredAccesos.map((acceso) => (
-                  <TableRow
-                      key={acceso._id}
-                      hover
-                      sx={{
-                        "&:hover": { backgroundColor: "#e0f2fe" },
-                        transition: "background-color 0.3s ease",
-                      }}
-                  >
+                  <TableRow key={acceso._id} hover>
                     <TableCell>{acceso.nombre}</TableCell>
                     <TableCell>{acceso.dni}</TableCell>
                     <TableCell>{acceso.tipoUsuario}</TableCell>
                     <TableCell>{acceso.zonaAcceso}</TableCell>
-                    <TableCell>
-                      {new Date(acceso.fechaEntrada).toLocaleString()}
-                    </TableCell>
+                    <TableCell>{new Date(acceso.fechaEntrada).toLocaleString()}</TableCell>
                     <TableCell>
                       {acceso.fechaSalida
                           ? new Date(acceso.fechaSalida).toLocaleString()

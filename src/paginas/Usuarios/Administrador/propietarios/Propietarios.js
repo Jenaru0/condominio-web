@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoPropietario from "./EncabezadoPropietario";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaPropietarios from "./ListaPropietarios";
 import FormularioPropietario from "./FormularioPropietario";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -92,12 +93,20 @@ const Propietarios = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoPropietario onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Propietarios" />
+          <Boton label="+ Crear Propietario" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de Propietarios */}
         <ListaPropietarios
             propietarios={propietarios}
             onEdit={handleOpenDialog}
             onDelete={(id) => openConfirmDialog(id)}
         />
+
+        {/* Formulario para agregar o editar Propietario */}
         {dialogOpen && (
             <FormularioPropietario
                 open={dialogOpen}
@@ -106,6 +115,8 @@ const Propietarios = () => {
                 onSave={handleSave}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

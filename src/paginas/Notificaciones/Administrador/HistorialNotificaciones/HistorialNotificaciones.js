@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem } from "@mui/material";
-import { motion } from "framer-motion";
+import { Box, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem } from "@mui/material";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
-
-// Encabezado
-const EncabezadoHistorial = () => (
-    <motion.div
-        className="mb-8 flex justify-between items-center"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-    >
-        <h1 className="text-4xl font-bold text-gray-800 border-b-4 border-blue-500 pb-2">
-            Historial de Notificaciones
-        </h1>
-    </motion.div>
-);
+import Boton from "../../../../componentes/comunes/Boton";
 
 // Filtros
 const FiltrosNotificaciones = ({ filters, onFilterChange, onApplyFilters, onResetFilters }) => (
@@ -69,25 +56,13 @@ const FiltrosNotificaciones = ({ filters, onFilterChange, onApplyFilters, onRese
             sx={{ minWidth: "200px" }}
         />
         <Box sx={{ display: "flex", gap: "8px" }}>
-            <Button
-                variant="contained"
-                onClick={onApplyFilters}
-                sx={{ backgroundColor: "#1d4ed8" }}
-            >
-                Aplicar
-            </Button>
-            <Button
-                variant="outlined"
-                onClick={onResetFilters}
-                sx={{ color: "#1d4ed8", borderColor: "#1d4ed8" }}
-            >
-                Limpiar
-            </Button>
+            <Boton label="Aplicar" onClick={onApplyFilters} />
+            <Boton label="Limpiar" onClick={onResetFilters} />
         </Box>
     </Box>
 );
 
-// Historial de Notificaciones
+// Componente Principal
 const HistorialNotificaciones = () => {
     const [loading, setLoading] = useState(true);
     const [notificaciones, setNotificaciones] = useState([]);
@@ -173,7 +148,9 @@ const HistorialNotificaciones = () => {
 
     return (
         <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-            <EncabezadoHistorial />
+            <div className="flex justify-between items-center mb-8">
+                <Encabezado titulo="Historial de Notificaciones" />
+            </div>
 
             <FiltrosNotificaciones
                 filters={filters}
@@ -182,7 +159,6 @@ const HistorialNotificaciones = () => {
                 onResetFilters={handleResetFilters}
             />
 
-            {/* Tabla de notificaciones */}
             <TableContainer
                 component={Paper}
                 sx={{

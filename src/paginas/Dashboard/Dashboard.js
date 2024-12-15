@@ -12,6 +12,7 @@ import { Bar, Pie } from "react-chartjs-2";
 import { motion } from "framer-motion";
 import { FaUser, FaBuilding, FaUsers } from "react-icons/fa";
 import LoadingSpinner from "../../componentes/comunes/LoadingSpinner";
+import Encabezado from "../../componentes/comunes/Encabezado";
 
 // Registrar componentes de Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
@@ -34,7 +35,7 @@ const Dashboard = () => {
     setTimeout(() => {
       setStats(mockData);
       setLoading(false);
-    }, 3000); // Tiempo de carga simulado
+    }, 3000); // Simulación de carga
   }, []);
 
   if (loading) {
@@ -104,17 +105,8 @@ const Dashboard = () => {
 
   return (
       <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
-        {/* Título del dashboard */}
-        <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-        >
-          <h1 className="text-5xl font-bold text-gray-800 border-b-4 border-blue-500 pb-2">
-            Dashboard de Administrador
-          </h1>
-        </motion.div>
+        {/* Encabezado común reutilizado */}
+        <Encabezado titulo="Dashboard de Administrador" />
 
         {/* Tarjetas de Resumen */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">

@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoInquilinos from "./EncabezadoInquilinos";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaInquilinos from "./ListaInquilinos";
 import FormularioInquilino from "./FormularioInquilino";
 import ConfirmacionEliminacion from "../../../../componentes/comunes/ConfirmacionEliminacion";
+import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import {
   listarInquilinos,
   crearUsuario,
   editarUsuario,
   eliminarUsuario,
 } from "../../../../api/usuarioService";
-import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 
 const Inquilinos = () => {
   const [inquilinos, setInquilinos] = useState([]);
@@ -20,11 +21,11 @@ const Inquilinos = () => {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Cargar inquilinos
   const cargarInquilinos = async () => {
     try {
       setLoading(true);
-      // Simulación de retraso de 3 segundos
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Simula retraso de carga
       const data = await listarInquilinos();
       setInquilinos(data);
     } catch (error) {
@@ -34,6 +35,7 @@ const Inquilinos = () => {
     }
   };
 
+  // Abrir y cerrar diálogo
   const handleOpenDialog = (inquilino = null) => {
     setSelectedInquilino(inquilino);
     setDialogOpen(true);
@@ -44,6 +46,7 @@ const Inquilinos = () => {
     setDialogOpen(false);
   };
 
+  // Guardar inquilino
   const handleSave = async (form) => {
     try {
       if (selectedInquilino) {
@@ -63,6 +66,7 @@ const Inquilinos = () => {
     }
   };
 
+  // Abrir y cerrar confirmación de eliminación
   const openConfirmDialog = (id) => {
     setDeleteId(id);
     setConfirmDialogOpen(true);
@@ -73,6 +77,7 @@ const Inquilinos = () => {
     setConfirmDialogOpen(false);
   };
 
+  // Eliminar inquilino
   const handleDelete = async () => {
     try {
       if (deleteId) {
@@ -104,12 +109,20 @@ const Inquilinos = () => {
             fontFamily: "'Montserrat', sans-serif",
           }}
       >
-        <EncabezadoInquilinos onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Inquilinos" />
+          <Boton label="+ Crear Inquilino" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de inquilinos */}
         <ListaInquilinos
             inquilinos={inquilinos}
             onEdit={handleOpenDialog}
             onDelete={(id) => openConfirmDialog(id)}
         />
+
+        {/* Formulario de inquilinos */}
         {dialogOpen && (
             <FormularioInquilino
                 open={dialogOpen}
@@ -118,6 +131,8 @@ const Inquilinos = () => {
                 onSave={handleSave}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

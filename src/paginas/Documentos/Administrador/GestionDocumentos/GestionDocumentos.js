@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoGestionDocumentos from "./EncabezadoGestionDocumentos";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosDocumentos from "./FiltrosDocumentos";
 import TablaDocumentos from "./TablaDocumentos";
 import FormularioDocumento from "./FormularioDocumento";
@@ -23,6 +24,7 @@ const GestionDocumentos = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Simulación de carga inicial
   useEffect(() => {
     const mockDocumentos = [
       {
@@ -50,6 +52,7 @@ const GestionDocumentos = () => {
     }, 1000);
   }, []);
 
+  // Manejo de filtros
   const handleFilterChange = (key, value) => setFilters((prev) => ({ ...prev, [key]: value }));
 
   const applyFilters = () => {
@@ -75,6 +78,7 @@ const GestionDocumentos = () => {
     setFilteredDocumentos(documentos);
   };
 
+  // Manejo de diálogos
   const handleOpenDialog = (documento = null) => {
     setSelectedDocumento(documento);
     setDialogOpen(true);
@@ -117,19 +121,29 @@ const GestionDocumentos = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoGestionDocumentos onAdd={() => handleOpenDialog()} />
+        {/* Encabezado con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Gestión de Documentos" />
+          <Boton label="+ Agregar Documento" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Filtros */}
         <FiltrosDocumentos
             filters={filters}
             onFilterChange={handleFilterChange}
             onApplyFilters={applyFilters}
             onResetFilters={resetFilters}
         />
+
+        {/* Tabla de documentos */}
         <TablaDocumentos
             documentos={filteredDocumentos}
             onView={(url) => window.open(url, "_blank")}
             onEdit={(doc) => handleOpenDialog(doc)}
             onDelete={(id) => openConfirmDialog(id)}
         />
+
+        {/* Formulario de documento */}
         {dialogOpen && (
             <FormularioDocumento
                 open={dialogOpen}
@@ -138,6 +152,8 @@ const GestionDocumentos = () => {
                 onSave={handleSave}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

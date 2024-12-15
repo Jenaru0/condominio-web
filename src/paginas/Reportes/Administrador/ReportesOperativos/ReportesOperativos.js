@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoOperativos from "./EncabezadoOperativos";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import FormularioOperativo from "./FormularioOperativo";
 import ListaOperativos from "./ListaOperativos";
 import ConfirmacionEliminacion from "../../../../componentes/comunes/ConfirmacionEliminacion";
@@ -79,12 +80,20 @@ const Operativos = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoOperativos onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Reportes Operativos" />
+          <Boton label="+ Agregar Operativo" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de operativos */}
         <ListaOperativos
             operativos={operativos}
             onEdit={handleOpenDialog}
             onDelete={openConfirmDialog}
         />
+
+        {/* Formulario de operativos */}
         {dialogOpen && (
             <FormularioOperativo
                 open={dialogOpen}
@@ -93,6 +102,8 @@ const Operativos = () => {
                 onSave={handleSave}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

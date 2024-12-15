@@ -1,21 +1,9 @@
 import React, { useState } from "react";
-import { Box, Button, Checkbox, FormControlLabel, TextField, MenuItem, Typography, Select } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, TextField, MenuItem, Typography, Select } from "@mui/material";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import { motion } from "framer-motion";
-
-// Encabezado
-const EncabezadoNotificaciones = () => (
-    <motion.div
-        className="mb-8 flex justify-between items-center"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-    >
-      <h1 className="text-4xl font-bold text-gray-800 border-b-4 border-blue-500 pb-2">
-        Enviar Notificaciones
-      </h1>
-    </motion.div>
-);
 
 const EnviarNotificaciones = () => {
   const [loading, setLoading] = useState(false);
@@ -66,7 +54,10 @@ const EnviarNotificaciones = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoNotificaciones />
+        {/* Encabezado reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Enviar Notificaciones" />
+        </div>
 
         <Box
             sx={{
@@ -146,29 +137,11 @@ const EnviarNotificaciones = () => {
               label="Marcar como notificación urgente"
           />
 
-          {/* Botones */}
+          {/* Botones reutilizables */}
           <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "16px" }}>
-            <Button
-                variant="contained"
-                sx={{ backgroundColor: "#22c55e", "&:hover": { backgroundColor: "#16a34a" } }}
-                onClick={handleSubmit}
-            >
-              Enviar notificación
-            </Button>
-            <Button
-                variant="outlined"
-                sx={{ color: "#1d4ed8", borderColor: "#1d4ed8" }}
-                onClick={handlePreview}
-            >
-              Previsualizar
-            </Button>
-            <Button
-                variant="contained"
-                sx={{ backgroundColor: "#ef4444", "&:hover": { backgroundColor: "#dc2626" } }}
-                onClick={handleReset}
-            >
-              Limpiar campos
-            </Button>
+            <Boton label="Enviar notificación" onClick={handleSubmit} />
+            <Boton label="Previsualizar" onClick={handlePreview} />
+            <Boton label="Limpiar campos" onClick={handleReset} />
           </Box>
         </Box>
       </Box>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoSolicitudesMantenimiento from "./EncabezadoSolicitudesMantenimiento";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
+import FiltrosSolicitudes from "./FiltrosSolicitudes";
 import ListaSolicitudesMantenimiento from "./ListaSolicitudesMantenimiento";
 import FormularioSolicitudMantenimiento from "./FormularioSolicitudMantenimiento";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import ConfirmacionEliminacion from "../../../../componentes/comunes/ConfirmacionEliminacion";
-import FiltrosSolicitudes from "./FiltrosSolicitudes";
 
 const SolicitudesMantenimiento = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -17,6 +18,7 @@ const SolicitudesMantenimiento = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [solicitudToDelete, setSolicitudToDelete] = useState(null);
 
+    // Simulación de carga de datos
     useEffect(() => {
         const mockData = [
             {
@@ -55,6 +57,7 @@ const SolicitudesMantenimiento = () => {
         }, 2000);
     }, []);
 
+    // Abrir y cerrar diálogo
     const handleOpenDialog = (solicitud = null) => {
         setSelectedSolicitud(solicitud);
         setDialogOpen(true);
@@ -65,6 +68,7 @@ const SolicitudesMantenimiento = () => {
         setDialogOpen(false);
     };
 
+    // Guardar cambios
     const handleSave = (form) => {
         if (selectedSolicitud) {
             setSolicitudes((prev) =>
@@ -77,6 +81,7 @@ const SolicitudesMantenimiento = () => {
         handleCloseDialog();
     };
 
+    // Confirmación de eliminación
     const handleOpenDeleteDialog = (solicitud) => {
         setSolicitudToDelete(solicitud);
         setDeleteDialogOpen(true);
@@ -93,6 +98,7 @@ const SolicitudesMantenimiento = () => {
         handleCloseDeleteDialog();
     };
 
+    // Filtrar solicitudes
     const filterSolicitudes = () => {
         const filtered = solicitudes.filter((solicitud) => {
             const matchesEstado = !filtros.estado || solicitud.estado === filtros.estado;
@@ -122,18 +128,28 @@ const SolicitudesMantenimiento = () => {
 
     return (
         <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-            <EncabezadoSolicitudesMantenimiento onAdd={() => handleOpenDialog()} />
+            {/* Encabezado común con botón reutilizable */}
+            <div className="flex justify-between items-center mb-8">
+                <Encabezado titulo="Solicitudes de Mantenimiento" />
+                <Boton label="+ Nueva Solicitud" onClick={() => handleOpenDialog()} />
+            </div>
+
+            {/* Filtros de solicitudes */}
             <FiltrosSolicitudes
                 filtros={filtros}
                 setFiltros={setFiltros}
                 onSearch={handleSearch}
                 resetFilters={resetFilters}
             />
+
+            {/* Lista de solicitudes */}
             <ListaSolicitudesMantenimiento
                 solicitudes={filteredSolicitudes}
                 onEdit={handleOpenDialog}
                 onDelete={handleOpenDeleteDialog}
             />
+
+            {/* Formulario de solicitud */}
             {dialogOpen && (
                 <FormularioSolicitudMantenimiento
                     open={dialogOpen}
@@ -142,11 +158,13 @@ const SolicitudesMantenimiento = () => {
                     onSave={handleSave}
                 />
             )}
+
+            {/* Confirmación de eliminación */}
             <ConfirmacionEliminacion
                 open={deleteDialogOpen}
                 onClose={handleCloseDeleteDialog}
                 onConfirm={handleConfirmDelete}
-                text={`¿Estás seguro de eliminar esta solicitud?`}
+                text="¿Estás seguro de eliminar esta solicitud?"
             />
         </Box>
     );

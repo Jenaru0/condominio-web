@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoRolesPermisos from "./EncabezadoRolesPermisos";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaRoles from "./ListaRoles";
 import FormularioRol from "./FormularioRol";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -69,7 +70,7 @@ const RolesPermisos = () => {
           prev.map((r) => (r.id === selectedRol.id ? { ...form } : r))
       );
     } else {
-      setRoles((prev) => [...prev, { ...form }]);
+      setRoles((prev) => [...prev, { ...form, id: Date.now() }]);
     }
     handleCloseDialog();
   };
@@ -95,12 +96,20 @@ const RolesPermisos = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoRolesPermisos onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Roles y Permisos" />
+          <Boton label="+ Crear Rol" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de roles */}
         <ListaRoles
             roles={roles}
             onEdit={handleOpenDialog}
             onDelete={openConfirmDialog}
         />
+
+        {/* Formulario de roles */}
         {dialogOpen && (
             <FormularioRol
                 open={dialogOpen}
@@ -110,6 +119,8 @@ const RolesPermisos = () => {
                 permisos={permisos}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}

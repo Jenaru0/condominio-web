@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import EncabezadoReservas from "./EncabezadoReservas";
+import Encabezado from "../../../../componentes/comunes/Encabezado";
+import Boton from "../../../../componentes/comunes/Boton";
 import ListaReservas from "./ListaReservas";
 import FormularioReserva from "./FormularioReserva";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
@@ -16,6 +17,7 @@ const Reservas = () => {
   const [selectedReserva, setSelectedReserva] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Simulación de carga de datos
   useEffect(() => {
     const cargarDatos = () => {
       const mockReservas = [
@@ -57,6 +59,7 @@ const Reservas = () => {
     cargarDatos();
   }, []);
 
+  // Abrir y cerrar diálogo
   const handleOpenDialog = (reserva = null) => {
     setSelectedReserva(reserva);
     setDialogOpen(true);
@@ -67,6 +70,7 @@ const Reservas = () => {
     setDialogOpen(false);
   };
 
+  // Guardar o actualizar reserva
   const handleSave = (form) => {
     if (selectedReserva) {
       setReservas((prev) =>
@@ -78,6 +82,7 @@ const Reservas = () => {
     handleCloseDialog();
   };
 
+  // Confirmación de eliminación
   const openConfirmDialog = (id) => {
     setDeleteId(id);
     setConfirmDialogOpen(true);
@@ -99,13 +104,21 @@ const Reservas = () => {
 
   return (
       <Box sx={{ padding: 4, backgroundColor: "#f3f4f6", minHeight: "100vh" }}>
-        <EncabezadoReservas onAdd={() => handleOpenDialog()} />
+        {/* Encabezado común con botón reutilizable */}
+        <div className="flex justify-between items-center mb-8">
+          <Encabezado titulo="Gestión de Reservas" />
+          <Boton label="+ Crear Reserva" onClick={() => handleOpenDialog()} />
+        </div>
+
+        {/* Lista de reservas */}
         <ListaReservas
             reservas={reservas}
             users={users}
             onEdit={handleOpenDialog}
             onDelete={openConfirmDialog}
         />
+
+        {/* Formulario de reserva */}
         {dialogOpen && (
             <FormularioReserva
                 open={dialogOpen}
@@ -116,6 +129,8 @@ const Reservas = () => {
                 areas={areas}
             />
         )}
+
+        {/* Confirmación de eliminación */}
         {confirmDialogOpen && (
             <ConfirmacionEliminacion
                 open={confirmDialogOpen}
