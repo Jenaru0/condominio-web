@@ -15,8 +15,7 @@ import HistorialSolicitudes from "../paginas/Mantenimiento/Administrador/Histori
 import Reservas from "../paginas/AreasComunes/Administrador/reservas/Reservas";
 import ConfiguracionAreas from "../paginas/AreasComunes/Administrador/configuracionAreas/ConfiguracionAreas";
 import Correspondencia from "../paginas/Correspondencia/Administrador/Correspondencia";
-import Eventos from "../paginas/Eventos/Administrador/Eventos";
-import EventosCondominio from "../paginas/Eventos/Administrador/EventosCondominio";
+import Eventos from "../paginas/Eventos/Administrador/Eventos/Eventos";
 import VerificacionPagos from "../paginas/Pagos/Administrador/VerificacionPagos/VerificacionPagos";
 import EstadosCuenta from "../paginas/Pagos/Administrador/estadosCuenta/EstadosCuenta";
 import Facturacion from "../paginas/Pagos/Administrador/facturacion/Facturacion";
@@ -139,14 +138,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-          <Route
-              path="/eventos-condominio"
-              element={
-                  <ProtectedRoute>
-                      <EventosCondominio />
-                  </ProtectedRoute>
-              }
-          />
         <Route
           path="/pagos/verificacion-pagos"
           element={
