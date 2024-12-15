@@ -87,6 +87,15 @@ const linksAdministrador = [
         ],
     },
     {
+        dropdown: true,
+        label: "Eventos",
+        icon: FaCalendarAlt,
+        children: [
+            { to: "/eventos", label: "Eventos", icon: FaCalendarAlt },
+            { to: "/eventos-condominio", label: "Eventos condominio", icon: FaCalendarAlt },
+        ],
+    },
+    {
         to: "/documentos/gestion-documentos",
         icon: FaFileAlt,
         label: "Documentos",
@@ -95,11 +104,6 @@ const linksAdministrador = [
         to: "/enviar-notificaciones",
         icon: FaBell,
         label: "Enviar notificaciones",
-    },
-    {
-        to: "/eventos",
-        icon: FaCalendarAlt,
-        label: "Eventos",
     },
     {
         to: "/correspondencia",
