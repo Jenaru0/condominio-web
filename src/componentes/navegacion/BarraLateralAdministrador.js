@@ -12,6 +12,7 @@ import {
     FaCogs,
     FaCalendarAlt,
     FaCar,
+    FaEnvelope, // Añadido para correspondencia
 } from "react-icons/fa";
 
 const linksAdministrador = [
@@ -27,7 +28,6 @@ const linksAdministrador = [
         children: [
             { to: "/usuarios/propietarios", label: "Propietarios", icon: FaUser },
             { to: "/usuarios/inquilinos", label: "Inquilinos", icon: FaUser },
-            /*{ to: "/usuarios/empleados", label: "Empleados", icon: FaUser },*/
             { to: "/usuarios/roles-permisos", label: "Roles y Permisos", icon: FaUser },
         ],
     },
@@ -83,13 +83,9 @@ const linksAdministrador = [
         ],
     },
     {
-        dropdown: true,
-        label: "Notificaciones",
+        to: "/enviar-notificaciones",
         icon: FaBell,
-        children: [
-            { to: "/enviar-notificaciones", label: "Enviar Notificaciones", icon: FaBell },
-            { to: "/historial-notificaciones", label: "Historial de Notificaciones", icon: FaBell },
-        ],
+        label: "Enviar notificaciones",
     },
     {
         dropdown: true,
@@ -99,6 +95,16 @@ const linksAdministrador = [
             { to: "/seguridad/control-accesos", label: "Control de Accesos", icon: FaShieldAlt },
             { to: "/seguridad/incidentes-seguridad", label: "Incidentes de Seguridad", icon: FaShieldAlt },
         ],
+    },
+    {
+        to: "/correspondencia",
+        icon: FaEnvelope,  // Cambio de FaTachometerAlt a FaEnvelope para correspondencia
+        label: "Correspondencia",
+    },
+    {
+        to: "/eventos",
+        icon: FaCalendarAlt,  // Cambio de FaTachometerAlt a FaCalendarAlt para eventos
+        label: "Eventos",
     },
 ];
 
