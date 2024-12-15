@@ -3,6 +3,31 @@ import { Link, useLocation } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import linksAdministrador from "../navegacion/BarraLateralAdministrador";
 
+const SubOption = ({ item, onClose }) => {
+    const { to, label, icon: Icon, isActive } = item;
+
+    return (
+        <li
+            className={`rounded-md p-2 flex items-center transition-all duration-200 ${
+                isActive ? "bg-blue-600" : "hover:bg-blue-500"
+            }`}
+            onClick={onClose}
+        >
+            <Link
+                to={to}
+                className="flex items-center space-x-3 text-sm text-white no-underline w-full"
+            >
+                <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
+                    <Icon className="text-lg text-white" />
+                </div>
+                <span className={`flex-1 text-left ${isActive ? "font-semibold" : ""}`}>
+                    {label}
+                </span>
+            </Link>
+        </li>
+    );
+};
+
 const SidebarOption = ({
                            to,
                            label,
@@ -64,7 +89,7 @@ const SidebarOption = ({
                         marginLeft: "8px",
                     }}
                 >
-                    <ul className="space-y-1 p-2">
+                    <ul className="space-y-1 p-2 no-scrollbar">
                         {items?.map((item, index) => (
                             <SubOption key={index} item={item} onClose={onClose} />
                         ))}
@@ -83,9 +108,7 @@ const SidebarOption = ({
         >
             <Link
                 to={to}
-                className={`flex items-center ${
-                    collapsed ? "justify-center" : "space-x-3"
-                } w-full no-underline text-white`}
+                className={`flex items-center ${collapsed ? "justify-center" : "space-x-3"} w-full no-underline text-white`}
             >
                 <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
                     <Icon className="text-lg text-white" />
@@ -95,31 +118,6 @@ const SidebarOption = ({
                         <span className="text-sm text-left whitespace-nowrap">{label}</span>
                     </div>
                 )}
-            </Link>
-        </li>
-    );
-};
-
-const SubOption = ({ item, onClose }) => {
-    const { to, label, icon: Icon, isActive } = item;
-
-    return (
-        <li
-            className={`rounded-md p-2 flex items-center transition-all duration-200 ${
-                isActive ? "bg-blue-600" : "hover:bg-blue-500"
-            }`}
-            onClick={onClose}
-        >
-            <Link
-                to={to}
-                className="flex items-center space-x-3 text-sm text-white no-underline w-full"
-            >
-                <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
-                    <Icon className="text-lg text-white" />
-                </div>
-                <span className={`flex-1 text-left ${isActive ? "font-semibold" : ""}`}>
-                    {label}
-                </span>
             </Link>
         </li>
     );
@@ -148,7 +146,7 @@ const SidebarDropdown = ({
             onClose={onClose}
         />
         {!collapsed && isOpen && (
-            <ul className="pl-8 mt-1 space-y-1 overflow-hidden max-h-[400px] overflow-y-auto scrollbar-hide">
+            <ul className="pl-8 mt-1 space-y-1 overflow-hidden max-h-[400px] overflow-y-auto no-scrollbar">
                 {items.map((item, index) => (
                     <SubOption key={index} item={item} onClose={onClose} />
                 ))}
@@ -182,6 +180,7 @@ const Sidebar = ({ collapsed }) => {
     useEffect(() => {
         if (!collapsed) {
             setOpenDropdownCollapsed(null);
+            setOpenDropdownExpanded(null); // Close all dropdowns when expanded
         }
     }, [collapsed]);
 
@@ -206,7 +205,7 @@ const Sidebar = ({ collapsed }) => {
         >
             <ul
                 className={`space-y-1 pt-2 px-2 ${
-                    collapsed ? "overflow-visible" : "overflow-y-auto h-full scrollbar-hide"
+                    collapsed ? "overflow-visible" : "overflow-y-auto h-full no-scrollbar"
                 }`}
             >
                 {processedLinks.map((link, index) =>

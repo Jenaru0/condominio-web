@@ -55,4 +55,15 @@
     .custom-scrollbar:active {
         scrollbar-color: #78909c transparent;
     }
+    /* Elimina el scrollbar visualmente pero mantiene su funcionalidad */
+    .no-scrollbar::-webkit-scrollbar {
+        width: 0; /* Ancho invisible */
+        height: 0; /* Alto invisible */
+    }
+
+    .no-scrollbar {
+        scrollbar-width: none; /* Ocultar scrollbar en Firefox */
+        -ms-overflow-style: none; /* Ocultar scrollbar en IE/Edge */
+    }
+
 }
