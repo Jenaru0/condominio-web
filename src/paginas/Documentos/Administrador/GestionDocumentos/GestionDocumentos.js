@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import Encabezado from "../../../../componentes/comunes/Encabezado";
 import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosDocumentos from "./FiltrosDocumentos";
-import TablaDocumentos from "./TablaDocumentos";
+import ListaDocumentos from "./ListaDocumentos";
 import FormularioDocumento from "./FormularioDocumento";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import ConfirmacionEliminacion from "../../../../componentes/comunes/ConfirmacionEliminacion";
@@ -136,7 +136,7 @@ const GestionDocumentos = () => {
         />
 
         {/* Tabla de documentos */}
-        <TablaDocumentos
+        <ListaDocumentos
             documentos={filteredDocumentos}
             onView={(url) => window.open(url, "_blank")}
             onEdit={(doc) => handleOpenDialog(doc)}

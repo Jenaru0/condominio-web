@@ -21,7 +21,8 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
         }}
     >
         <Table>
-            <TableHead sx={{ backgroundColor: "#9333ea" }}>
+            {/* Encabezado */}
+            <TableHead sx={{ backgroundColor: "#3b82f6" }}>
                 <TableRow>
                     <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>ID</TableCell>
                     <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Nombre</TableCell>
@@ -29,6 +30,7 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                     <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
                 </TableRow>
             </TableHead>
+            {/* Cuerpo */}
             <TableBody>
                 {roles.map((rol) => (
                     <TableRow
@@ -46,8 +48,8 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                                 <span
                                     key={permiso}
                                     style={{
-                                        backgroundColor: "#e0e7ff",
-                                        color: "#4f46e5",
+                                        backgroundColor: "#e0f2fe",
+                                        color: "#2563eb",
                                         padding: "4px 8px",
                                         borderRadius: "8px",
                                         fontSize: "0.75rem",
@@ -63,15 +65,24 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                             <Button
                                 startIcon={<Edit />}
                                 onClick={() => onEdit(rol)}
-                                sx={{ color: "#9333ea", fontWeight: 600 }}
+                                sx={{
+                                    color: "#3b82f6",
+                                    fontWeight: 600,
+                                    textTransform: "none",
+                                    "&:hover": { color: "#2563eb" },
+                                }}
                             >
                                 Editar
                             </Button>
                             <Button
                                 startIcon={<Delete />}
-                                color="error"
                                 onClick={() => onDelete(rol.id)}
-                                sx={{ fontWeight: 600 }}
+                                sx={{
+                                    color: "#ef4444",
+                                    fontWeight: 600,
+                                    textTransform: "none",
+                                    "&:hover": { color: "#dc2626" },
+                                }}
                             >
                                 Eliminar
                             </Button>

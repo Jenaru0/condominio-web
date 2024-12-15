@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Encabezado from "../../../../componentes/comunes/Encabezado";
 import FiltrosPagos from "./FiltrosPagos";
-import TablaPagos from "./TablaPagos";
+import ListaPagos from "./ListaPagos";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 
 const VerificacionPagos = () => {
@@ -96,7 +96,7 @@ const VerificacionPagos = () => {
         <FiltrosPagos filters={filters} onFilterChange={handleFilterChange} />
 
         {/* Tabla de pagos */}
-        <TablaPagos pagos={filteredPagos} />
+        <ListaPagos pagos={filteredPagos} />
       </Box>
   );
 };

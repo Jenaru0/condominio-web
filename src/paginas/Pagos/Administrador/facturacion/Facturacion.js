@@ -5,7 +5,7 @@ import Encabezado from "../../../../componentes/comunes/Encabezado";
 import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosFacturacion from "./FiltrosFacturacion";
 import ResumenFacturacion from "./ResumenFacturacion";
-import TablaFacturacion from "./TablaFacturacion";
+import ListaFacturacion from "./ListaFacturacion";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 
 const Facturacion = () => {
@@ -105,7 +105,7 @@ const Facturacion = () => {
         <ResumenFacturacion resumen={resumen} />
 
         {/* Tabla de facturación */}
-        <TablaFacturacion pagos={filteredPagos} generarPDF={generarPDF} />
+        <ListaFacturacion pagos={filteredPagos} generarPDF={generarPDF} />
       </Box>
   );
 };

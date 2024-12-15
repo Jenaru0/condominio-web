@@ -27,28 +27,18 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
             }}
         >
             <Table>
+                {/* Encabezado */}
                 <TableHead sx={{ backgroundColor: "#3b82f6" }}>
                     <TableRow>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Número
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Nivel
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Edificio
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Estado
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Usuario Asignado
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>
-                            Acciones
-                        </TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Número</TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Nivel</TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Edificio</TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Estado</TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Usuario Asignado</TableCell>
+                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
                     </TableRow>
                 </TableHead>
+                {/* Cuerpo */}
                 <TableBody>
                     {cocheras.map((cochera) => (
                         <TableRow
@@ -62,10 +52,23 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                             <TableCell>{cochera.numero}</TableCell>
                             <TableCell>{cochera.nivel}</TableCell>
                             <TableCell>{cochera.edificio}</TableCell>
-                            <TableCell>{cochera.estado}</TableCell>
                             <TableCell>
-                                {users.find((user) => user.id === cochera.usuario_asignado)
-                                    ?.name || "N/A"}
+                <span
+                    style={{
+                        backgroundColor:
+                            cochera.estado === "Disponible" ? "#e0f2fe" : "#fef3c7",
+                        color: cochera.estado === "Disponible" ? "#2563eb" : "#b45309",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                    }}
+                >
+                  {cochera.estado}
+                </span>
+                            </TableCell>
+                            <TableCell>
+                                {users.find((user) => user.id === cochera.usuario_asignado)?.name || "N/A"}
                             </TableCell>
                             <TableCell>
                                 <Button
@@ -73,17 +76,22 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                                     onClick={() => onEdit(cochera)}
                                     sx={{
                                         color: "#3b82f6",
-                                        fontFamily: "'Montserrat', sans-serif",
-                                        marginRight: "8px",
+                                        fontWeight: 600,
+                                        textTransform: "none",
+                                        "&:hover": { color: "#2563eb" },
                                     }}
                                 >
                                     Editar
                                 </Button>
                                 <Button
                                     startIcon={<Delete />}
-                                    color="error"
                                     onClick={() => onDelete(cochera.id)}
-                                    sx={{ fontFamily: "'Montserrat', sans-serif" }}
+                                    sx={{
+                                        color: "#ef4444",
+                                        fontWeight: 600,
+                                        textTransform: "none",
+                                        "&:hover": { color: "#dc2626" },
+                                    }}
                                 >
                                     Eliminar
                                 </Button>

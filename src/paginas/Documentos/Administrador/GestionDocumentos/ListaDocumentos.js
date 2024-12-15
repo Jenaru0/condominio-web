@@ -9,17 +9,15 @@ import {
     Paper,
     Button,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-// Colores para los estados de la reserva
 const estadoColores = {
-    Pendiente: "#f59e0b", // Amarillo
-    Confirmada: "#10b981", // Verde
-    Cancelada: "#ef4444", // Rojo
+    Vigente: "#10b981", // Verde
+    Expirado: "#ef4444", // Rojo
 };
 
-const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
+const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -28,72 +26,78 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
         <TableContainer
             component={Paper}
             sx={{
-                marginTop: "16px",
                 borderRadius: "12px",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "#ffffff",
             }}
         >
             <Table>
                 {/* Encabezado */}
                 <TableHead sx={{ backgroundColor: "#3b82f6" }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Usuario</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Área</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Hora Inicio</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Hora Fin</TableCell>
+                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
+                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
                         <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
+                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha de Expiración</TableCell>
                         <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
                 <TableBody>
-                    {reservas.map((reserva) => (
+                    {documentos.map((doc) => (
                         <TableRow
-                            key={reserva.id}
+                            key={doc._id}
                             hover
                             sx={{
                                 "&:hover": { backgroundColor: "#f3f4f6" },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
+                            <TableCell>{doc.nombre_documento}</TableCell>
+                            <TableCell>{doc.tipo}</TableCell>
                             <TableCell>
-                                {users.find((u) => u.id === reserva.usuario_id)?.name || "N/A"}
+                                <span
+                                    style={{
+                                        backgroundColor: estadoColores[doc.estado],
+                                        color: "#ffffff",
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontWeight: 600,
+                                        fontSize: "0.75rem",
+                                    }}
+                                >
+                                    {doc.estado}
+                                </span>
                             </TableCell>
-                            <TableCell>{reserva.area_comun}</TableCell>
-                            <TableCell>{reserva.fecha_reserva}</TableCell>
-                            <TableCell>{reserva.hora_inicio}</TableCell>
-                            <TableCell>{reserva.hora_fin}</TableCell>
-                            <TableCell>
-                <span
-                    style={{
-                        backgroundColor: estadoColores[reserva.estado] || "#e5e7eb",
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {reserva.estado}
-                </span>
-                            </TableCell>
+                            <TableCell>{doc.fecha_expiracion}</TableCell>
                             <TableCell>
                                 <Button
-                                    startIcon={<Edit />}
-                                    onClick={() => onEdit(reserva)}
+                                    startIcon={<Visibility />}
+                                    onClick={() => onView(doc.documento_url)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: "#10b981",
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: "#059669" },
+                                    }}
+                                >
+                                    Ver
+                                </Button>
+                                <Button
+                                    startIcon={<Edit />}
+                                    onClick={() => onEdit(doc._id)}
+                                    sx={{
+                                        color: "#f59e0b",
+                                        fontWeight: 600,
+                                        textTransform: "none",
+                                        "&:hover": { color: "#d97706" },
                                     }}
                                 >
                                     Editar
                                 </Button>
                                 <Button
                                     startIcon={<Delete />}
-                                    onClick={() => onDelete(reserva.id)}
+                                    onClick={() => onDelete(doc._id)}
                                     sx={{
                                         color: "#ef4444",
                                         fontWeight: 600,
@@ -112,4 +116,4 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
     </motion.div>
 );
 
-export default ListaReservas;
+export default ListaDocumentos;

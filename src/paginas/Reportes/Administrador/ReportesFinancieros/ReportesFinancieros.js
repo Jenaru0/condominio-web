@@ -4,7 +4,7 @@ import Encabezado from "../../../../componentes/comunes/Encabezado";
 import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosFinancieros from "./FiltrosFinancieros";
 import ResumenFinancieros from "./ResumenFinancieros";
-import TablaFinancieros from "./TablaFinancieros";
+import ListaFinancieros from "./ListaFinancieros";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 import { Bar } from "react-chartjs-2";
 
@@ -70,7 +70,7 @@ const Financieros = () => {
             resumen={summary}
             grafico={<Bar data={datosGrafico} options={{ maintainAspectRatio: true }} />}
         />
-        <TablaFinancieros datos={filteredFinanzas} />
+        <ListaFinancieros datos={filteredFinanzas} />
       </Box>
   );
 };

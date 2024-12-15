@@ -5,7 +5,7 @@ import { saveAs } from "file-saver";
 import Encabezado from "../../../../componentes/comunes/Encabezado";
 import Boton from "../../../../componentes/comunes/Boton";
 import FiltrosEstadosCuenta from "./FiltrosEstadosCuenta";
-import TablaEstadosCuenta from "./TablaEstadosCuenta";
+import ListaEstadosCuenta from "./ListaEstadosCuenta";
 import ResumenEstadosCuenta from "./ResumenEstadosCuenta";
 import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 
@@ -108,7 +108,7 @@ const EstadosCuenta = () => {
         <ResumenEstadosCuenta resumen={resumen} />
 
         {/* Tabla de pagos */}
-        <TablaEstadosCuenta pagos={filteredPagos} />
+        <ListaEstadosCuenta pagos={filteredPagos} />
       </Box>
   );
 };
