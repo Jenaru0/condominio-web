@@ -2,6 +2,14 @@ import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    textSecondary: "#6B7280", // Gris oscuro
+};
+
 const ListaFinancieros = ({ datos }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -14,16 +22,18 @@ const ListaFinancieros = ({ datos }) => (
                 borderRadius: "12px",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                 backgroundColor: "#ffffff",
+                marginTop: "16px",
             }}
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Fecha</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Categoría</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Tipo</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Monto</TableCell>
+                        {["Fecha", "Categoría", "Tipo", "Monto"].map((header) => (
+                            <TableCell key={header} sx={{ fontWeight: "bold", color: COLORS.headerText }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -34,7 +44,7 @@ const ListaFinancieros = ({ datos }) => (
                                 key={item._id}
                                 hover
                                 sx={{
-                                    "&:hover": { backgroundColor: "#f3f4f6" },
+                                    "&:hover": { backgroundColor: COLORS.hoverBackground },
                                     transition: "background-color 0.3s ease",
                                 }}
                             >
@@ -46,7 +56,7 @@ const ListaFinancieros = ({ datos }) => (
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={4} align="center" sx={{ fontWeight: 600, color: "#6b7280" }}>
+                            <TableCell colSpan={4} align="center" sx={{ fontWeight: 600, color: COLORS.textSecondary }}>
                                 No se encontraron registros con los filtros aplicados.
                             </TableCell>
                         </TableRow>

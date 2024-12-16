@@ -2,11 +2,16 @@ import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
-// Colores por estado
-const estadoColores = {
-    Pendiente: "#f59e0b", // Amarillo
-    "En Proceso": "#2563eb", // Azul
-    Resuelto: "#10b981", // Verde
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    estado: {
+        Pendiente: "#F59E0B", // Amarillo
+        "En Proceso": "#2563EB", // Azul
+        Resuelto: "#10B981", // Verde
+    },
 };
 
 const ListaIncidentes = ({ incidentes }) => (
@@ -26,12 +31,13 @@ const ListaIncidentes = ({ incidentes }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Descripción</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Prioridad</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
+                        {["Descripción", "Fecha", "Prioridad", "Estado"].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: "bold" }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -41,7 +47,7 @@ const ListaIncidentes = ({ incidentes }) => (
                             key={_id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -51,8 +57,8 @@ const ListaIncidentes = ({ incidentes }) => (
                             <TableCell>
                                 <span
                                     style={{
-                                        backgroundColor: estadoColores[estado],
-                                        color: "#ffffff",
+                                        backgroundColor: COLORS.estado[estado] || "#E5E7EB",
+                                        color: "#FFFFFF",
                                         padding: "4px 8px",
                                         borderRadius: "8px",
                                         fontWeight: 600,

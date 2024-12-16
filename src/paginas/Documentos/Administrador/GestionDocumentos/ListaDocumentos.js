@@ -12,9 +12,20 @@ import {
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-const estadoColores = {
-    Vigente: "#10b981", // Verde
-    Expirado: "#ef4444", // Rojo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionView: "#10b981", // Verde
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionViewHover: "#059669", // Verde más oscuro
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    textSecondary: "#6B7280", // Gris oscuro
+    stateVigente: "#10b981", // Verde para Vigente
+    stateExpirado: "#EF4444", // Rojo para Expirado
 };
 
 const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
@@ -33,13 +44,16 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha de Expiración</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
+                        {["Nombre", "Tipo", "Estado", "Fecha de Expiración", "Acciones"].map((header) => (
+                            <TableCell
+                                key={header}
+                                sx={{ color: COLORS.headerText, fontWeight: 700 }}
+                            >
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -49,7 +63,7 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
                             key={doc._id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -58,8 +72,8 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
                             <TableCell>
                                 <span
                                     style={{
-                                        backgroundColor: estadoColores[doc.estado],
-                                        color: "#ffffff",
+                                        backgroundColor: doc.estado === "Vigente" ? COLORS.stateVigente : COLORS.stateExpirado,
+                                        color: COLORS.headerText,
                                         padding: "4px 8px",
                                         borderRadius: "8px",
                                         fontWeight: 600,
@@ -75,10 +89,10 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
                                     startIcon={<Visibility />}
                                     onClick={() => onView(doc.documento_url)}
                                     sx={{
-                                        color: "#10b981",
+                                        color: COLORS.actionView,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#059669" },
+                                        "&:hover": { color: COLORS.actionViewHover },
                                     }}
                                 >
                                     Ver
@@ -87,10 +101,10 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(doc._id)}
                                     sx={{
-                                        color: "#f59e0b",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#d97706" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -99,10 +113,10 @@ const ListaDocumentos = ({ documentos, onView, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(doc._id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar

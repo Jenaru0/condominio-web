@@ -11,6 +11,20 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    textSecondary: "#6B7280", // Gris oscuro
+    confirmed: "#10B981", // Verde para estado "Confirmado"
+    pending: "#F59E0B", // Amarillo para estado "Pendiente"
+};
+
 const ListaEventos = ({ eventos, onEdit, onDelete }) => (
     <TableContainer
         component={Paper}
@@ -22,16 +36,27 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
     >
         <Table>
             {/* Encabezado */}
-            <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+            <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                 <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>ID Evento</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Nombre del Evento</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Fecha</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Asistencia</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Estado</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }} align="center">
-                        Acciones
-                    </TableCell>
+                    {[
+                        "ID Evento",
+                        "Nombre del Evento",
+                        "Fecha",
+                        "Asistencia",
+                        "Estado",
+                        "Acciones",
+                    ].map((header) => (
+                        <TableCell
+                            key={header}
+                            sx={{
+                                fontWeight: "bold",
+                                color: COLORS.headerText,
+                            }}
+                            align={header === "Acciones" ? "center" : "left"}
+                        >
+                            {header}
+                        </TableCell>
+                    ))}
                 </TableRow>
             </TableHead>
             {/* Cuerpo */}
@@ -41,7 +66,7 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
                         key={evento.id}
                         hover
                         sx={{
-                            "&:hover": { backgroundColor: "#f3f4f6" },
+                            "&:hover": { backgroundColor: COLORS.hoverBackground },
                             transition: "background-color 0.3s ease",
                         }}
                     >
@@ -51,7 +76,7 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
                         <TableCell>
                             <span className="flex items-center gap-2">
                                 {evento.asistencia}
-                                <Visibility sx={{ color: "#6b7280" }} />
+                                <Visibility sx={{ color: COLORS.textSecondary }} />
                             </span>
                         </TableCell>
                         <TableCell>
@@ -59,8 +84,8 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
                                 style={{
                                     backgroundColor:
                                         evento.estado === "Confirmado"
-                                            ? "#10b981"
-                                            : "#ef4444", // Verde o Rojo según el estado
+                                            ? COLORS.confirmed
+                                            : COLORS.pending,
                                     color: "#FFF",
                                     padding: "4px 8px",
                                     borderRadius: "8px",
@@ -75,10 +100,10 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
                                 startIcon={<Edit />}
                                 onClick={() => onEdit(evento)}
                                 sx={{
-                                    color: "#3b82f6",
+                                    color: COLORS.actionEdit,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#2563eb" },
+                                    "&:hover": { color: COLORS.actionEditHover },
                                 }}
                             >
                                 Editar
@@ -87,10 +112,10 @@ const ListaEventos = ({ eventos, onEdit, onDelete }) => (
                                 startIcon={<Delete />}
                                 onClick={() => onDelete(evento.id)}
                                 sx={{
-                                    color: "#ef4444",
+                                    color: COLORS.actionDelete,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#dc2626" },
+                                    "&:hover": { color: COLORS.actionDeleteHover },
                                 }}
                             >
                                 Eliminar

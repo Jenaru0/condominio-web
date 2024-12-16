@@ -2,6 +2,14 @@ import React from "react";
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    textSecondary: "#6B7280", // Gris oscuro
+};
+
 const ListaAccesos = ({ accesos }) => {
     return (
         <motion.div
@@ -20,14 +28,19 @@ const ListaAccesos = ({ accesos }) => {
             >
                 <Table>
                     {/* Encabezado */}
-                    <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                    <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                         <TableRow>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>DNI</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Tipo</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Zona</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Entrada</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Salida</TableCell>
+                            {["Nombre", "DNI", "Tipo", "Zona", "Entrada", "Salida"].map((header) => (
+                                <TableCell
+                                    key={header}
+                                    sx={{
+                                        color: COLORS.headerText,
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {header}
+                                </TableCell>
+                            ))}
                         </TableRow>
                     </TableHead>
                     {/* Cuerpo */}
@@ -37,7 +50,7 @@ const ListaAccesos = ({ accesos }) => {
                                 key={acceso._id}
                                 hover
                                 sx={{
-                                    "&:hover": { backgroundColor: "#f3f4f6" },
+                                    "&:hover": { backgroundColor: COLORS.hoverBackground },
                                     transition: "background-color 0.3s ease",
                                 }}
                             >

@@ -12,11 +12,25 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-// Colores para los estados de la reserva
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    estadoPendiente: "#F59E0B", // Amarillo
+    estadoConfirmada: "#10B981", // Verde
+    estadoCancelada: "#EF4444", // Rojo
+};
+
+// Estados de la reserva
 const estadoColores = {
-    Pendiente: "#f59e0b", // Amarillo
-    Confirmada: "#10b981", // Verde
-    Cancelada: "#ef4444", // Rojo
+    Pendiente: COLORS.estadoPendiente,
+    Confirmada: COLORS.estadoConfirmada,
+    Cancelada: COLORS.estadoCancelada,
 };
 
 const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
@@ -35,15 +49,21 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Usuario</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Área</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Hora Inicio</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Hora Fin</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
+                        {[
+                            "Usuario",
+                            "Área",
+                            "Fecha",
+                            "Hora Inicio",
+                            "Hora Fin",
+                            "Estado",
+                            "Acciones",
+                        ].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: 700 }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -53,7 +73,7 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
                             key={reserva.id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -65,28 +85,28 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
                             <TableCell>{reserva.hora_inicio}</TableCell>
                             <TableCell>{reserva.hora_fin}</TableCell>
                             <TableCell>
-                <span
-                    style={{
-                        backgroundColor: estadoColores[reserva.estado] || "#e5e7eb",
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {reserva.estado}
-                </span>
+                                <span
+                                    style={{
+                                        backgroundColor: estadoColores[reserva.estado] || "#E5E7EB",
+                                        color: "#FFFFFF",
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {reserva.estado}
+                                </span>
                             </TableCell>
                             <TableCell>
                                 <Button
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(reserva)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -95,10 +115,10 @@ const ListaReservas = ({ reservas, users, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(reserva.id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar

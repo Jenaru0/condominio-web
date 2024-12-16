@@ -12,10 +12,24 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    textSecondary: "#6B7280", // Gris oscuro
+    estadoActivo: "#10B981", // Verde
+    estadoInactivo: "#EF4444", // Rojo
+};
+
 // Colores para los estados del área
 const estadoColores = {
-    Activo: "#10b981", // Verde
-    Inactivo: "#ef4444", // Rojo
+    Activo: COLORS.estadoActivo,
+    Inactivo: COLORS.estadoInactivo,
 };
 
 const ListaAreas = ({ areas, onEdit, onDelete }) => (
@@ -34,14 +48,13 @@ const ListaAreas = ({ areas, onEdit, onDelete }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Nombre</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Capacidad</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Ubicación</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Horario</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
+                        {["Nombre", "Capacidad", "Ubicación", "Horario", "Estado", "Acciones"].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: 700 }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -51,7 +64,7 @@ const ListaAreas = ({ areas, onEdit, onDelete }) => (
                             key={area.id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -62,28 +75,28 @@ const ListaAreas = ({ areas, onEdit, onDelete }) => (
                                 {area.horario_inicio} - {area.horario_fin}
                             </TableCell>
                             <TableCell>
-                <span
-                    style={{
-                        backgroundColor: estadoColores[area.estado] || "#e5e7eb",
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {area.estado}
-                </span>
+                                <span
+                                    style={{
+                                        backgroundColor: estadoColores[area.estado] || COLORS.textSecondary,
+                                        color: COLORS.headerText,
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {area.estado}
+                                </span>
                             </TableCell>
                             <TableCell>
                                 <Button
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(area)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -92,10 +105,10 @@ const ListaAreas = ({ areas, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(area.id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar

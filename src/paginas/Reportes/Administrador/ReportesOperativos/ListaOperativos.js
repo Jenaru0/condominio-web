@@ -12,10 +12,18 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-const estadoColores = {
-    Activo: "#10b981", // Verde
-    Inactivo: "#ef4444", // Rojo
-    Pendiente: "#f59e0b", // Amarillo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    statusActive: "#10B981", // Verde
+    statusInactive: "#EF4444", // Rojo
+    statusPending: "#F59E0B", // Amarillo
 };
 
 const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
@@ -27,20 +35,21 @@ const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
         <TableContainer
             component={Paper}
             sx={{
-                borderRadius: "16px",
+                borderRadius: "12px",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "#ffffff",
+                backgroundColor: "#FFFFFF",
+                marginTop: "16px",
             }}
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: "bold" }}>Fecha</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: "bold" }}>Categoría</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: "bold" }}>Estado</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: "bold" }}>Descripción</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: "bold" }}>Acciones</TableCell>
+                        {["Fecha", "Categoría", "Estado", "Descripción", "Acciones"].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: "bold" }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -50,7 +59,7 @@ const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
                             key={op._id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -59,8 +68,13 @@ const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
                             <TableCell>
                                 <span
                                     style={{
-                                        backgroundColor: estadoColores[op.estado] || "#e5e7eb",
-                                        color: "#ffffff",
+                                        backgroundColor:
+                                            op.estado === "Activo"
+                                                ? COLORS.statusActive
+                                                : op.estado === "Inactivo"
+                                                    ? COLORS.statusInactive
+                                                    : COLORS.statusPending,
+                                        color: "#FFFFFF",
                                         padding: "4px 8px",
                                         borderRadius: "8px",
                                         fontWeight: 600,
@@ -76,10 +90,10 @@ const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(op)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -88,10 +102,10 @@ const ListaOperativos = ({ operativos, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(op._id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar

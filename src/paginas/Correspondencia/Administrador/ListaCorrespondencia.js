@@ -11,6 +11,20 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    textSecondary: "#6B7280", // Gris oscuro
+    estadoPendiente: "#F59E0B", // Amarillo
+    estadoEntregado: "#10B981", // Verde
+};
+
 const ListaCorrespondencia = ({
                                   correspondencia,
                                   users,
@@ -27,15 +41,24 @@ const ListaCorrespondencia = ({
     >
         <Table>
             {/* Encabezado */}
-            <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+            <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                 <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Usuario</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Tipo</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Descripción</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Fecha</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Estado</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Notificado</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
+                    {[
+                        "Usuario",
+                        "Tipo",
+                        "Descripción",
+                        "Fecha",
+                        "Estado",
+                        "Notificado",
+                        "Acciones",
+                    ].map((header) => (
+                        <TableCell
+                            key={header}
+                            sx={{ fontWeight: "bold", color: COLORS.headerText }}
+                        >
+                            {header}
+                        </TableCell>
+                    ))}
                 </TableRow>
             </TableHead>
             {/* Cuerpo */}
@@ -45,7 +68,7 @@ const ListaCorrespondencia = ({
                         key={item.id}
                         hover
                         sx={{
-                            "&:hover": { backgroundColor: "#f3f4f6" },
+                            "&:hover": { backgroundColor: COLORS.hoverBackground },
                             transition: "background-color 0.3s ease",
                         }}
                     >
@@ -55,17 +78,36 @@ const ListaCorrespondencia = ({
                         <TableCell>{item.tipo_correspondencia}</TableCell>
                         <TableCell>{item.descripcion}</TableCell>
                         <TableCell>{item.fecha_recepcion}</TableCell>
-                        <TableCell>{item.estado}</TableCell>
+                        <TableCell>
+                            {/* Estado con colores */}
+                            <span
+                                style={{
+                                    backgroundColor:
+                                        item.estado === "Pendiente"
+                                            ? COLORS.estadoPendiente
+                                            : item.estado === "Entregado"
+                                                ? COLORS.estadoEntregado
+                                                : COLORS.textSecondary,
+                                    color: "#FFFFFF",
+                                    padding: "4px 8px",
+                                    borderRadius: "8px",
+                                    fontWeight: 600,
+                                    fontSize: "0.75rem",
+                                }}
+                            >
+                                {item.estado}
+                            </span>
+                        </TableCell>
                         <TableCell>{item.notificado ? "Sí" : "No"}</TableCell>
                         <TableCell>
                             <Button
                                 startIcon={<Edit />}
                                 onClick={() => handleEdit(item)}
                                 sx={{
-                                    color: "#3b82f6",
+                                    color: COLORS.actionEdit,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#2563eb" },
+                                    "&:hover": { color: COLORS.actionEditHover },
                                 }}
                             >
                                 Editar
@@ -74,10 +116,10 @@ const ListaCorrespondencia = ({
                                 startIcon={<Delete />}
                                 onClick={() => handleDelete(item.id)}
                                 sx={{
-                                    color: "#ef4444",
+                                    color: COLORS.actionDelete,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#dc2626" },
+                                    "&:hover": { color: COLORS.actionDeleteHover },
                                 }}
                             >
                                 Eliminar
