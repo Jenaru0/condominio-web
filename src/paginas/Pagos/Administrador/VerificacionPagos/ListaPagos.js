@@ -10,10 +10,23 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    estadoPagado: "#10B981", // Verde
+    estadoPendiente: "#F59E0B", // Amarillo
+    estadoAtrasado: "#EF4444", // Rojo
+    enlaceFactura: "#2563EB", // Azul intermedio
+    enlaceFacturaHover: "#1E40AF", // Azul más oscuro
+};
+
+// Mapeo de colores para los estados
 const estadoColores = {
-    Pagado: "#10b981", // Verde
-    Pendiente: "#f59e0b", // Amarillo
-    Atrasado: "#ef4444", // Rojo
+    Pagado: COLORS.estadoPagado,
+    Pendiente: COLORS.estadoPendiente,
+    Atrasado: COLORS.estadoAtrasado,
 };
 
 const ListaPagos = ({ pagos }) => {
@@ -28,21 +41,27 @@ const ListaPagos = ({ pagos }) => {
                 sx={{
                     borderRadius: "12px",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                    backgroundColor: "#ffffff",
+                    backgroundColor: "#FFFFFF",
                     marginTop: "16px",
                 }}
             >
                 <Table>
                     {/* Encabezado */}
-                    <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                    <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                         <TableRow>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Usuario</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Monto</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha de Pago</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Concepto</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Método de Pago</TableCell>
-                            <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Factura</TableCell>
+                            {[
+                                "Usuario",
+                                "Monto",
+                                "Fecha de Pago",
+                                "Concepto",
+                                "Estado",
+                                "Método de Pago",
+                                "Factura",
+                            ].map((header) => (
+                                <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: 700 }}>
+                                    {header}
+                                </TableCell>
+                            ))}
                         </TableRow>
                     </TableHead>
                     {/* Cuerpo */}
@@ -53,7 +72,7 @@ const ListaPagos = ({ pagos }) => {
                                     key={pago._id}
                                     hover
                                     sx={{
-                                        "&:hover": { backgroundColor: "#f3f4f6" },
+                                        "&:hover": { backgroundColor: COLORS.hoverBackground },
                                         transition: "background-color 0.3s ease",
                                     }}
                                 >
@@ -62,18 +81,18 @@ const ListaPagos = ({ pagos }) => {
                                     <TableCell>{pago.fecha_pago}</TableCell>
                                     <TableCell>{pago.concepto}</TableCell>
                                     <TableCell>
-                    <span
-                        style={{
-                            backgroundColor: estadoColores[pago.estado],
-                            color: "#ffffff",
-                            padding: "4px 8px",
-                            borderRadius: "8px",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                        }}
-                    >
-                      {pago.estado}
-                    </span>
+                                        <span
+                                            style={{
+                                                backgroundColor: estadoColores[pago.estado],
+                                                color: "#FFFFFF",
+                                                padding: "4px 8px",
+                                                borderRadius: "8px",
+                                                fontSize: "0.75rem",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            {pago.estado}
+                                        </span>
                                     </TableCell>
                                     <TableCell>{pago.metodo_pago}</TableCell>
                                     <TableCell>
@@ -82,10 +101,13 @@ const ListaPagos = ({ pagos }) => {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             style={{
-                                                color: "#3b82f6",
+                                                color: COLORS.enlaceFactura,
                                                 textDecoration: "underline",
                                                 fontWeight: 600,
+                                                transition: "color 0.2s ease",
                                             }}
+                                            onMouseOver={(e) => (e.target.style.color = COLORS.enlaceFacturaHover)}
+                                            onMouseOut={(e) => (e.target.style.color = COLORS.enlaceFactura)}
                                         >
                                             Ver Factura
                                         </a>
@@ -94,7 +116,7 @@ const ListaPagos = ({ pagos }) => {
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={7} align="center">
+                                <TableCell colSpan={7} align="center" sx={{ color: COLORS.textSecondary, fontWeight: 600 }}>
                                     No se encontraron pagos con los filtros aplicados.
                                 </TableCell>
                             </TableRow>

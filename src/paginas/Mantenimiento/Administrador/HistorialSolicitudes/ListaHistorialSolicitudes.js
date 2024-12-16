@@ -10,10 +10,14 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 
-// Definir colores para cada estado
-const estadoColores = {
-    Resuelto: "#22c55e", // Verde
-    Cancelado: "#ef4444", // Rojo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    resolved: "#22C55E", // Verde
+    canceled: "#EF4444", // Rojo
+    textSecondary: "#6B7280", // Gris oscuro
 };
 
 const ListaHistorialSolicitudes = ({ solicitudes }) => (
@@ -32,16 +36,20 @@ const ListaHistorialSolicitudes = ({ solicitudes }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Residente</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha Solicitud</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Asunto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Descripción</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }} align="center">
-                            Estado
-                        </TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha Resolución</TableCell>
+                        {[
+                            "Residente",
+                            "Fecha Solicitud",
+                            "Asunto",
+                            "Descripción",
+                            "Estado",
+                            "Fecha Resolución",
+                        ].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: 700 }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -51,7 +59,7 @@ const ListaHistorialSolicitudes = ({ solicitudes }) => (
                             key={solicitud.id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -59,19 +67,22 @@ const ListaHistorialSolicitudes = ({ solicitudes }) => (
                             <TableCell>{solicitud.fechaSolicitud}</TableCell>
                             <TableCell>{solicitud.asunto}</TableCell>
                             <TableCell>{solicitud.descripcion}</TableCell>
-                            <TableCell align="center">
-                <span
-                    style={{
-                        backgroundColor: estadoColores[solicitud.estado],
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {solicitud.estado}
-                </span>
+                            <TableCell align="left">
+                                <span
+                                    style={{
+                                        backgroundColor:
+                                            solicitud.estado === "Resuelto"
+                                                ? COLORS.resolved
+                                                : COLORS.canceled,
+                                        color: "#FFFFFF",
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {solicitud.estado}
+                                </span>
                             </TableCell>
                             <TableCell>{solicitud.fechaResolucion || "Pendiente"}</TableCell>
                         </TableRow>

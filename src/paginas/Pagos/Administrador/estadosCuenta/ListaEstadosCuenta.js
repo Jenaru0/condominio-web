@@ -2,10 +2,14 @@ import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { motion } from "framer-motion";
 
-const estadoColores = {
-    Pagado: "#10b981", // Verde
-    Pendiente: "#f59e0b", // Amarillo
-    Atrasado: "#ef4444", // Rojo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    estadoPagado: "#10B981", // Verde
+    estadoPendiente: "#F59E0B", // Amarillo
+    estadoAtrasado: "#EF4444", // Rojo
 };
 
 const ListaEstadosCuenta = ({ pagos }) => (
@@ -19,19 +23,18 @@ const ListaEstadosCuenta = ({ pagos }) => (
             sx={{
                 borderRadius: "12px",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "#ffffff",
                 marginTop: "16px",
             }}
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Usuario</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Monto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha de Pago</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Concepto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
+                        {["Usuario", "Monto", "Fecha de Pago", "Concepto", "Estado"].map((header) => (
+                            <TableCell key={header} sx={{ fontWeight: "bold", color: COLORS.headerText }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -41,7 +44,7 @@ const ListaEstadosCuenta = ({ pagos }) => (
                             key={pago._id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -50,18 +53,23 @@ const ListaEstadosCuenta = ({ pagos }) => (
                             <TableCell>{pago.fecha_pago}</TableCell>
                             <TableCell>{pago.concepto}</TableCell>
                             <TableCell>
-                <span
-                    style={{
-                        backgroundColor: estadoColores[pago.estado],
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {pago.estado}
-                </span>
+                                <span
+                                    style={{
+                                        backgroundColor:
+                                            pago.estado === "Pagado"
+                                                ? COLORS.estadoPagado
+                                                : pago.estado === "Pendiente"
+                                                    ? COLORS.estadoPendiente
+                                                    : COLORS.estadoAtrasado,
+                                        color: "#FFFFFF",
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {pago.estado}
+                                </span>
                             </TableCell>
                         </TableRow>
                     ))}

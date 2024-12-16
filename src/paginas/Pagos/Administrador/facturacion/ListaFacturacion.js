@@ -2,10 +2,18 @@ import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
 import { motion } from "framer-motion";
 
-const estadoColores = {
-    Pagado: "#10b981", // Verde
-    Pendiente: "#f59e0b", // Amarillo
-    Atrasado: "#ef4444", // Rojo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionButton: "#2563EB", // Azul intermedio
+    actionButtonHover: "#1E40AF", // Azul más oscuro
+    estado: {
+        Pagado: "#10b981", // Verde
+        Pendiente: "#f59e0b", // Amarillo
+        Atrasado: "#ef4444", // Rojo
+    },
 };
 
 const ListaFacturacion = ({ pagos, generarPDF }) => (
@@ -25,14 +33,20 @@ const ListaFacturacion = ({ pagos, generarPDF }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Usuario</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Monto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha de Pago</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Concepto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Estado</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
+                        {["Usuario", "Monto", "Fecha de Pago", "Concepto", "Estado", "Acciones"].map((header) => (
+                            <TableCell
+                                key={header}
+                                sx={{
+                                    color: COLORS.headerText,
+                                    fontWeight: "bold",
+                                    textAlign: header === "Acciones" ? "center" : "left",
+                                }}
+                            >
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -42,7 +56,7 @@ const ListaFacturacion = ({ pagos, generarPDF }) => (
                             key={pago._id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -51,28 +65,28 @@ const ListaFacturacion = ({ pagos, generarPDF }) => (
                             <TableCell>{pago.fecha_pago}</TableCell>
                             <TableCell>{pago.concepto}</TableCell>
                             <TableCell>
-                <span
-                    style={{
-                        backgroundColor: estadoColores[pago.estado],
-                        color: "#ffffff",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {pago.estado}
-                </span>
+                                <span
+                                    style={{
+                                        backgroundColor: COLORS.estado[pago.estado],
+                                        color: "#ffffff",
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {pago.estado}
+                                </span>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                                 <Button
                                     onClick={() => generarPDF(pago)}
                                     variant="contained"
                                     sx={{
-                                        backgroundColor: "#3b82f6",
+                                        backgroundColor: COLORS.actionButton,
                                         textTransform: "none",
                                         fontWeight: 600,
-                                        "&:hover": { backgroundColor: "#2563eb" },
+                                        "&:hover": { backgroundColor: COLORS.actionButtonHover },
                                     }}
                                 >
                                     Descargar PDF

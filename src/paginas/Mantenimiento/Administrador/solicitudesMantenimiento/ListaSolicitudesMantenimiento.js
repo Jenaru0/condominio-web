@@ -12,11 +12,22 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
-const estadoColores = {
-    Pendiente: "#eab308", // Amarillo
-    "En Progreso": "#3b82f6", // Azul
-    Resuelto: "#22c55e", // Verde
-    Cancelado: "#ef4444", // Rojo
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    textSecondary: "#FFFFFF", // Gris oscuro
+    estados: {
+        Pendiente: "#EAB308", // Amarillo
+        "En Progreso": "#2563EB", // Azul intermedio
+        Resuelto: "#10B981", // Verde
+        Cancelado: "#EF4444", // Rojo
+    },
 };
 
 const ListaSolicitudesMantenimiento = ({ solicitudes, onEdit, onDelete }) => (
@@ -35,16 +46,20 @@ const ListaSolicitudesMantenimiento = ({ solicitudes, onEdit, onDelete }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Residente</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Fecha</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Asunto</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Descripción</TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }} align="center">
-                            Estado
-                        </TableCell>
-                        <TableCell sx={{ color: "#ffffff", fontWeight: 700 }}>Acciones</TableCell>
+                        {[
+                            "Residente",
+                            "Fecha",
+                            "Asunto",
+                            "Descripción",
+                            "Estado",
+                            "Acciones",
+                        ].map((header) => (
+                            <TableCell key={header} sx={{ color: COLORS.headerText, fontWeight: 700 }}>
+                                {header}
+                            </TableCell>
+                        ))}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -54,7 +69,7 @@ const ListaSolicitudesMantenimiento = ({ solicitudes, onEdit, onDelete }) => (
                             key={solicitud.id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -62,30 +77,30 @@ const ListaSolicitudesMantenimiento = ({ solicitudes, onEdit, onDelete }) => (
                             <TableCell>{solicitud.fecha}</TableCell>
                             <TableCell>{solicitud.asunto}</TableCell>
                             <TableCell>{solicitud.descripcion}</TableCell>
-                            <TableCell align="center">
-                <span
-                    style={{
-                        backgroundColor: estadoColores[solicitud.estado],
-                        color: solicitud.estado === "Cancelado" ? "#ffffff" : "#1f2937",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                        display: "inline-block",
-                    }}
-                >
-                  {solicitud.estado}
-                </span>
+                            <TableCell align="left">
+                                <span
+                                    style={{
+                                        backgroundColor: COLORS.estados[solicitud.estado],
+                                        color: solicitud.estado === "Cancelado" ? "#FFFFFF" : COLORS.textSecondary,
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                        display: "inline-block",
+                                    }}
+                                >
+                                    {solicitud.estado}
+                                </span>
                             </TableCell>
                             <TableCell>
                                 <Button
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(solicitud)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -94,10 +109,10 @@ const ListaSolicitudesMantenimiento = ({ solicitudes, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(solicitud.id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar
