@@ -12,6 +12,22 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    estadoDisponibleBackground: "#E0F2FE", // Azul claro
+    estadoDisponibleText: "#2563EB", // Azul intermedio
+    estadoOcupadoBackground: "#FEF3C7", // Amarillo claro
+    estadoOcupadoText: "#B45309", // Amarillo intermedio
+    textSecondary: "#6B7280", // Gris oscuro
+};
+
 const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -28,14 +44,15 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
         >
             <Table>
                 {/* Encabezado */}
-                <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+                <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                     <TableRow>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Número</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Nivel</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Edificio</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Estado</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Usuario Asignado</TableCell>
-                        <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
+                        {["Número", "Nivel", "Edificio", "Estado", "Usuario Asignado", "Acciones"].map(
+                            (header) => (
+                                <TableCell key={header} sx={{ fontWeight: "bold", color: COLORS.headerText }}>
+                                    {header}
+                                </TableCell>
+                            )
+                        )}
                     </TableRow>
                 </TableHead>
                 {/* Cuerpo */}
@@ -45,7 +62,7 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                             key={cochera.id}
                             hover
                             sx={{
-                                "&:hover": { backgroundColor: "#f3f4f6" },
+                                "&:hover": { backgroundColor: COLORS.hoverBackground },
                                 transition: "background-color 0.3s ease",
                             }}
                         >
@@ -53,19 +70,24 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                             <TableCell>{cochera.nivel}</TableCell>
                             <TableCell>{cochera.edificio}</TableCell>
                             <TableCell>
-                <span
-                    style={{
-                        backgroundColor:
-                            cochera.estado === "Disponible" ? "#e0f2fe" : "#fef3c7",
-                        color: cochera.estado === "Disponible" ? "#2563eb" : "#b45309",
-                        padding: "4px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                  {cochera.estado}
-                </span>
+                                <span
+                                    style={{
+                                        backgroundColor:
+                                            cochera.estado === "Disponible"
+                                                ? COLORS.estadoDisponibleBackground
+                                                : COLORS.estadoOcupadoBackground,
+                                        color:
+                                            cochera.estado === "Disponible"
+                                                ? COLORS.estadoDisponibleText
+                                                : COLORS.estadoOcupadoText,
+                                        padding: "4px 8px",
+                                        borderRadius: "8px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    {cochera.estado}
+                                </span>
                             </TableCell>
                             <TableCell>
                                 {users.find((user) => user.id === cochera.usuario_asignado)?.name || "N/A"}
@@ -75,10 +97,10 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                                     startIcon={<Edit />}
                                     onClick={() => onEdit(cochera)}
                                     sx={{
-                                        color: "#3b82f6",
+                                        color: COLORS.actionEdit,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#2563eb" },
+                                        "&:hover": { color: COLORS.actionEditHover },
                                     }}
                                 >
                                     Editar
@@ -87,10 +109,10 @@ const ListaCocheras = ({ cocheras, users, onEdit, onDelete }) => (
                                     startIcon={<Delete />}
                                     onClick={() => onDelete(cochera.id)}
                                     sx={{
-                                        color: "#ef4444",
+                                        color: COLORS.actionDelete,
                                         fontWeight: 600,
                                         textTransform: "none",
-                                        "&:hover": { color: "#dc2626" },
+                                        "&:hover": { color: COLORS.actionDeleteHover },
                                     }}
                                 >
                                     Eliminar

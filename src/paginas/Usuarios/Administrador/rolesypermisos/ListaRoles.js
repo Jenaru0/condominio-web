@@ -11,6 +11,19 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+    badgeBackground: "#E0F2FE", // Azul claro
+    badgeText: "#2563EB", // Azul intermedio
+};
+
 const ListaRoles = ({ roles, onEdit, onDelete }) => (
     <TableContainer
         component={Paper}
@@ -22,12 +35,13 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
     >
         <Table>
             {/* Encabezado */}
-            <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+            <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                 <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>ID</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Nombre</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Permisos</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
+                    {["ID", "Nombre", "Permisos", "Acciones"].map((header) => (
+                        <TableCell key={header} sx={{ fontWeight: "bold", color: COLORS.headerText }}>
+                            {header}
+                        </TableCell>
+                    ))}
                 </TableRow>
             </TableHead>
             {/* Cuerpo */}
@@ -37,7 +51,7 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                         key={rol.id}
                         hover
                         sx={{
-                            "&:hover": { backgroundColor: "#f3f4f6" },
+                            "&:hover": { backgroundColor: COLORS.hoverBackground },
                             transition: "background-color 0.3s ease",
                         }}
                     >
@@ -48,8 +62,8 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                                 <span
                                     key={permiso}
                                     style={{
-                                        backgroundColor: "#e0f2fe",
-                                        color: "#2563eb",
+                                        backgroundColor: COLORS.badgeBackground,
+                                        color: COLORS.badgeText,
                                         padding: "4px 8px",
                                         borderRadius: "8px",
                                         fontSize: "0.75rem",
@@ -57,8 +71,8 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                                         display: "inline-block",
                                     }}
                                 >
-                  {permiso}
-                </span>
+                                    {permiso}
+                                </span>
                             ))}
                         </TableCell>
                         <TableCell>
@@ -66,10 +80,10 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                                 startIcon={<Edit />}
                                 onClick={() => onEdit(rol)}
                                 sx={{
-                                    color: "#3b82f6",
+                                    color: COLORS.actionEdit,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#2563eb" },
+                                    "&:hover": { color: COLORS.actionEditHover },
                                 }}
                             >
                                 Editar
@@ -78,10 +92,10 @@ const ListaRoles = ({ roles, onEdit, onDelete }) => (
                                 startIcon={<Delete />}
                                 onClick={() => onDelete(rol.id)}
                                 sx={{
-                                    color: "#ef4444",
+                                    color: COLORS.actionDelete,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#dc2626" },
+                                    "&:hover": { color: COLORS.actionDeleteHover },
                                 }}
                             >
                                 Eliminar

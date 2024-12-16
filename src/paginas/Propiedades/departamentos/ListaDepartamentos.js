@@ -11,6 +11,17 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
+// Paleta de colores unificada
+const COLORS = {
+    headerBackground: "#1D4ED8", // Azul intenso
+    headerText: "#FFFFFF", // Blanco
+    hoverBackground: "#F3F4F6", // Gris claro
+    actionEdit: "#2563EB", // Azul intermedio
+    actionDelete: "#EF4444", // Rojo intenso
+    actionEditHover: "#1E40AF", // Azul más oscuro
+    actionDeleteHover: "#B91C1C", // Rojo más oscuro
+};
+
 const ListaDepartamentos = ({ departamentos, onEdit, onDelete }) => (
     <TableContainer
         component={Paper}
@@ -22,14 +33,15 @@ const ListaDepartamentos = ({ departamentos, onEdit, onDelete }) => (
     >
         <Table>
             {/* Encabezado */}
-            <TableHead sx={{ backgroundColor: "#3b82f6" }}>
+            <TableHead sx={{ backgroundColor: COLORS.headerBackground }}>
                 <TableRow>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Número</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Piso</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Edificio</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Propietario</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Inquilino</TableCell>
-                    <TableCell sx={{ fontWeight: "bold", color: "#FFF" }}>Acciones</TableCell>
+                    {["Número", "Piso", "Edificio", "Propietario", "Inquilino", "Acciones"].map(
+                        (header) => (
+                            <TableCell key={header} sx={{ fontWeight: "bold", color: COLORS.headerText }}>
+                                {header}
+                            </TableCell>
+                        )
+                    )}
                 </TableRow>
             </TableHead>
             {/* Cuerpo */}
@@ -39,7 +51,7 @@ const ListaDepartamentos = ({ departamentos, onEdit, onDelete }) => (
                         key={dep._id}
                         hover
                         sx={{
-                            "&:hover": { backgroundColor: "#f3f4f6" },
+                            "&:hover": { backgroundColor: COLORS.hoverBackground },
                             transition: "background-color 0.3s ease",
                         }}
                     >
@@ -53,10 +65,10 @@ const ListaDepartamentos = ({ departamentos, onEdit, onDelete }) => (
                                 startIcon={<Edit />}
                                 onClick={() => onEdit(dep)}
                                 sx={{
-                                    color: "#3b82f6",
+                                    color: COLORS.actionEdit,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#2563eb" },
+                                    "&:hover": { color: COLORS.actionEditHover },
                                 }}
                             >
                                 Editar
@@ -65,10 +77,10 @@ const ListaDepartamentos = ({ departamentos, onEdit, onDelete }) => (
                                 startIcon={<Delete />}
                                 onClick={() => onDelete(dep._id)}
                                 sx={{
-                                    color: "#ef4444",
+                                    color: COLORS.actionDelete,
                                     fontWeight: 600,
                                     textTransform: "none",
-                                    "&:hover": { color: "#dc2626" },
+                                    "&:hover": { color: COLORS.actionDeleteHover },
                                 }}
                             >
                                 Eliminar
