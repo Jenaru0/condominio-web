@@ -7,21 +7,17 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
             sx={{
                 backgroundColor: "#ffffff",
                 padding: "16px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                borderRadius: "12px", // Updated borderRadius
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Updated shadow for consistency
                 display: "flex",
                 flexWrap: "wrap",
-                gap: "16px",
+                gap: "16px", // Updated gap between elements
                 alignItems: "center",
+                marginBottom: "20px", // Updated margin for consistency
             }}
         >
             {/* Filtro por estado */}
-            <FormControl
-                sx={{
-                    minWidth: "200px",
-                    fontFamily: "'Montserrat', sans-serif",
-                }}
-            >
+            <FormControl sx={{ minWidth: "200px", fontFamily: "'Montserrat', sans-serif" }}>
                 <InputLabel>Estado</InputLabel>
                 <Select
                     value={filtros.estado}
@@ -29,6 +25,12 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
                     sx={{
                         "& .MuiSelect-select": {
                             fontFamily: "'Montserrat', sans-serif",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
                         },
                     }}
                 >
@@ -41,12 +43,7 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
             </FormControl>
 
             {/* Filtro por residente */}
-            <FormControl
-                sx={{
-                    minWidth: "200px",
-                    fontFamily: "'Montserrat', sans-serif",
-                }}
-            >
+            <FormControl sx={{ minWidth: "200px", fontFamily: "'Montserrat', sans-serif" }}>
                 <TextField
                     label="Residente"
                     value={filtros.residente}
@@ -59,17 +56,18 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
                         "& .MuiInputBase-root": {
                             fontFamily: "'Montserrat', sans-serif",
                         },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
+                        },
                     }}
                 />
             </FormControl>
 
             {/* Filtro por fecha */}
-            <FormControl
-                sx={{
-                    minWidth: "200px",
-                    fontFamily: "'Montserrat', sans-serif",
-                }}
-            >
+            <FormControl sx={{ minWidth: "200px", fontFamily: "'Montserrat', sans-serif" }}>
                 <TextField
                     label="Fecha"
                     type="date"
@@ -83,6 +81,12 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
                         },
                         "& .MuiInputBase-root": {
                             fontFamily: "'Montserrat', sans-serif",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
                         },
                     }}
                 />
@@ -98,7 +102,12 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
                     fontFamily: "'Montserrat', sans-serif",
                     textTransform: "none",
                     fontWeight: 600,
-                    "&:hover": { backgroundColor: "#1e40af" },
+                    padding: "8px 16px",
+                    borderRadius: "8px", // Added border radius for consistency
+                    "&:hover": {
+                        backgroundColor: "#1e40af",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    },
                 }}
             >
                 Buscar
@@ -114,7 +123,12 @@ const FiltrosSolicitudes = ({ filtros, setFiltros, onSearch, resetFilters }) => 
                     fontFamily: "'Montserrat', sans-serif",
                     textTransform: "none",
                     fontWeight: 600,
-                    "&:hover": { borderColor: "#1e40af", backgroundColor: "#e0f2fe" },
+                    padding: "8px 16px",
+                    borderRadius: "8px", // Added border radius for consistency
+                    "&:hover": {
+                        borderColor: "#1e40af",
+                        backgroundColor: "#e5e7eb",
+                    },
                 }}
             >
                 Reiniciar

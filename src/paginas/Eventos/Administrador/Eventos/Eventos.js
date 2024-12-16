@@ -8,11 +8,18 @@ import LoadingSpinner from "../../../../componentes/comunes/LoadingSpinner";
 
 const Eventos = () => {
   const [eventos, setEventos] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado inicial de carga
+  const [filteredEventos, setFilteredEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
 
-  // Simulación de carga de datos
+  // Filtros
+  const [filters, setFilters] = useState({
+    estado: "",
+    fecha: "",
+    busqueda: "",
+  });
+
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -23,7 +30,6 @@ const Eventos = () => {
           fecha: "2024-10-05",
           asistencia: "15 Confirmados",
           estado: "Confirmado",
-          estadoColor: "bg-green-500",
         },
         {
           id: "E0550",
@@ -31,41 +37,39 @@ const Eventos = () => {
           fecha: "2024-12-24",
           asistencia: "10 Confirmados",
           estado: "Pendiente",
-          estadoColor: "bg-red-500",
         },
       ];
       setEventos(mockEventos);
+      setFilteredEventos(mockEventos);
       setLoading(false);
-    }, 3000); // Simulación de carga de 3 segundos
+    }, 3000);
   }, []);
 
-  const handleEliminar = (id) => {
-    const nuevoListado = eventos.filter((evento) => evento.id !== id);
-    setEventos(nuevoListado);
-    alert("Evento eliminado con éxito");
+  const handleFilterChange = (field, value) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleEdit = (evento) => {
-    setSelectedEvento(evento);
-    setIsModalOpen(true);
-  };
+  const applyFilters = () => {
+    let eventosFiltrados = [...eventos];
+    const { estado, fecha, busqueda } = filters;
 
-  const handleCreate = () => {
-    setSelectedEvento(null);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (formData) => {
-    if (selectedEvento) {
-      setEventos((prev) =>
-          prev.map((e) => (e.id === selectedEvento.id ? formData : e))
-      );
-      alert("Evento actualizado con éxito");
-    } else {
-      setEventos((prev) => [...prev, { ...formData, id: `E${prev.length + 1}` }]);
-      alert("Evento creado con éxito");
+    if (estado) {
+      eventosFiltrados = eventosFiltrados.filter((evento) => evento.estado === estado);
     }
-    setIsModalOpen(false);
+    if (fecha) {
+      eventosFiltrados = eventosFiltrados.filter((evento) => evento.fecha.includes(fecha));
+    }
+    if (busqueda) {
+      eventosFiltrados = eventosFiltrados.filter((evento) =>
+          evento.nombreEvento.toLowerCase().includes(busqueda.toLowerCase())
+      );
+    }
+    setFilteredEventos(eventosFiltrados);
+  };
+
+  const resetFilters = () => {
+    setFilters({ estado: "", fecha: "", busqueda: "" });
+    setFilteredEventos(eventos);
   };
 
   if (loading) {
@@ -74,24 +78,27 @@ const Eventos = () => {
 
   return (
       <div className="p-6 bg-gray-100 min-h-screen">
-        {/* Encabezado y Botón */}
         <div className="flex justify-between items-center mb-8">
           <Encabezado titulo="Gestión de Eventos del Condominio" />
-          <Boton label="+ Crear Nuevo Evento" onClick={handleCreate} />
+          <Boton label="+ Crear Nuevo Evento" onClick={() => setIsModalOpen(true)} />
         </div>
 
         {/* Filtros */}
-        <FiltrosEventos />
+        <FiltrosEventos
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onApplyFilters={applyFilters}
+            onResetFilters={resetFilters}
+        />
 
         {/* Lista de Eventos */}
-        <ListaEventos eventos={eventos} onEdit={handleEdit} onDelete={handleEliminar} />
+        <ListaEventos eventos={filteredEventos} />
 
         {/* Formulario */}
         {isModalOpen && (
             <FormularioEvento
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onSave={handleSave}
                 initialData={selectedEvento}
             />
         )}

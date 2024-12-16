@@ -32,12 +32,13 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
             sx={{
                 backgroundColor: "#ffffff",
                 padding: "16px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+                borderRadius: "12px", // Matching rounded corners from FiltrosPagos
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Same box shadow as FiltrosPagos
                 display: "flex",
                 flexWrap: "wrap",
-                gap: "16px",
+                gap: "16px", // Matching gap between elements
                 alignItems: "center",
+                marginBottom: "20px", // Reduced margin as in FiltrosPagos
             }}
         >
             {/* Filtro por estado */}
@@ -54,6 +55,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                     sx={{
                         "& .MuiSelect-select": {
                             fontFamily: "'Montserrat', sans-serif",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8", // Matching border hover effect
                         },
                     }}
                 >
@@ -82,6 +89,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                         "& .MuiInputBase-root": {
                             fontFamily: "'Montserrat', sans-serif",
                         },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
+                        },
                     }}
                 />
             </FormControl>
@@ -106,6 +119,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                         },
                         "& .MuiInputBase-root": {
                             fontFamily: "'Montserrat', sans-serif",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
                         },
                     }}
                 />
@@ -132,6 +151,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                         "& .MuiInputBase-root": {
                             fontFamily: "'Montserrat', sans-serif",
                         },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e0e0e0",
+                        },
+                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#1d4ed8",
+                        },
                     }}
                 />
             </FormControl>
@@ -146,7 +171,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                     fontFamily: "'Montserrat', sans-serif",
                     textTransform: "none",
                     fontWeight: 600,
-                    "&:hover": { backgroundColor: "#1e40af" },
+                    borderRadius: "8px", // Matching button border radius
+                    padding: "8px 16px", // Padding consistency
+                    "&:hover": {
+                        backgroundColor: "#1e40af",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Hover effect consistency
+                    },
                 }}
             >
                 Buscar
@@ -162,7 +192,12 @@ const FiltrosHistorialSolicitudes = ({ onFilter }) => {
                     fontFamily: "'Montserrat', sans-serif",
                     textTransform: "none",
                     fontWeight: 600,
-                    "&:hover": { borderColor: "#1e40af", backgroundColor: "#e0f2fe" },
+                    borderRadius: "8px", // Matching button border radius
+                    padding: "8px 16px", // Padding consistency
+                    "&:hover": {
+                        borderColor: "#1d4ed8",
+                        backgroundColor: "#e5e7eb", // Consistent hover color
+                    },
                 }}
             >
                 Reiniciar
